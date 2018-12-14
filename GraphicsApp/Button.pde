@@ -1,6 +1,10 @@
 class Button extends Clickable
 {
   
+  color clickedColor = color(105,105,105);
+  color passiveColor = color(200,200,200);
+  color activeColor = color(155,155,155);
+  
   Button()
   {
    this.x = 0;
@@ -23,11 +27,11 @@ class Button extends Clickable
     {
       if (clicked)
       {
-        fill(color(105,105,105));
+        fill(clickedColor);
       }
       else
       {
-        fill(color(155,155,155));
+        fill(activeColor);
       }
       
       
@@ -35,7 +39,15 @@ class Button extends Clickable
     }
     else 
     {
-      fill(color(200,200,200));
+      if (toggleable && toggled)
+      {
+       fill(activeColor); 
+      }
+      else
+      {
+        fill(passiveColor);
+      }
+      
     }
     
     rect(x,y,w,h);

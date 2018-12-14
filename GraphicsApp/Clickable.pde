@@ -1,6 +1,9 @@
 //Base class for clickable objects
 class Clickable extends Widget
 {
+  boolean toggleable = true;
+  
+  boolean toggled = false;
   
   boolean mouseIsIn = false;
   boolean clicked = false;
@@ -16,7 +19,7 @@ class Clickable extends Widget
     if (mouseIsIn)
     {
       //Click Event
-      
+      toggled = !toggled;
       print("Clicked!\n\n\n");
     }
   }
