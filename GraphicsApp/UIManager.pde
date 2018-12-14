@@ -14,4 +14,43 @@ class UIManager
       widgetList.get(i).draw();
     }
   }
+  
+  void mousePressed() {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      widgetList.get(i).mousePressed();
+    }
+  }
+  
+  void mouseClicked ()
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      widgetList.get(i).mouseClicked();
+    }
+  }
+  
+  void mouseMoved()
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      widgetList.get(i).mouseMoved();
+    }
+  }
+  
+  void mouseReleased()
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      widgetList.get(i).mouseReleased();
+    }
+  }
+  
+  void mouseDragged()
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      widgetList.get(i).mouseDragged();
+    }
+  }
 }
