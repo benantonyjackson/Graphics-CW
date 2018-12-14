@@ -4,7 +4,7 @@ class UIManager
   
   UIManager()
   {
-    widgetList.add(new Button());
+    widgetList.add(new Button(200, 100, 100, 50));
   }
   
   void draw()

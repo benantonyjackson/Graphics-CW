@@ -19,6 +19,15 @@ class Button extends Clickable
   
   void draw()
   {
+    if (mouseIsIn())
+    {
+      fill(color(155,155,155));
+    }
+    else 
+    {
+      fill(color(200,200,200));
+    }
+    
     rect(x,y,w,h);
   }
 }
