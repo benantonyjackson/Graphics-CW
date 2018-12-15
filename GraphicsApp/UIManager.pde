@@ -1,14 +1,23 @@
-class UIManager
+class UIManager extends Widget
 {
   ArrayList<Widget> widgetList = new ArrayList<Widget>();
   
+  int x,y,h,w;
+  
+  
   UIManager()
   {
-    widgetList.add(new Button(200, 100, 100, 50));
+    
   }
   
+  void add(Widget widget)
+  {  
+    widgetList.add(widget);
+  }
+    
   void draw()
   {
+    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).draw();

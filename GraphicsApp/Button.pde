@@ -1,4 +1,4 @@
-class Button extends Clickable
+class Button extends Widget
 {
   
   color clickedColor = color(105,105,105);
@@ -21,6 +21,11 @@ class Button extends Clickable
     this.h = h;
   }
   
+  void WidgetClickEvent()
+  {
+    print(clicked);
+  }
+  
   void draw()
   {
     if (mouseIsIn)
@@ -33,8 +38,6 @@ class Button extends Clickable
       {
         fill(activeColor);
       }
-      
-      
       
     }
     else 
