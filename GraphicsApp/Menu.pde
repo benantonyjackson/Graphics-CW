@@ -19,6 +19,22 @@ class Menu extends UIManager
       }
     }
     
+    /*if(widgetList.size() != 0)
+    {
+      Widget endWidget = widgetList.get(widgetList.size() - 1);
+    
+      widget.x = endWidget.x;
+    
+      widget.y = endWidget.y + endWidget.h;
+    }*/
+    
+    h += widget.h;
+    
+    widget.x = x;
+    
+    widget.y = (y + h) - widget.h;
+    
+    
     widgetList.add(widget);
   }
   

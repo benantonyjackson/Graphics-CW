@@ -7,8 +7,18 @@ void setup()
   
   ui = new UIManager();
   //print("Point b");
-  ui.add(new Button(200, 100, 100, 50));
-  ui.add(new RadioButtons());
+  //ui.add(new Button(200, 100, 100, 50));
+  //ui.add(new RadioButtons());
+  //Menu testMenu = new Menu(100, 100);
+  
+  testMenu.add(new Button());
+  testMenu.add(new Button());
+  testMenu.add(new Button());
+  testMenu.add(new Button());
+
+  
+  
+  ui.add(testMenu);
     //print ("Point a");
 }
 
