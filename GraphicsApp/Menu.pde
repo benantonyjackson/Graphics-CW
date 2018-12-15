@@ -7,6 +7,12 @@ class Menu extends UIManager
     this.y=y;
   }
   
+  void mouseReleased()
+  {
+    super.mouseReleased();
+    setActive(mouseIsIn && active);
+  }
+  
   void add(Widget widget)
   {
     if (widget.w > w)
@@ -18,15 +24,7 @@ class Menu extends UIManager
         widgetList.get(i).w = w;
       }
     }
-    
-    /*if(widgetList.size() != 0)
-    {
-      Widget endWidget = widgetList.get(widgetList.size() - 1);
-    
-      widget.x = endWidget.x;
-    
-      widget.y = endWidget.y + endWidget.h;
-    }*/
+   
     
     h += widget.h;
     
@@ -37,6 +35,18 @@ class Menu extends UIManager
     
     widgetList.add(widget);
   }
+  
+  
+  void setActive(boolean act)
+  {
+    active = act;
+    
+    for (Widget widget: widgetList)
+    {
+      widget.active = act;
+    }
+  }
+  
   
   
 }

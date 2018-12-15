@@ -11,19 +11,24 @@ void setup()
   //ui.add(new RadioButtons());
   //Menu testMenu = new Menu(100, 100);
   
+  /*testMenu.add(new Button());
   testMenu.add(new Button());
   testMenu.add(new Button());
-  testMenu.add(new Button());
-  testMenu.add(new Button());
-
+  testMenu.add(new Button());*/
   
   
-  ui.add(testMenu);
+  ui.add(new MenuBar());
+  
+  
+  //ui.add(testMenu);
     //print ("Point a");
 }
 
 void draw()
 {
+  background(255,255,255);
+  
+  
   ui.draw();
 }
 

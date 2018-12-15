@@ -18,6 +18,7 @@ class Widget
     }
   }
   
+  boolean active = true;
   
   boolean toggleable = true;
   
@@ -41,6 +42,7 @@ class Widget
     {
       //Click Event
       toggled = !toggled;
+      if (active)
       WidgetClickEvent();
     }
     else if (untoggleAfterClick)
@@ -65,7 +67,7 @@ class Widget
   //Called after a widget has been clicked 
   void WidgetClickEvent()
   {
-  
+    
   }
   
   void mouseClicked()

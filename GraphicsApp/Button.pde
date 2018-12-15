@@ -28,6 +28,8 @@ class Button extends Widget
   
   void draw()
   {
+    if (active)
+    {
     if (mouseIsIn)
     {
       if (clicked)
@@ -54,5 +56,10 @@ class Button extends Widget
     }
     
     rect(x,y,w,h);
+
+    }
+    
+    
+    
   }
 }
