@@ -1,6 +1,11 @@
 class Menu extends UIManager
 {
   
+  Menu()
+  {
+    
+  }
+  
   Menu(int x, int y)
   {
     this.x=x;
@@ -47,6 +52,17 @@ class Menu extends UIManager
     }
   }
   
-  
-  
+  void setPosition(int x, int y)
+  {
+    int tempY = y;
+    
+    for (Widget widget: widgetList)
+    {
+      widget.x = x;
+      
+      widget.y = tempY;
+      
+      tempY += widget.h;
+    }
+  }
 }

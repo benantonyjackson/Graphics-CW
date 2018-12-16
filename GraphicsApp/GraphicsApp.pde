@@ -26,7 +26,7 @@ void setup()
 
 void draw()
 {
-  background(255,255,255);
+  background(25,25,25);
   
   
   ui.draw();

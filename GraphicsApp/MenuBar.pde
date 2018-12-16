@@ -4,20 +4,29 @@ class MenuBar extends UIManager
   ArrayList<Menu> menuList = new ArrayList<Menu>();
   MenuBar()
   {
-    Menu testMenu = new Menu(100, 50);
+    Menu fileMenu = new Menu();
     
-    testMenu.add(new Button());
-    testMenu.add(new Button());
-    testMenu.add(new Button());
-    testMenu.add(new Button());
+    fileMenu.add(new Button("New"));
+    fileMenu.add(new Button("Open"));
+    fileMenu.add(new Button("Save"));
+    fileMenu.add(new Button("Export"));
+    fileMenu.setActive(false);
     
-    testMenu.setActive(false);
+    Menu editMenu = new Menu();
+    editMenu.add(new Button("Undo"));
+    Button redo = new Button("Redo");
+    redo.clickable = false;
+    editMenu.add(redo);
+    editMenu.add(new Button("Cut"));
+    editMenu.add(new Button("Copy"));
+    editMenu.add(new Button("Paste"));
+    editMenu.setActive(false);
     
-    //menuList.add(testMenu);
-    
-    //buttonList.add(new Button(100,0, 100, 50));
     addButton("File");
-    addMenu(testMenu);
+    addMenu(fileMenu);
+    addButton("Edit");
+    addMenu(editMenu);
+    
     
     widgetList.addAll(buttonList);
     widgetList.addAll(menuList);
@@ -53,12 +62,10 @@ class MenuBar extends UIManager
   
   
   void addMenu(Menu m)
-  {
+  { 
       Button btn = buttonList.get(buttonList.size()-1);
       
-      m.x=btn.x;
-      
-      m.y=btn.y+btn.w;
+      m.setPosition(m.x=btn.x, m.y=btn.y+btn.h);
       
       menuList.add(m);
   }

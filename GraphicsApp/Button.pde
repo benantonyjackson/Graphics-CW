@@ -8,14 +8,26 @@ class Button extends Widget
   color clickedColor = color(105,105,105);
   color passiveColor = color(200,200,200);
   color activeColor = color(155,155,155);
+  color notClickableColor = color(75,75,75);
   
   Button()
   {
    this.x = 0;
    this.y = 0;
-   this.w = 100;
-   this.h = 50;
+   this.w = 75;
+   this.h = 32;
   }
+  
+  Button(String s)
+  {
+    text = s;
+    
+    this.x = 0;
+    this.y = 0;
+    this.w = 75;
+    this.h = 32;
+  }
+  
   
   Button(String s, int x, int y, int w, int h)
   {
@@ -38,7 +50,7 @@ class Button extends Widget
   
   void WidgetClickEvent()
   {
-    print(clicked);
+    print(text + "\n");
   }
   
   void draw()
@@ -59,7 +71,11 @@ class Button extends Widget
     }
     else 
     {
-      if (toggleable && toggled)
+      if (!clickable)
+      {
+        fill(notClickableColor);
+      }
+      else if (toggleable && toggled)
       {
        fill(activeColor); 
       }

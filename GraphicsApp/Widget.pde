@@ -25,12 +25,14 @@ class Widget
   boolean toggled = false;
   boolean untoggleAfterClick = true;
   
+  boolean clickable = true;
   
   boolean mouseIsIn = false;
   //True if the user is currently clicking on the widget
   boolean clicked = false;
   void mousePressed() 
   {
+    if (clickable)
     clicked = mouseIsIn;
   }
   
@@ -42,7 +44,7 @@ class Widget
     {
       //Click Event
       toggled = !toggled;
-      if (active)
+      if (active && clickable)
       WidgetClickEvent();
     }
     else if (untoggleAfterClick)
@@ -55,6 +57,7 @@ class Widget
   
   void mouseMoved()
   {
+    if (clickable)
     mouseIsIn = checkMouseIsIn();
   }
   
