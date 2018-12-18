@@ -1,9 +1,17 @@
 UIManager ui;
 
+int oldWidth;
+int oldHeight;
+
 
 void setup()
 {
   size(900, 500);
+  
+  oldWidth = 900;
+  oldHeight = 500;
+  
+  surface.setResizable(true);
   
   ui = new UIManager();
   //print("Point b");
@@ -16,8 +24,12 @@ void setup()
   testMenu.add(new Button());
   testMenu.add(new Button());*/
   
+  Button btn = new Button("Test", 750, 300, 100, 50);
+  
+  btn.aligned = ALLIGNMENT.right;
   
   ui.add(new MenuBar());
+  ui.add(btn);
   
   
   //ui.add(testMenu);
@@ -26,6 +38,16 @@ void setup()
 
 void draw()
 {
+  if (oldWidth != width || oldHeight != height)
+  {
+    ui.resize((width - oldWidth), (height - oldHeight));
+  }
+  
+  oldWidth = width;
+  oldHeight = height;
+  
+  //print("width: " + width + " height: " + height + "\n");
+  
   background(25,25,25);
   
   

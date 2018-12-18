@@ -1,5 +1,14 @@
+
+public enum ALLIGNMENT
+  {
+    non, center, left, right, top, bottom, top_left, top_right, bottom_left, bottom_right
+  }
+  
 class Widget
 { 
+  
+  ALLIGNMENT aligned = ALLIGNMENT.non;
+  
   void draw()
   {
     
@@ -76,6 +85,15 @@ class Widget
   void mouseClicked()
   {
   
+  }
+  
+  void resize(int dtW, int dtH)
+  {
+    print("dtW: " + dtW + " dtH: " + dtH + "\n");
+    if (aligned == ALLIGNMENT.right)
+    {
+      x += dtW;
+    }
   }
   
   int x;

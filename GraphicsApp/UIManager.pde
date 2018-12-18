@@ -62,4 +62,12 @@ class UIManager extends Widget
       widgetList.get(i).mouseDragged();
     }
   }
+  
+  void resize(int dtW, int dtH)
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      widgetList.get(i).resize(dtW, dtH);
+    }
+  }
 }
