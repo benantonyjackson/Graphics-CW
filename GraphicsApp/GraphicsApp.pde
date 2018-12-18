@@ -24,9 +24,9 @@ void setup()
   testMenu.add(new Button());
   testMenu.add(new Button());*/
   
-  Button btn = new Button("Test", 750, 300, 100, 50);
+  Button btn = new Button("Test", 750, 400, 100, 50);
   
-  btn.aligned = ALLIGNMENT.right;
+  btn.aligned = ALLIGNMENT.center_right;
   
   ui.add(new MenuBar());
   ui.add(btn);

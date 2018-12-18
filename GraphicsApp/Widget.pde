@@ -1,7 +1,7 @@
 
 public enum ALLIGNMENT
   {
-    non, center, left, right, top, bottom, top_left, top_right, bottom_left, bottom_right
+    non, center, left, right, top, bottom, top_left, top_right, bottom_left, bottom_right, center_top, center_bottom, center_left, center_right
   }
   
 class Widget
@@ -89,10 +89,38 @@ class Widget
   
   void resize(int dtW, int dtH)
   {
-    print("dtW: " + dtW + " dtH: " + dtH + "\n");
-    if (aligned == ALLIGNMENT.right)
+    //center_right
+    if (aligned == ALLIGNMENT.right || aligned == ALLIGNMENT.top_right)
     {
       x += dtW;
+    }
+    else if (aligned == ALLIGNMENT.center || aligned == ALLIGNMENT.center_top)
+    {
+      x = (width / 2) - (w / 2);
+      y = (height / 2) - (h / 2);
+    }
+    else if (aligned == ALLIGNMENT.bottom || aligned == ALLIGNMENT.bottom_left)
+    {
+      y += dtH;
+    }
+    else if (aligned == ALLIGNMENT.bottom_right)
+    {
+      x += dtW;
+      y += dtH;
+    }
+    else if (aligned == ALLIGNMENT.center_bottom)
+    {
+      x = (width / 2) - (w / 2);
+      y += dtH;
+    }
+    else if (aligned == ALLIGNMENT.center_left)
+    {
+      y = (height / 2) - (h / 2);
+    }
+    else if (aligned == ALLIGNMENT.center_right)
+    {
+      x += dtW;
+      y = (height / 2) - (h / 2);
     }
   }
   
