@@ -24,12 +24,23 @@ void setup()
   testMenu.add(new Button());
   testMenu.add(new Button());*/
   
-  Button btn = new Button("Test", 750, 400, 100, 50);
+  //Button btn = new Button("Test", 750, 400, 100, 50);
   
-  btn.aligned = ALLIGNMENT.center_right;
+  //btn.aligned = ALLIGNMENT.center_right;
+  
+  
+  /*Menu m = new Menu(300, 300);
+  
+  m.add(new Button("btn1"));
+  m.add(new Button("btn1"));
+  m.add(new Button("btn1"));
+  m.aligned = ALLIGNMENT.center;*/
+  
+  
+  ui.add(new Lable(500, 300, "This is a test lable", 32));
   
   ui.add(new MenuBar());
-  ui.add(btn);
+
   
   
   //ui.add(testMenu);
@@ -77,4 +88,11 @@ void mouseReleased()
 void mouseDragged()
 {
   ui.mouseDragged();
+}
+
+void keyPressed()
+{
+  
+  
+  ui.keyPressed();
 }

@@ -1,0 +1,3 @@
+class TextInput extends Widget
+{
+}

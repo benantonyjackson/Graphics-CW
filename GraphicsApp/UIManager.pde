@@ -70,4 +70,12 @@ class UIManager extends Widget
       widgetList.get(i).resize(dtW, dtH);
     }
   }
+  
+  void keyPressed()
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      widgetList.get(i).keyPressed();
+    }
+  }
 }
