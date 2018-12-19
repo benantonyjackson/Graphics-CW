@@ -37,7 +37,7 @@ void setup()
   m.aligned = ALLIGNMENT.center;*/
   
   
-  ui.add(new TextInput(500, 300, "cscs",32));
+  ui.add(new TextInput(0, 300, "Test",32));
   
   ui.add(new MenuBar());
 

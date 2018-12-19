@@ -1,6 +1,8 @@
 class TextInput extends Label
 {
   
+  color toggledColor = color(0,0,255);
+  
   TextInput (int x, int y, String s, int size)
   {
     super(x,y,s,size);
@@ -9,15 +11,16 @@ class TextInput extends Label
   
   void keyPressed()
   {
+    if (toggled)
+    {
     char k = key;
     if (k == CODED)
     {
-      print("mdsofnmosdn");
-      //print("\n keyCode: " + keyCode);
+     
     }
     else 
     {
-      print ("grr");
+      
       if (k == BACKSPACE || k == DELETE)
       {
         if (s.length() > 0)
@@ -25,10 +28,26 @@ class TextInput extends Label
           setString(s.substring(0, s.length() - 1));
         }
       }
+      else if (k == ENTER)
+      {
+        toggled = false;
+      }
       else
       {
         setString(s + k);
       }
     }
+    }
+  }
+  
+  void draw()
+  {
+    if (toggled)
+    {
+      fill(toggledColor);
+      
+      rect(x,y,w,h);
+    }
+    super.draw();
   }
 }

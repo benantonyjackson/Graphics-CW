@@ -52,6 +52,7 @@ class Label extends Widget
   {
     
     textSize(size);
+    textAlign(LEFT, TOP);
     if (s.length() > 0)
     {
         w = (int)textWidth(s);
@@ -69,6 +70,7 @@ class Label extends Widget
   {
     if (active)
     {
+      textAlign(LEFT, TOP);
       fill(textColor);
       textSize(size);
       
