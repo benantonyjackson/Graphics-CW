@@ -27,15 +27,18 @@ class Widget
     }
   }
   
+  //True if the user is able to see and interact with the widget
   boolean active = true;
   
+  //True if the user is able to toggle to control with a mouse click
   boolean toggleable = true;
-  
+  //True if the widget is currently toggled on
   boolean toggled = false;
   boolean untoggleAfterClick = true;
   
+  //True if the user is able to click on the widget
   boolean clickable = true;
-  
+  //True if the mouse is currently hovering the widget
   boolean mouseIsIn = false;
   //True if the user is currently clicking on the widget
   boolean clicked = false;

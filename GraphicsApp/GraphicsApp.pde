@@ -37,7 +37,7 @@ void setup()
   m.aligned = ALLIGNMENT.center;*/
   
   
-  ui.add(new Lable(500, 300, "This is a test lable", 32));
+  ui.add(new TextInput(500, 300, "cscs",32));
   
   ui.add(new MenuBar());
 

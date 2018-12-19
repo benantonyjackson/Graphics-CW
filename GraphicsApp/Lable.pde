@@ -1,32 +1,34 @@
-class Lable extends Widget
+class Label extends Widget
 {
   String s;
   int size = 12;
   
   color textColor = color(255,255,255);
   
+  Label()
+  {}
   
-  Lable(int x, int y)
+  Label(int x, int y)
   {
     this.x = x;
     this.y = y;
   }
   
-  Lable(int x, int y, int size)
+  Label(int x, int y, int size)
   {
     this.x = x;
     this.y = y;
     setFontSize(size);
   }
   
-  Lable (int x, int y, String s)
+  Label (int x, int y, String s)
   {
     this.x = x;
     this.y = y;
     setString(s);
   }
   
-  Lable (int x, int y, String s, int size)
+  Label (int x, int y, String s, int size)
   {
     this.x = x;
     this.y = y;
@@ -50,9 +52,17 @@ class Lable extends Widget
   {
     
     textSize(size);
-    
-    w = (int)textWidth(s);
-    h = (int)(textAscent() + textDescent());
+    if (s.length() > 0)
+    {
+        w = (int)textWidth(s);
+        h = (int)(textAscent() + textDescent());
+    }
+    else
+    {
+      w = 10;
+      h = 10;
+    }
+
   }
   
   void draw()
@@ -62,7 +72,7 @@ class Lable extends Widget
       fill(textColor);
       textSize(size);
       
-      text(s, x,y,w,h);
+      text(s,x,y);
     }
   }
 }
