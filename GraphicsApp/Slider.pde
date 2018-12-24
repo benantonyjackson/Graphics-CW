@@ -16,14 +16,14 @@ class Slider extends Widget
   
   void mouseDragged()
   {
-    rectX = mouseX;
+    rectX = clamp(mouseX, x, x+ w);
     
     
   }
   
   void mouseReleased()
   {
-    float val = ((float)mouseX - (float)x) / ((float)x+(float)w);
+    float val = ((float)rectX - (float)x) / ((float)w);
     
     val = ((float)(max - min) * val) + min;
     

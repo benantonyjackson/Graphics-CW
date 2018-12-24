@@ -4,6 +4,24 @@ public enum ALLIGNMENT
     non, center, left, right, top, bottom, top_left, top_right, bottom_left, bottom_right, center_top, center_bottom, center_left, center_right
   }
   
+public float clamp(float val, float min, float max)
+{
+  if (val < min)
+    return min;
+  if (val > max)
+    return max;
+  return val;
+}
+
+public int clamp(int val, int min, int max)
+{
+  if (val < min)
+    return min;
+  if (val > max)
+    return max;
+  return val;
+}
+
 class Widget
 { 
   
