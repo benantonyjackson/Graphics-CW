@@ -95,6 +95,8 @@ class Widget
     
   }
   
+  
+  
   void resize(int dtW, int dtH)
   {
     //center_right

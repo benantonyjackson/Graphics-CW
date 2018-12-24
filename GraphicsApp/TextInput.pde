@@ -6,7 +6,7 @@ class TextInput extends Label
   TextInput (int x, int y, String s, int size)
   {
     super(x,y,s,size);
-    
+    border = true;
   }
   
   void keyPressed()
@@ -44,9 +44,7 @@ class TextInput extends Label
   {
     if (toggled)
     {
-      fill(toggledColor);
       
-      rect(x,y,w,h);
     }
     super.draw();
   }

@@ -10,7 +10,7 @@ class Button extends Widget
   color activeColor = color(155,155,155);
   color notClickableColor = color(75,75,75);
   
-  
+  int cornerRadius = 0;
   
   Button()
   {
@@ -88,7 +88,7 @@ class Button extends Widget
       
     }
     
-    rect(x,y,w,h);
+    rect(x,y,w,h,cornerRadius);
     
     fill(textColor);
     

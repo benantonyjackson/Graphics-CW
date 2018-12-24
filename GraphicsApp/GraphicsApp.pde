@@ -37,7 +37,9 @@ void setup()
   m.aligned = ALLIGNMENT.center;*/
   
   
-  ui.add(new TextInput(0, 300, "Test",32));
+  //ui.add(new TextInput(0, 300, "Test",32));
+  
+  ui.add(new Slider(10, 300, 300, 0, 100));
   
   ui.add(new MenuBar());
 

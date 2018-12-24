@@ -4,6 +4,8 @@ class Label extends Widget
   int size = 12;
   
   color textColor = color(255,255,255);
+  boolean border = false;
+  color borderColor = color(0,0,0);
   
   Label()
   {}
@@ -56,13 +58,12 @@ class Label extends Widget
     if (s.length() > 0)
     {
         w = (int)textWidth(s);
-        h = (int)(textAscent() + textDescent());
     }
     else
     {
       w = 10;
-      h = 10;
     }
+    h = (int)(textAscent() + textDescent());
 
   }
   
@@ -70,6 +71,15 @@ class Label extends Widget
   {
     if (active)
     {
+      if (border)
+      {
+        fill(borderColor);
+      
+        noFill();
+      
+        rect(x,y,w,h);
+      }
+      
       textAlign(LEFT, TOP);
       fill(textColor);
       textSize(size);
