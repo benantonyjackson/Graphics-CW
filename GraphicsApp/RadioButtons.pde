@@ -8,16 +8,7 @@ class RadioButtons extends UIManager
   RadioButtons()
   {
     untoggleAfterClick = false;
-    print ("point a");
-    add(new Button(0,0, 100, 50));
     
-    add(new Button(150,0, 100, 50));
-    
-    add(new Button(0,150, 100, 50));
-    
-    add(new Button(150,150, 100, 50));
-    
-    print("point b");
   }
   
   void mouseReleased()

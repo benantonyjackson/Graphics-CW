@@ -4,6 +4,8 @@ int oldWidth;
 int oldHeight;
 
 
+Canvas canvas;
+
 void setup()
 {
   size(900, 500);
@@ -14,39 +16,17 @@ void setup()
   surface.setResizable(true);
   
   ui = new UIManager();
-  //print("Point b");
-  //ui.add(new Button(200, 100, 100, 50));
-  //ui.add(new RadioButtons());
-  //Menu testMenu = new Menu(100, 100);
-  
-  /*testMenu.add(new Button());
-  testMenu.add(new Button());
-  testMenu.add(new Button());
-  testMenu.add(new Button());*/
-  
-  //Button btn = new Button("Test", 750, 400, 100, 50);
-  
-  //btn.aligned = ALLIGNMENT.center_right;
   
   
-  /*Menu m = new Menu(300, 300);
   
-  m.add(new Button("btn1"));
-  m.add(new Button("btn1"));
-  m.add(new Button("btn1"));
-  m.aligned = ALLIGNMENT.center;*/
-  
-  
-  //ui.add(new TextInput(0, 300, "Test",32));
-  
-  ui.add(new Slider(100, 0, 300, -100, 100));
+  //ui.add(new Slider(300, 300, 150, -100, 100));
   
   ui.add(new MenuBar());
 
+  canvas = new Canvas();
+  ui.add(canvas);
   
-  
-  //ui.add(testMenu);
-    //print ("Point a");
+  ui.add(new ScrollBar(0,  height - 15, width, Orientation.horrizontal, 450));
 }
 
 void draw()
