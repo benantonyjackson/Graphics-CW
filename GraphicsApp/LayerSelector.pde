@@ -39,6 +39,6 @@ class LayerSelector extends UIManager
   
   void addLayer()
   {
-    layerButtons.add(new LayerButton("layer1", x, y + 25 + layerButtons.h, 120, 40));
+    layerButtons.add(new LayerButton("layer1", width - 120, y + 25 + layerButtons.h, 120, 40));
   }
 }
