@@ -4,10 +4,10 @@ class MenuBar extends UIManager
   ArrayList<Menu> menuList = new ArrayList<Menu>();
   MenuBar()
   {
-    Menu fileMenu = new Menu();
+    FileMenu fileMenu = new FileMenu();
     
     fileMenu.add(new Button("New"));
-    fileMenu.add(new Button("Open"));
+    fileMenu.add(new Button("Open", "mnbtnOpen"));
     fileMenu.add(new Button("Save"));
     fileMenu.add(new Button("Export"));
     fileMenu.setActive(false);
@@ -40,6 +40,8 @@ class MenuBar extends UIManager
     {
         menuList.get(i).setActive(buttonList.get(i).toggled);
     }
+    
+    
   }
   
   void addButton(String s)
@@ -70,4 +72,22 @@ class MenuBar extends UIManager
       menuList.add(m);
   }
   
+}
+
+class FileMenu extends Menu
+{
+  void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnOpen")
+      {
+        File FileDir = new File("");
+        selectInput("Select an Image: ", "addLayer");
+        print("afsdfz");
+      }
+    }
+  }
 }

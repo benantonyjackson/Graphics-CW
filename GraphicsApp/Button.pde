@@ -30,6 +30,17 @@ class Button extends Widget
     this.h = 32;
   }
   
+  Button(String s, String n)
+  {
+    text = s;
+    name = n;
+    
+    this.x = 0;
+    this.y = 0;
+    this.w = 75;
+    this.h = 32;
+  }
+  
   
   Button(String s, int x, int y, int w, int h)
   {
@@ -52,7 +63,8 @@ class Button extends Widget
   
   void WidgetClickEvent()
   {
-    print(text + "\n");
+    super.WidgetClickEvent();
+    //print(text + "\n");
   }
   
   void draw()

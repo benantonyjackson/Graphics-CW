@@ -4,6 +4,7 @@ class UIManager extends Widget
   
   int x,y,h,w;
   
+  ArrayList<String> clickedList = new ArrayList<String>();
   
   UIManager()
   {
@@ -49,9 +50,15 @@ class UIManager extends Widget
   
   void mouseReleased()
   {
+    clickedList = new ArrayList<String>();
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseReleased();
+      if (widgetList.get(i).wasClicked)
+      {
+        clickedList.add(widgetList.get(i).name);
+        widgetList.get(i).wasClicked = false;
+      }
     }
   }
   

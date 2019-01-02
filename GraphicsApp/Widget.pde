@@ -27,6 +27,8 @@ class Widget
   
   ALLIGNMENT aligned = ALLIGNMENT.non;
   
+  String name;
+  
   void draw()
   {
     
@@ -60,6 +62,8 @@ class Widget
   boolean mouseIsIn = false;
   //True if the user is currently clicking on the widget
   boolean clicked = false;
+  //True if the user clicked on the widget
+  boolean wasClicked = false;
   void mousePressed() 
   {
     if (clickable)
@@ -100,7 +104,7 @@ class Widget
   //Called after a widget has been clicked 
   void WidgetClickEvent()
   {
-    
+    wasClicked = true;
   }
   
   void mouseClicked()

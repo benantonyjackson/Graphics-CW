@@ -4,11 +4,12 @@ int oldWidth;
 int oldHeight;
 
 
-Canvas canvas;
+public Canvas canvas;
+public LayerSelector layerSelector;
 
 void setup()
 {
-  size(900, 500);
+  size(900, 600);
   
   oldWidth = 900;
   oldHeight = 500;
@@ -21,12 +22,17 @@ void setup()
   
   //ui.add(new Slider(300, 300, 150, -100, 100));
   
-  ui.add(new MenuBar());
+ 
 
   canvas = new Canvas();
   ui.add(canvas);
+  layerSelector = new LayerSelector();
+  ui.add(layerSelector);
   
-  ui.add(new ScrollBar(0,  height - 15, width, Orientation.horrizontal, 450));
+   ui.add(new MenuBar());
+  
+  //ui.add(new ScrollBar(width - 10,  0, height, Orientation.vertical, 30));
+  //ui.add(new ScrollBar(0,  height - 15, width, Orientation.horrizontal, 500));
 }
 
 void draw()
@@ -77,4 +83,9 @@ void keyPressed()
   
   
   ui.keyPressed();
+}
+
+void addLayer(File sourceImage)
+{
+  canvas.addLayer(sourceImage);
 }

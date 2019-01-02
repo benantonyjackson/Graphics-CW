@@ -84,7 +84,7 @@ class ScrollBar extends Widget
       }
       
      
-     print( getValue());
+     println(getValue());
     
       
     }
@@ -95,26 +95,21 @@ class ScrollBar extends Widget
     //float min, max;
     int min = 0;
     float pos;
+    int begin, end;
     if (Orientation.vertical == o)
     {
-      //pos = barSize + rectY;
-      pos = barSize + rectY;
-
+      pos = rectY;
+      begin = y;
+      end = h;
     }
     else
     {
-      //pos = barSize + rectX;
       pos =  rectX;
-
+      begin = x;
+      end = w;
     }
     
-   
-    
-    //value = ((float)pos - (float)x + (float)barSize) / ((float)w);
-    
-    //value = ((float)(max - min) * value) + min;
-    
-    value = ((float)pos - (float)x) / (((float)w - (float)barSize));
+    value = ((float)pos - (float)begin) / (((float)end - (float)barSize));
     
     value = ((float)(max - min) * value) + min;
     
