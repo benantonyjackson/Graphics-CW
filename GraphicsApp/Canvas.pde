@@ -14,7 +14,8 @@ class Canvas extends UIManager
   {
     //aligned = ALLIGNMENT.center;
     tbxZoom = new TextInput(width - 180, height - 10,"",10);
-    
+    tbxZoom.aligned = ALLIGNMENT.bottom_right;
+    tbxZoom.name = "Fuck";
     add(tbxZoom);
     
     autoSetSize();
@@ -24,8 +25,8 @@ class Canvas extends UIManager
   {
     //x = 25;
     //y = 25;
-    
-    if (canvasWidth > canvasHeight)
+    float scalar;
+    /*if (canvasWidth > canvasHeight)
     {
       w = (int)((float)canvasWidth * ((float)(width - 150) / (float)canvasWidth));
       h = (int)((float)canvasHeight * ((float)(width - 150) / (float)canvasWidth));
@@ -36,13 +37,42 @@ class Canvas extends UIManager
     {
       w = (int)((float)canvasWidth * ((float)(height - 150) / (float)height));
       h = (int)((float)canvasHeight * ((float)(height - 150) / (float)height));
+    }*/
+    
+    //if (w > width - 150 || w == 0)
+    {
+      scalar = ((float)(width - 150) / (float)canvasWidth);
+      
+      w = (int)((float)canvasWidth * scalar);
+      h = (int)((float)canvasHeight * scalar);
+      
+      for (Layer l: layers)
+      {
+        l.scaleAfterReize(scalar);
+      }
+      
+      tbxZoom.setString(scalar * 100 + "%");
     }
     
+    if (h > height - 25 || h == 0)
+    {
+      scalar = ((float)(height - 150) / (float)canvasHeight);
+      
+      w = (int)((float)canvasWidth * scalar);
+      h = (int)((float)canvasHeight * scalar);
+      for (Layer l: layers)
+      {
+        l.scaleAfterReize(scalar);
+      }
+      tbxZoom.setString((scalar * 100) + "%");
+    }
     
     x = 25 + (((width-150-25) / 2) - (w / 2));
     y = (height / 2) - (h / 2);
     //w = width - 150;
     //h = height - 50;
+    
+    
   }
   
   void draw()
@@ -63,7 +93,7 @@ class Canvas extends UIManager
   {
     super.resize(dtW,dtH);
     autoSetSize();
-    
+    //print("sadasdsax");
     //super.resize(dtW, dtH);
   }
   

@@ -11,8 +11,8 @@ void setup()
 {
   size(900, 600);
   
-  oldWidth = 900;
-  oldHeight = 500;
+  oldWidth = width;
+  oldHeight = height;
   
   surface.setResizable(true);
   

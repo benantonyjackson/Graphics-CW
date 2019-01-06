@@ -10,6 +10,7 @@ class LayerSelector extends UIManager
     y = 20;
     newLayer = new Button ("New", x, y, 25, 15);
     newLayer.name = "newLayer";
+    newLayer.allignX = 120;
     
     add(newLayer);
     layerButtons = new LayerButtons();

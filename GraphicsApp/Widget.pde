@@ -117,14 +117,15 @@ class Widget
     
   }
   
-  
+  int allignX;
+  int allignY;
   
   void resize(int dtW, int dtH)
   {
     //center_right
     if (aligned == ALLIGNMENT.right || aligned == ALLIGNMENT.top_right)
     {
-      x += dtW;
+      x = width - allignX;
     }
     else if (aligned == ALLIGNMENT.center || aligned == ALLIGNMENT.center_top)
     {
@@ -133,17 +134,17 @@ class Widget
     }
     else if (aligned == ALLIGNMENT.bottom || aligned == ALLIGNMENT.bottom_left)
     {
-      y += dtH;
+      y = height - allignY;
     }
     else if (aligned == ALLIGNMENT.bottom_right)
     {
-      x += dtW;
-      y += dtH;
+      x = width - allignX;
+      y = height - allignY;
     }
     else if (aligned == ALLIGNMENT.center_bottom)
     {
       x = (width / 2) - (w / 2);
-      y += dtH;
+      y = height - allignY;
     }
     else if (aligned == ALLIGNMENT.center_left)
     {
@@ -151,9 +152,11 @@ class Widget
     }
     else if (aligned == ALLIGNMENT.center_right)
     {
-      x += dtW;
+      x = width - allignX;
       y = (height / 2) - (h / 2);
     }
+    
+    println("dtx: " + dtW + " dtY: " + dtH);
   }
   
   int x;
