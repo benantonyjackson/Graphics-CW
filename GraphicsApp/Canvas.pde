@@ -15,7 +15,9 @@ class Canvas extends UIManager
     //aligned = ALLIGNMENT.center;
     tbxZoom = new TextInput(width - 180, height - 10,"",10);
     tbxZoom.aligned = ALLIGNMENT.bottom_right;
-    tbxZoom.name = "Fuck";
+    tbxZoom.name = "";
+    tbxZoom.allignX = 180;
+    tbxZoom.allignY = 10;
     add(tbxZoom);
     
     autoSetSize();
@@ -26,18 +28,6 @@ class Canvas extends UIManager
     //x = 25;
     //y = 25;
     float scalar;
-    /*if (canvasWidth > canvasHeight)
-    {
-      w = (int)((float)canvasWidth * ((float)(width - 150) / (float)canvasWidth));
-      h = (int)((float)canvasHeight * ((float)(width - 150) / (float)canvasWidth));
-      
-      tbxZoom.setString((((width-150) / canvasWidth) * 100) + "%");
-    }
-    else 
-    {
-      w = (int)((float)canvasWidth * ((float)(height - 150) / (float)height));
-      h = (int)((float)canvasHeight * ((float)(height - 150) / (float)height));
-    }*/
     
     //if (w > width - 150 || w == 0)
     {

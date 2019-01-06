@@ -156,7 +156,7 @@ class Widget
       y = (height / 2) - (h / 2);
     }
     
-    println("dtx: " + dtW + " dtY: " + dtH);
+    //println("dtx: " + dtW + " dtY: " + dtH);
   }
   
   int x;
