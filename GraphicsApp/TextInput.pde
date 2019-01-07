@@ -11,6 +11,7 @@ class TextInput extends Label
   
   void keyPressed()
   {
+    //If the user has clicked on the text input to type in it
     if (toggled)
     {
     char k = key;
@@ -20,20 +21,24 @@ class TextInput extends Label
     }
     else 
     {
-      
+      //If the current keystroke is backspace or delete
       if (k == BACKSPACE || k == DELETE)
       {
+        //Remove the character at the end of the string list
         if (s.length() > 0)
         {
           setString(s.substring(0, s.length() - 1));
         }
       }
+      //If user pressed enter
       else if (k == ENTER)
       {
+        //Deselects the text input
         toggled = false;
       }
       else
       {
+        //Adds character to text
         setString(s + k);
       }
     }

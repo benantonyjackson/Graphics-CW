@@ -1,9 +1,10 @@
-
+//Enums used to define a widgets behavior when the window is resized
 public enum ALLIGNMENT
   {
     non, center, left, right, top, bottom, top_left, top_right, bottom_left, bottom_right, center_top, center_bottom, center_left, center_right
   }
-  
+
+//Ensures that a value is within givin minimum and maximum values
 public float clamp(float val, float min, float max)
 {
   if (val < min)
@@ -12,7 +13,7 @@ public float clamp(float val, float min, float max)
     return max;
   return val;
 }
-
+//Ensures that a value is within givin minimum and maximum values
 public int clamp(int val, int min, int max)
 {
   if (val < min)
@@ -24,9 +25,10 @@ public int clamp(int val, int min, int max)
 
 class Widget
 { 
-  
+  //defines a widgets behavior when the window is resized
   ALLIGNMENT aligned = ALLIGNMENT.non;
   
+  //Identifier used to address widgets when retrieved from a list
   String name;
   
   void draw()
@@ -122,7 +124,8 @@ class Widget
   
   void resize(int dtW, int dtH)
   {
-    //center_right
+    //Moves widget when the window is resized depending on how they are aligned
+    
     if (aligned == ALLIGNMENT.right || aligned == ALLIGNMENT.top_right)
     {
       x = width - allignX;
@@ -156,7 +159,7 @@ class Widget
       y = (height / 2) - (h / 2);
     }
     
-    //println("dtx: " + dtW + " dtY: " + dtH);
+    
   }
   
   int x;

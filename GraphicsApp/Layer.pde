@@ -7,11 +7,10 @@ class Layer extends UIManager
   
   Layer(File sourceImage)
   {
+    //Loads the image that the layer is made of into memory
     actImage = loadImage(sourceImage.getAbsolutePath());
     
     disImage = actImage;
-    
-    
   }
   
   void draw()
@@ -21,27 +20,28 @@ class Layer extends UIManager
   
   void scaleAfterReize(float scalar)
   {
+    //Scales display image to the size of the canvas 
     disImage = scaleUp_bilinear((int)((float)actImage.width * scalar), (int)((float)actImage.height * scalar), actImage);
   }
   
 }
 
 PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
+  //Create a blank image for the destination imgage
   PImage destinationImage = new PImage(destinationImageWidth, destinationImageHeight);
+  //Loops through each pixel in the destination image
   for (int y = 0; y < destinationImageHeight; y++) {
     for (int x = 0; x < destinationImageWidth; x++){
-      
+      //Scales coordinates to origonal image pixel coordinates
       float parametricX = (x/(float)destinationImageWidth);
-      
       float parametricY = (y/(float)destinationImageHeight); 
-        
+      
+      //Gets the pixel color of the current pixel
       color thisPix = getPixelBilinear(parametricX,parametricY, img);
-     
       destinationImage.set(x,y, thisPix);
     }
   
   }
-  //destinationImage.save("scaleUp1_bilinear.png");
   return destinationImage;
 } 
  

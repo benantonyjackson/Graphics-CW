@@ -18,7 +18,6 @@ class UIManager extends Widget
     
   void draw()
   {
-    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).draw();
@@ -50,6 +49,7 @@ class UIManager extends Widget
   
   void mouseReleased()
   {
+    //Updates the array of widgets that were clicked
     clickedList = new ArrayList<String>();
     for (int i = 0; i < widgetList.size(); i++)
     {

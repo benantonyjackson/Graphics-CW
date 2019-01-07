@@ -1,6 +1,8 @@
 class Label extends Widget
 {
+  //String that the lable displayes
   String s;
+  //Font size of text
   int size = 12;
   
   color textColor = color(255,255,255);
@@ -50,17 +52,18 @@ class Label extends Widget
     setSize();
   }
   
+  //Calculates width and height of the text
   protected void setSize()
   {
-    
     textSize(size);
     textAlign(LEFT, TOP);
     if (s.length() > 0)
-    {
-        w = (int)textWidth(s);
+    { 
+      w = (int)textWidth(s);
     }
     else
     {
+      //Sets the width to 10 if label has no text so that the user can still click on the lable
       w = 10;
     }
     h = (int)(textAscent() + textDescent());
@@ -69,8 +72,10 @@ class Label extends Widget
   
   void draw()
   {
+    //if the lable is visible 
     if (active)
     {
+      //Checks if the lable has a boarder
       if (border)
       {
         fill(borderColor);

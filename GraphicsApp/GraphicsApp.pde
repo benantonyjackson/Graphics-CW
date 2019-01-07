@@ -1,5 +1,7 @@
 UIManager ui;
 
+//Stores the size of the window in the previous frame.
+//Used to determin if the window has been resized
 int oldWidth;
 int oldHeight;
 
@@ -37,11 +39,13 @@ void setup()
 
 void draw()
 {
+  //Checks if the window has been resized
   if (oldWidth != width || oldHeight != height)
   {
     ui.resize((width - oldWidth), (height - oldHeight));
   }
   
+  //Stores the size of the window to be compared to the size of the window in the next frame
   oldWidth = width;
   oldHeight = height;
   
@@ -85,6 +89,7 @@ void keyPressed()
   ui.keyPressed();
 }
 
+//Function called when the user adds a new picture to the project
 void addLayer(File sourceImage)
 {
   canvas.addLayer(sourceImage);

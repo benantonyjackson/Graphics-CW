@@ -17,11 +17,14 @@ class RadioButtons extends UIManager
     {
       widgetList.get(i).mouseReleased();
       
+      //If the current button is toggled and the current button is not the currently selected button
       if (i != activeButton && widgetList.get(i).toggled)
       {
+        //Checks that a button was previously selected
         if (activeButton != -1)
+        //deselects the currently active button
         widgetList.get(activeButton).toggled = false;
-        
+        //Sets the current button as the active button
         activeButton = i;
       }
     }
@@ -30,7 +33,7 @@ class RadioButtons extends UIManager
   void add(Button btn)
   {
     btn.toggleable = true; 
-    btn.untoggleAfterClick = false;
+    btn.untoggleAfterClick = untoggleAfterClick;
     widgetList.add(btn);
   }
  

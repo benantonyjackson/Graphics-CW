@@ -41,8 +41,7 @@ class ScrollBar extends Widget
     setMax(max);
   }
   
-  
-  
+   
   void setMax (int newMax)
   {
     max = newMax;
@@ -52,10 +51,9 @@ class ScrollBar extends Widget
   
   void mouseDragged()
   {
-    
+    //Keeps the bar within bounds of the scroll bar
     if (clicked)
-    {
-      
+    {      
       if (o == Orientation.vertical)
       {
          rectY = clamp(mouseY - (barSize/2), y, (y+h)- barSize);      
@@ -64,14 +62,14 @@ class ScrollBar extends Widget
       {
         rectX = clamp(mouseX - (barSize/2), x, (x+ w) - barSize);
       }
+      //Calculates the current selected value
       getValue();
-    
-      
     }
   }
   
   void mouseReleased()
   {
+    //Keeps the bar within bounds of the scroll bar
     if (clicked)
     {
       if (o == Orientation.vertical)
@@ -82,20 +80,18 @@ class ScrollBar extends Widget
       {
         rectX = clamp(mouseX - (barSize/2), x, (x+ w) - barSize);
       }
-      
-     
-     println(getValue());
-    
-      
+     //Calculates the current selected value
+     getValue();
     }
   }
   
   float getValue()
   {
-    //float min, max;
     int min = 0;
     float pos;
     int begin, end;
+    
+    //Calculates the position of the bar, the begining of the scrollbar and the end of the scroll bar depending on the orientation of the scroll bar
     if (Orientation.vertical == o)
     {
       pos = rectY;
@@ -109,8 +105,8 @@ class ScrollBar extends Widget
       end = w;
     }
     
+    //Calcuates the value of the scroll bar
     value = ((float)pos - (float)begin) / (((float)end - (float)barSize));
-    
     value = ((float)(max - min) * value) + min;
     
     return value;

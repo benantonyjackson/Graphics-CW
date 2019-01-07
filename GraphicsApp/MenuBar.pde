@@ -1,5 +1,6 @@
 class MenuBar extends UIManager
 {
+  //List of buttons and the menus associated with those buttons
   ArrayList<Button> buttonList = new ArrayList<Button>();
   ArrayList<Menu> menuList = new ArrayList<Menu>();
   MenuBar()
@@ -36,6 +37,8 @@ class MenuBar extends UIManager
   {
     super.mouseReleased();
     
+    //Loops through each button on the menu bar
+    //If a button is toggled then that buttons menu is displayed
     for(int i = 0; i < buttonList.size(); i++)
     {
         menuList.get(i).setActive(buttonList.get(i).toggled);
@@ -44,12 +47,14 @@ class MenuBar extends UIManager
     
   }
   
+  //Adds a button to the menu bar
   void addButton(String s)
   {
+    //Calculates width of the button based on the lenth of its lable
     textSize(11);
-    
     int mX = (int)textWidth(s)+7;
     
+    //Adds button to the end of the menu bar
     if (buttonList.size() != 0)
     {
       Button btnLast = buttonList.get(buttonList.size() - 1);
@@ -62,14 +67,15 @@ class MenuBar extends UIManager
     }
   }
   
-  
+  //Menus must be added imidiatly after the corisponding menu button was added
   void addMenu(Menu m)
-  { 
-      Button btn = buttonList.get(buttonList.size()-1);
-      
-      m.setPosition(m.x=btn.x, m.y=btn.y+btn.h);
-      
-      menuList.add(m);
+  {
+    //Sets the menus position to be under the button at the end of the menu bar
+    
+    Button btn = buttonList.get(buttonList.size()-1);
+    m.setPosition(m.x=btn.x, m.y=btn.y+btn.h);
+    
+    menuList.add(m);
   }
   
 }
@@ -82,14 +88,18 @@ class FileMenu extends Menu
     
     for (String s: clickedList)
     {
+      //If the open menu button is pressed
       if (s == "mnbtnOpen")
       {
-        File FileDir = new File("");
+        //Opens a file dialoge and allows the user to select an image
+        //The file directory will be passed to the addLayer function which can be found in the "GraphicApp" tab
+        //The image selected is the added to the canvas
         selectInput("Select an Image: ", "addLayer");
-        print("afsdfz");
       }
+      //If the export menu button is pressed
       if (s == "mnbtnExport")
       {
+        //The project is exported to an image file
         canvas.export();
       }
     }
