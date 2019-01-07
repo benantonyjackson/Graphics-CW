@@ -9,7 +9,7 @@ class MenuBar extends UIManager
     fileMenu.add(new Button("New"));
     fileMenu.add(new Button("Open", "mnbtnOpen"));
     fileMenu.add(new Button("Save"));
-    fileMenu.add(new Button("Export"));
+    fileMenu.add(new Button("Export", "mnbtnExport"));
     fileMenu.setActive(false);
     
     Menu editMenu = new Menu();
@@ -87,6 +87,10 @@ class FileMenu extends Menu
         File FileDir = new File("");
         selectInput("Select an Image: ", "addLayer");
         print("afsdfz");
+      }
+      if (s == "mnbtnExport")
+      {
+        canvas.export();
       }
     }
   }

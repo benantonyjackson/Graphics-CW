@@ -1,8 +1,8 @@
 class Canvas extends UIManager
 {
   //The dimentions of the resultant PImage
-  int canvasWidth = 300;
-  int canvasHeight = 100;
+  int canvasWidth = 520;
+  int canvasHeight = 520;
   
   TextInput tbxZoom;
   
@@ -85,6 +85,22 @@ class Canvas extends UIManager
     autoSetSize();
     //print("sadasdsax");
     //super.resize(dtW, dtH);
+  }
+  
+  void export()
+  { 
+    PImage output = new PImage(canvasWidth, canvasHeight);
+    for (Layer l: layers)
+    {
+      for (int x = 0; x < l.actImage.width; x++)
+      {
+        for (int y = 0; y < l.actImage.height; y++)
+        {
+          output.set(x,y,l.actImage.get(x,y));
+        }
+      }
+    }
+    output.save(dataPath("") + "scaleUp1_bilinear.png");
   }
   
   void setLayerIndex(int i)
