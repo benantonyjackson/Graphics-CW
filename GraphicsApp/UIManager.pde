@@ -2,8 +2,6 @@ class UIManager extends Widget
 {
   ArrayList<Widget> widgetList = new ArrayList<Widget>();
   
-  int x,y,h,w;
-  
   ArrayList<String> clickedList = new ArrayList<String>();
   
   UIManager()
@@ -22,9 +20,12 @@ class UIManager extends Widget
     {
       widgetList.get(i).draw();
     }
+    
+    super.draw();
   }
   
   void mousePressed() {
+    super.mousePressed();
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mousePressed();
@@ -37,6 +38,8 @@ class UIManager extends Widget
     {
       widgetList.get(i).mouseClicked();
     }
+    
+    super.mouseClicked();
   }
   
   void mouseMoved()
@@ -45,6 +48,8 @@ class UIManager extends Widget
     {
       widgetList.get(i).mouseMoved();
     }
+    
+    super.mouseMoved();
   }
   
   void mouseReleased()
@@ -60,14 +65,19 @@ class UIManager extends Widget
         widgetList.get(i).wasClicked = false;
       }
     }
+    
+    super.mouseReleased();
   }
   
   void mouseDragged()
-  {
+  {  
+    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseDragged();
     }
+    
+    super.mouseDragged();
   }
   
   void resize(int dtW, int dtH)
@@ -76,6 +86,8 @@ class UIManager extends Widget
     {
       widgetList.get(i).resize(dtW, dtH);
     }
+    
+    super.resize(dtW, dtH);
   }
   
   void keyPressed()
@@ -84,5 +96,6 @@ class UIManager extends Widget
     {
       widgetList.get(i).keyPressed();
     }
+    super.keyPressed();
   }
 }

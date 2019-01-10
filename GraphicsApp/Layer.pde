@@ -1,9 +1,14 @@
-class Layer extends UIManager
+class Layer extends Widget
 {
   //Image that is actually used to write to file
   PImage actImage;
   //Image that is diplayed to the screen
   PImage disImage;
+  
+  //Stores the position of the actual image for exporting the image
+  //The widget x and y are used for the display image
+  int offsetX = 100;
+  int offsetY = 100;
   
   Layer(File sourceImage)
   {
@@ -11,20 +16,40 @@ class Layer extends UIManager
     actImage = loadImage(sourceImage.getAbsolutePath());
     
     disImage = actImage;
+    
+    name = "layer";
+    
+    draggable = true;
   }
   
   void draw()
   {
-    image(disImage, canvas.x + x, canvas.y + y);
+    image(disImage, x, y);
   }
   
   void scaleAfterReize(float scalar)
   {
     //Scales display image to the size of the canvas 
     disImage = scaleUp_bilinear((int)((float)actImage.width * scalar), (int)((float)actImage.height * scalar), actImage);
+    
+    w = disImage.width;
+    h = disImage.height;
+    
+    x = (int)((float)offsetX * scalar) + canvas.x;
+    y = (int)((float)offsetY * scalar) + canvas.y;
   }
   
+  void mouseDragged()
+  {
+    //println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
+    super.mouseDragged();
+    //println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
+    //println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
+  }
+ 
+ 
 }
+//End of class
 
 PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
   //Create a blank image for the destination imgage

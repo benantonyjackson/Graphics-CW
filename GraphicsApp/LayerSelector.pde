@@ -4,6 +4,8 @@ class LayerSelector extends UIManager
   ScrollBar scrollBar;
   LayerButtons layerButtons;
   
+  int numberOfLayers = 0;
+  
   LayerSelector()
   {
     x = width - 120;
@@ -29,6 +31,18 @@ class LayerSelector extends UIManager
         addLayer();
       }
     }
+    
+    
+    if (layerButtons.activeButton == -1)
+    {
+      canvas.setLayerIndex(-1);
+    }
+    else 
+    {
+      canvas.setLayerIndex(numberOfLayers - (layerButtons.activeButton + 1));
+    }
+    
+    
   }
   
   void add (Widget widget)
@@ -41,5 +55,6 @@ class LayerSelector extends UIManager
   void addLayer()
   {
     layerButtons.add(new LayerButton("layer1", width - 120, y + 25 + layerButtons.h, 120, 40));
+    numberOfLayers++;
   }
 }

@@ -68,8 +68,25 @@ class Widget
   boolean wasClicked = false;
   void mousePressed() 
   {
+    if (name == "layer")
+    {
+     println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
+      println("Mouse x:" + mouseX + " y: " + mouseY);
+    }
+    
     if (clickable)
     clicked = mouseIsIn;
+    
+    if (clicked)
+    {
+      mouseOffsetX = mouseX - x;
+      mouseOffsetY = mouseY - y;
+    }
+    else
+    {
+      mouseOffsetX = 0;
+      mouseOffsetY = 0;
+    }
   }
   
   void mouseReleased()
@@ -97,10 +114,26 @@ class Widget
     mouseIsIn = checkMouseIsIn();
   }
   
+  boolean draggable = false;
+  int mouseOffsetX = 0;
+  int mouseOffsetY = 0;
+  
   void mouseDragged()
   {
+     
     if (!clicked)
-    mouseIsIn = checkMouseIsIn();
+    {
+      mouseIsIn = checkMouseIsIn();
+    }
+    else
+    {
+      if (draggable)
+      {
+        x = mouseX - mouseOffsetX;
+        y = mouseY - mouseOffsetY;
+      }
+    }
+    
   }
   
   //Called after a widget has been clicked 
@@ -158,7 +191,6 @@ class Widget
       x = width - allignX;
       y = (height / 2) - (h / 2);
     }
-    
     
   }
   

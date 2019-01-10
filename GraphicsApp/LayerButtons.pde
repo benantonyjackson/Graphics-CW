@@ -6,7 +6,7 @@ class LayerButtons extends RadioButtons
     allignX = 120;
     btn.allignX = 120;
     h += btn.h;
-    println(h);
+    //println(h);
     btn.aligned = ALLIGNMENT.right;
   }
 }

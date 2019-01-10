@@ -7,7 +7,7 @@ class Canvas extends UIManager
   //Displays the current level of zoom
   TextInput tbxZoom;
   //Stores the currently selected layers index
-  private int layerIndex;
+  private int layerIndex = -1;
   
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
@@ -36,7 +36,9 @@ class Canvas extends UIManager
       
       w = (int)((float)canvasWidth * scalar);
       h = (int)((float)canvasHeight * scalar);
-      
+      //Centers canvas body
+      x = 25 + (((width-150-25) / 2) - (w / 2));
+      y = (height / 2) - (h / 2);
       //Scales all images on the canvas
       for (Layer l: layers)
       {
@@ -53,16 +55,20 @@ class Canvas extends UIManager
       
       w = (int)((float)canvasWidth * scalar);
       h = (int)((float)canvasHeight * scalar);
+      
+      //Centers canvas body
+      x = 25 + (((width-150-25) / 2) - (w / 2));
+      y = (height / 2) - (h / 2);
+      
       //Scales all images on the canvas
       for (Layer l: layers)
       {
         l.scaleAfterReize(scalar);
       }
+      
       tbxZoom.setString((scalar * 100) + "%");
     }
-    //Centers canvas body
-    x = 25 + (((width-150-25) / 2) - (w / 2));
-    y = (height / 2) - (h / 2);
+    
   }
   
   void draw()
@@ -99,7 +105,7 @@ class Canvas extends UIManager
       {
         for (int y = 0; y < l.actImage.height; y++)
         {
-          output.set(x,y,l.actImage.get(x,y));
+          output.set(x + l.offsetX,y + l.offsetY,l.actImage.get(x,y));
         }
       }
     }
@@ -109,6 +115,7 @@ class Canvas extends UIManager
   //Sets the active layer
   void setLayerIndex(int i)
   {
+    //println("AHoifadofhadono");
     layerIndex = i;
     
   }
@@ -128,4 +135,36 @@ class Canvas extends UIManager
   { 
     return layerIndex;
   }
+  
+  
+  void mouseDragged()
+  {
+      if (layerIndex != -1)
+      {
+        //println(layerIndex);
+        //print("Why are you running");
+        layers.get(layerIndex).mouseDragged();
+      }
+  }
+  
+  void mousePressed()
+  {
+      if (layerIndex != -1)
+      {
+        //println(layerIndex);
+        //print("Why are you running");
+        layers.get(layerIndex).mousePressed();
+      }
+  }
+  
+  void mouseMoved()
+  {
+      if (layerIndex != -1)
+      {
+        //println(layerIndex);
+        //print("Why are you running");
+        layers.get(layerIndex).mouseMoved();
+      }
+  }
+  
 }
