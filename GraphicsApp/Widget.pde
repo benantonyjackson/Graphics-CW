@@ -68,11 +68,6 @@ class Widget
   boolean wasClicked = false;
   void mousePressed() 
   {
-    if (name == "layer")
-    {
-     println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
-      println("Mouse x:" + mouseX + " y: " + mouseY);
-    }
     
     if (clickable)
     clicked = mouseIsIn;

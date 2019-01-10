@@ -39,7 +39,7 @@ class LayerSelector extends UIManager
     }
     else 
     {
-      canvas.setLayerIndex(numberOfLayers - (layerButtons.activeButton + 1));
+      canvas.setLayerIndex((numberOfLayers-1) - (layerButtons.activeButton));
     }
     
     

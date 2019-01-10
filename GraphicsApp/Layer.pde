@@ -10,6 +10,10 @@ class Layer extends Widget
   int offsetX = 100;
   int offsetY = 100;
   
+  
+  float scalar;
+  
+  
   Layer(File sourceImage)
   {
     //Loads the image that the layer is made of into memory
@@ -37,14 +41,19 @@ class Layer extends Widget
     
     x = (int)((float)offsetX * scalar) + canvas.x;
     y = (int)((float)offsetY * scalar) + canvas.y;
+    
+    this.scalar = scalar;
   }
   
   void mouseDragged()
   {
-    //println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
     super.mouseDragged();
-    //println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
-    //println("x:" + x + " y: " + y + " w: " + w + " h:" + h);
+   
+    println(scalar);
+    
+    offsetX = (int)(((float)x - (float)canvas.x) / scalar);
+    offsetY = (int)(((float)y - (float)canvas.y) / scalar);
+    
   }
  
  
