@@ -94,7 +94,7 @@ class Canvas extends UIManager
   }
   
   //Saves image to png file
-  void export()
+  void export(File outputDir)
   { 
     //Stores the image to be written to disk
     PImage output = new PImage(canvasWidth, canvasHeight);
@@ -109,7 +109,8 @@ class Canvas extends UIManager
         }
       }
     }
-    output.save(dataPath("") + "scaleUp1_bilinear.png");
+    //output.save(dataPath("") + "scaleUp1_bilinear.png");
+    output.save(outputDir.getAbsolutePath() + ".png");
   }
   
   //Sets the active layer

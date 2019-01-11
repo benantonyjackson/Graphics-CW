@@ -7,7 +7,7 @@ class MenuBar extends UIManager
   {
     FileMenu fileMenu = new FileMenu();
     
-    fileMenu.add(new Button("New"));
+    fileMenu.add(new Button("New", "mnbtnNew"));
     fileMenu.add(new Button("Open", "mnbtnOpen"));
     fileMenu.add(new Button("Save"));
     fileMenu.add(new Button("Export", "mnbtnExport"));
@@ -88,6 +88,10 @@ class FileMenu extends Menu
     
     for (String s: clickedList)
     {
+      if(s == "mnbtnNew")
+      {
+        openCanvasConfigWindow();
+      }
       //If the open menu button is pressed
       if (s == "mnbtnOpen")
       {
@@ -100,7 +104,9 @@ class FileMenu extends Menu
       if (s == "mnbtnExport")
       {
         //The project is exported to an image file
-        canvas.export();
+        //canvas.export();
+        
+        selectOutput("Select save path for image", "export");
       }
     }
   }

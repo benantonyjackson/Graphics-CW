@@ -1,10 +1,12 @@
 UIManager ui;
+UIManager drawingUI;
 
 //Stores the size of the window in the previous frame.
 //Used to determin if the window has been resized
 int oldWidth;
 int oldHeight;
 
+color windowColor = color(25,25,25);
 
 public Canvas canvas;
 public LayerSelector layerSelector;
@@ -18,23 +20,11 @@ void setup()
   
   surface.setResizable(true);
   
-  ui = new UIManager();
+  ui = new UIManager(new MenuBar());
   
   
   
-  //ui.add(new Slider(300, 300, 150, -100, 100));
   
- 
-
-  canvas = new Canvas();
-  ui.add(canvas);
-  layerSelector = new LayerSelector();
-  ui.add(layerSelector);
-  
-   ui.add(new MenuBar());
-  
-  //ui.add(new ScrollBar(width - 10,  0, height, Orientation.vertical, 30));
-  //ui.add(new ScrollBar(0,  height - 15, width, Orientation.horrizontal, 500));
 }
 
 void draw()
@@ -93,4 +83,30 @@ void keyPressed()
 void addLayer(File sourceImage)
 {
   canvas.addLayer(sourceImage);
+}
+
+//Function called when the user exports the image
+void export(File outputDir)
+{
+  canvas.export(outputDir);
+}
+
+void setupNewCanvas (int w, int h)
+{
+  //Main UI 
+  //*******************************
+  drawingUI = new UIManager();
+  canvas = new Canvas();
+  drawingUI.add(canvas);
+  layerSelector = new LayerSelector();
+  drawingUI.add(layerSelector);
+  
+   
+   //*******************************
+   //end of Main ui
+}
+
+void openCanvasConfigWindow()
+{
+  ui.add(new NewCanvasUIManager());
 }

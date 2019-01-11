@@ -31,6 +31,9 @@ class Widget
   //Identifier used to address widgets when retrieved from a list
   String name;
   
+  //When true the widget should be removed from the UI manager
+  boolean closed = false;
+  
   void draw()
   {
     
@@ -158,7 +161,7 @@ class Widget
     {
       x = width - allignX;
     }
-    else if (aligned == ALLIGNMENT.center || aligned == ALLIGNMENT.center_top)
+    else if (aligned == ALLIGNMENT.center)
     {
       x = (width / 2) - (w / 2);
       y = (height / 2) - (h / 2);
@@ -185,6 +188,10 @@ class Widget
     {
       x = width - allignX;
       y = (height / 2) - (h / 2);
+    }
+    else if (aligned == ALLIGNMENT.center_top)
+    {
+      x = (width / 2) - (w / 2);
     }
     
   }

@@ -48,8 +48,6 @@ class Layer extends Widget
   void mouseDragged()
   {
     super.mouseDragged();
-   
-    println(scalar);
     
     offsetX = (int)(((float)x - (float)canvas.x) / scalar);
     offsetY = (int)(((float)y - (float)canvas.y) / scalar);
