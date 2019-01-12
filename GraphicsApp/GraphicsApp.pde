@@ -93,10 +93,16 @@ void export(File outputDir)
 
 void setupNewCanvas (int w, int h)
 {
+  //ui.pop();
+  
+  if (drawingUI != null)
+  drawingUI.closed = true;
+  ui.clean();
   //Main UI 
   //*******************************
+  
   drawingUI = new UIManager();
-  canvas = new Canvas();
+  canvas = new Canvas(w,h);
   drawingUI.add(canvas);
   layerSelector = new LayerSelector();
   drawingUI.add(layerSelector);
@@ -104,6 +110,8 @@ void setupNewCanvas (int w, int h)
    
    //*******************************
    //end of Main ui
+   
+   ui.add(drawingUI);
 }
 
 void openCanvasConfigWindow()

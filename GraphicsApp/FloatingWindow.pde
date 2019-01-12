@@ -33,7 +33,7 @@ class FloatingWindow extends UIManager
     if (closeButton.wasClicked)
     {
       closed = true;
-      print
+//print
     }
     
     super.mouseReleased();

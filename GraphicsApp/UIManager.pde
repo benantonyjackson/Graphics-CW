@@ -16,6 +16,7 @@ class UIManager extends Widget
   
   void add(Widget widget)
   {  
+    println("point a");
     widgetList.add(widget);
   }
   
@@ -27,12 +28,14 @@ class UIManager extends Widget
   void draw()
   {
     super.draw();
-    if (menuBar != null)
-    menuBar.draw();
+    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).draw();
     }
+    
+    if (menuBar != null)
+    menuBar.draw();
   }
   
   void mousePressed() {
@@ -129,5 +132,19 @@ class UIManager extends Widget
       widgetList.get(i).keyPressed();
     }
     super.keyPressed();
+  }
+  
+  
+  //Removes all widgets that have been marked as closed
+  void clean()
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      if (widgetList.get(i).closed)
+      {
+        widgetList.remove(i);
+        i--;
+      }
+    }
   }
 }

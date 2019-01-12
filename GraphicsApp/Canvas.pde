@@ -1,8 +1,8 @@
 class Canvas extends UIManager
 {
   //The dimentions of the resultant PImage
-  int canvasWidth = 520;
-  int canvasHeight = 520;
+  int canvasWidth;
+  int canvasHeight;
   
   //Displays the current level of zoom
   TextInput tbxZoom;
@@ -12,8 +12,10 @@ class Canvas extends UIManager
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
   
-  Canvas()
+  Canvas(int canWidth, int canHeight)
   {
+    canvasWidth= canWidth;
+    canvasHeight = canHeight;
     //aligned = ALLIGNMENT.center;
     tbxZoom = new TextInput(width - 180, height - 10,"",10);
     tbxZoom.aligned = ALLIGNMENT.bottom_right;
