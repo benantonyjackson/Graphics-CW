@@ -5,6 +5,8 @@ class UIManager extends Widget
   ArrayList<String> clickedList = new ArrayList<String>();
   
   MenuBar menuBar;
+
+  int CurrnetID = 0;
   
   UIManager()
   {}
@@ -16,7 +18,8 @@ class UIManager extends Widget
   
   void add(Widget widget)
   {  
-    println("point a");
+    widget.id = CurrnetID++;
+
     widgetList.add(widget);
   }
   
@@ -146,5 +149,43 @@ class UIManager extends Widget
         i--;
       }
     }
+  }
+
+  void remove(int i)
+  {
+    if (i < (widgetList.size() - 1) && i >= 0)
+    widgetList.remove(i);
+  }
+
+  int getIndexFromID(int WidgetID)
+  {
+    for (int i = 0; i < widgetList.size(); i++)
+    {
+      println("Point a");
+      if (widgetList.get(i).id == WidgetID)
+      {
+        return i;
+      }
+    }
+    return -1;
+
+  }
+
+  void remove(Widget widget)
+  {
+    int i = -1;
+    if (widget != null)
+    {
+      i = getIndexFromID(widget.id);
+
+      println("Widet id: " + widget.id);
+      println("Widget index: " + i);
+    }
+    
+
+    if (i > -1)
+    {
+      remove(i);
+    } 
   }
 }

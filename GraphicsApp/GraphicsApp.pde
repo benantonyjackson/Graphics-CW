@@ -19,9 +19,8 @@ void setup()
   oldHeight = height;
   
   surface.setResizable(true);
-  
   ui = new UIManager(new MenuBar());
-  
+  ui.name="ui";
   
   
   
@@ -95,9 +94,12 @@ void setupNewCanvas (int w, int h)
 {
   //ui.pop();
   
-  if (drawingUI != null)
+  /*if (drawingUI != null)
   drawingUI.closed = true;
-  ui.clean();
+  ui.clean();*/
+
+  ui.remove(drawingUI);
+
   //Main UI 
   //*******************************
   
@@ -114,7 +116,13 @@ void setupNewCanvas (int w, int h)
    ui.add(drawingUI);
 }
 
+NewCanvasUIManager newCanvasUIManager;
+
 void openCanvasConfigWindow()
 {
-  ui.add(new NewCanvasUIManager());
+  ui.remove(newCanvasUIManager);
+
+  newCanvasUIManager = new NewCanvasUIManager();
+
+  ui.add(newCanvasUIManager);
 }

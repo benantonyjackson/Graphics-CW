@@ -3,7 +3,9 @@ class NewCanvasUIManager extends FloatingWindow
   TextInput txtWidth;
   TextInput txtHeight;
   Button confirmButton;
-  
+  Label lblWidth;
+  Label lblHeight;
+
   NewCanvasUIManager()
   {
     x = 150;
@@ -11,8 +13,11 @@ class NewCanvasUIManager extends FloatingWindow
     w=300;
     h=200;
     
-    txtWidth = new TextInput(50, 20, "500", 12);
-    txtHeight = new TextInput(50, 60, "500", 12);
+    lblWidth = new Label(25, 20, "Width");
+    lblHeight = new Label(25, 60, "Height");
+
+    txtWidth = new TextInput(70, 20, "500", 12);
+    txtHeight = new TextInput(70, 60, "500", 12);
     confirmButton = new Button("Confirm", 200, 140, 60, 25);
     confirmButton.name = "confirmButton";
     
@@ -28,7 +33,9 @@ class NewCanvasUIManager extends FloatingWindow
     add(txtWidth);
     add(txtHeight);
     add(confirmButton);
-    
+    add(lblWidth);
+    add(lblHeight);
+
     //resize(0,0);
   }
   

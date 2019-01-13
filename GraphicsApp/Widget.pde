@@ -31,6 +31,9 @@ class Widget
   //Identifier used to address widgets when retrieved from a list
   String name;
   
+  //Assigned by a UI manager when add function is used
+  int id = -1;
+
   //When true the widget should be removed from the UI manager
   boolean closed = false;
   
@@ -56,7 +59,7 @@ class Widget
   boolean active = true;
   
   //True if the user is able to toggle to control with a mouse click
-  boolean toggleable = true;
+  boolean toggleable = false;
   //True if the widget is currently toggled on
   boolean toggled = false;
   boolean untoggleAfterClick = true;

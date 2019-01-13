@@ -131,3 +131,4 @@ class CloseButton extends Widget
     
   }
 }
+//End of close button class

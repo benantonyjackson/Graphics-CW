@@ -86,6 +86,7 @@ class Canvas extends UIManager
     {
       l.draw();
     }
+    //println("canavas " + id);
   }
   
   void resize(int dtW, int dtH)
