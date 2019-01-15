@@ -1,4 +1,6 @@
-class Canvas extends UIManager
+import java.io.Serializable;
+
+class Canvas extends UIManager implements Serializable
 {
   //The dimentions of the resultant PImage
   int canvasWidth;
@@ -12,6 +14,11 @@ class Canvas extends UIManager
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
   
+  Canvas()
+  {
+
+  }
+
   Canvas(int canWidth, int canHeight)
   {
     canvasWidth= canWidth;
@@ -82,10 +89,18 @@ class Canvas extends UIManager
     super.draw();
     
     //Draws layers
-    for (Layer l: layers)
+    try
     {
-      l.draw();
+      for (Layer l: layers)
+      {
+        l.draw();
+      }
     }
+    catch (Exception ex)
+    {
+    
+    }
+    
     //println("canavas " + id);
   }
   
@@ -171,4 +186,84 @@ class Canvas extends UIManager
       }
   }
   
+
+  void saveCanvas(File outputDir)
+  {
+    int time = millis();
+    PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
+    
+    String header;
+
+    String data = "";
+
+    for (Layer l: layers)
+    {
+      PImage img = l.actImage;
+     // println("Point b");
+      l.actImage.loadPixels();
+     // println("Point c");
+
+      data += img.width;
+      data += ".";
+      data += img.height;
+      data += ".";
+      data += l.offsetX;
+      data += ".";
+      data += l.offsetY;
+      data += ".";
+      int i = 0;
+      for (int x = 0; x < img.width; x++)
+      {
+        for (int y = 0; y < img.height; y++)
+          {
+            //color currentPixel = img.get(x,y);
+            /*data += red(currentPixel);
+            data += green(currentPixel);
+            data += blue(currentPixel);
+            data += alpha(currentPixel);*/
+            //data += currentPixel;
+            /*data += red(img.pixels[(x*y) + x]);
+            data += green(img.pixels[(x*y) + x]);
+            data += blue(img.pixels[(x*y) + x]);
+            data += alpha(img.pixels[(x*y) + x]);*/
+            color currentPixel = img.pixels[i++];
+            
+            //Gets red chanel value
+            data += (currentPixel >> 16) & 0xFF;
+            //Gets green chanel value
+            data += (currentPixel >> 8) & 0xFF;
+            //Gets blue chanel value
+            data += currentPixel & 0xFF;
+            //Gets Alhpa chanel value
+            data += (currentPixel >> 24) & 0xFF;
+            
+            /*//Gets red chanel value
+            data = data + ((currentPixel >> 16) & 0xFF);
+            //Gets green chanel value
+            data = data + ((currentPixel >> 8) & 0xFF);
+            //Gets blue chanel value
+            data = data + (currentPixel & 0xFF);
+            //Gets Alhpa chanel value
+            data = data + ((currentPixel >> 24) & 0xFF);*/
+
+            //curr
+            output.println(data);
+            data = "";
+          }
+          output.println(data);
+          data = "";
+      }
+      println("Point a");
+      output.println(data);
+      data += "/";
+      data = "";
+    }
+
+    //PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
+    //output.println(data);
+    output.flush();
+    output.close();
+    
+    print("Time:" + (millis() - time));
+  }
 }

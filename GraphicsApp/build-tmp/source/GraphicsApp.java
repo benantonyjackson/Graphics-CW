@@ -3,6 +3,12 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import java.io.FileOutputStream; 
+import java.io.ObjectOutputStream; 
+import java.io.FileInputStream; 
+import java.io.ObjectInputStream; 
+import java.io.Serializable; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -13,6 +19,11 @@ import java.io.OutputStream;
 import java.io.IOException; 
 
 public class GraphicsApp extends PApplet {
+
+
+
+
+
 
 UIManager ui;
 UIManager drawingUI;
@@ -141,6 +152,48 @@ public void openCanvasConfigWindow()
   newCanvasUIManager = new NewCanvasUIManager();
 
   ui.add(newCanvasUIManager);
+}
+
+public void saveCanvas(File outputDir)
+{
+  //https://examples.javacodegeeks.com/core-java/io/fileoutputstream/how-to-write-an-object-to-file-in-java/
+  //https://www.codementor.io/java/tutorial/serialization-and-deserialization-in-java
+  canvas.saveCanvas(outputDir);
+  /*try 
+  {
+    FileOutputStream fileOut = new FileOutputStream(outputDir.getAbsolutePath());
+    ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+    objectOut.writeObject(canvas);
+    objectOut.close();
+  
+  } 
+  catch (Exception ex) 
+  {
+    ex.printStackTrace();
+  }*/
+
+  //String header;
+
+}
+
+public void loadProject(File inputDir)
+{
+  /*try {
+         FileInputStream fileIn = new FileInputStream(inputDir.getAbsolutePath());
+         ObjectInputStream in = new ObjectInputStream(fileIn);
+         canvas = (Canvas) in.readObject();
+         in.close();
+         fileIn.close();
+      } catch (IOException i) {
+         i.printStackTrace();
+         return;
+      } catch (ClassNotFoundException c) {
+         System.out.println("Employee class not found");
+         c.printStackTrace();
+         return;
+      }*/
+
+
 }
 class Button extends Widget
 {
@@ -272,7 +325,9 @@ class Button extends Widget
     
   }
 }
-class Canvas extends UIManager
+
+
+class Canvas extends UIManager implements Serializable
 {
   //The dimentions of the resultant PImage
   int canvasWidth;
@@ -286,6 +341,11 @@ class Canvas extends UIManager
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
   
+  Canvas()
+  {
+
+  }
+
   Canvas(int canWidth, int canHeight)
   {
     canvasWidth= canWidth;
@@ -445,6 +505,66 @@ class Canvas extends UIManager
       }
   }
   
+
+  public void saveCanvas(File outputDir)
+  {
+    String header;
+
+    String data = "";
+
+    for (Layer l: layers)
+    {
+      PImage img = l.actImage;
+      println("Point b");
+      l.actImage.loadPixels();
+      println("Point c");
+
+      data += img.width;
+      data += ".";
+      data += img.height;
+      data += ".";
+      data += l.offsetX;
+      data += ".";
+      data += l.offsetY;
+      data += ".";
+      int i = 0;
+      for (int x = 0; x < img.width; x++)
+      {
+        for (int y = 0; y < img.height; y++)
+          {
+            //color currentPixel = img.get(x,y);
+            /*data += red(currentPixel);
+            data += green(currentPixel);
+            data += blue(currentPixel);
+            data += alpha(currentPixel);*/
+            //data += currentPixel;
+            /*data += red(img.pixels[(x*y) + x]);
+            data += green(img.pixels[(x*y) + x]);
+            data += blue(img.pixels[(x*y) + x]);
+            data += alpha(img.pixels[(x*y) + x]);*/
+            int currentPixel = img.pixels[i++];
+            
+            //Gets red chanel value
+            data += (currentPixel >> 16) & 0xFF;
+            //Gets green chanel value
+            data += (currentPixel >> 8) & 0xFF;
+            //Gets blue chanel value
+            data += currentPixel & 0xFF;
+            //Gets Alhpa chanel value
+            data += (currentPixel >> 24) & 0xFF;
+
+            //curr
+          }
+      }
+      print("Point a");
+      data += "/";
+    }
+
+    PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
+    output.println(data);
+    output.flush();
+    output.close();
+  }
 }
 class FloatingWindow extends UIManager
 {
@@ -460,6 +580,8 @@ class FloatingWindow extends UIManager
     
     widgetList.add(closeButton);
   }
+
+
   
   public void draw()
   {
@@ -731,10 +853,7 @@ class Layer extends Widget
     
   }
  
- 
-}
-//End of class
-
+ //Start of Functions
 public PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
   //Create a blank image for the destination imgage
   PImage destinationImage = new PImage(destinationImageWidth, destinationImageHeight);
@@ -815,7 +934,11 @@ public int getPixelBilinear(float x, float y, PImage img){
   
   return color(aRed, aGreen,aBlue);
 }
-  
+
+//End of functions
+ 
+}
+//End of class
 class LayerButton extends Button
 {
   PImage layerIMG;
@@ -995,7 +1118,8 @@ class MenuBar extends UIManager
     
     fileMenu.add(new Button("New", "mnbtnNew"));
     fileMenu.add(new Button("Open", "mnbtnOpen"));
-    fileMenu.add(new Button("Save"));
+    fileMenu.add(new Button("Load Project", "mnbtnLoad"));
+    fileMenu.add(new Button("Save", "nmbtnSave"));
     fileMenu.add(new Button("Export", "mnbtnExport"));
     fileMenu.setActive(false);
     
@@ -1093,6 +1217,15 @@ class FileMenu extends Menu
         //canvas.export();
         
         selectOutput("Select save path for image", "export");
+      }
+      if (s == "nmbtnSave")
+      {
+        selectOutput("Select save path for image", "saveCanvas");
+        
+      }
+      if (s == "mnbtnLoad")
+      {
+        selectInput("Select a project: ", "loadProject");
       }
     }
   }
@@ -1690,7 +1823,7 @@ public int clamp(int val, int min, int max)
   return val;
 }
 
-class Widget
+class Widget implements Serializable
 { 
   //defines a widgets behavior when the window is resized
   ALLIGNMENT aligned = ALLIGNMENT.non;

@@ -1,3 +1,8 @@
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+
 UIManager ui;
 UIManager drawingUI;
 
@@ -125,4 +130,46 @@ void openCanvasConfigWindow()
   newCanvasUIManager = new NewCanvasUIManager();
 
   ui.add(newCanvasUIManager);
+}
+
+void saveCanvas(File outputDir)
+{
+  //https://examples.javacodegeeks.com/core-java/io/fileoutputstream/how-to-write-an-object-to-file-in-java/
+  //https://www.codementor.io/java/tutorial/serialization-and-deserialization-in-java
+  canvas.saveCanvas(outputDir);
+  /*try 
+  {
+    FileOutputStream fileOut = new FileOutputStream(outputDir.getAbsolutePath());
+    ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+    objectOut.writeObject(canvas);
+    objectOut.close();
+  
+  } 
+  catch (Exception ex) 
+  {
+    ex.printStackTrace();
+  }*/
+
+  //String header;
+
+}
+
+void loadProject(File inputDir)
+{
+  /*try {
+         FileInputStream fileIn = new FileInputStream(inputDir.getAbsolutePath());
+         ObjectInputStream in = new ObjectInputStream(fileIn);
+         canvas = (Canvas) in.readObject();
+         in.close();
+         fileIn.close();
+      } catch (IOException i) {
+         i.printStackTrace();
+         return;
+      } catch (ClassNotFoundException c) {
+         System.out.println("Employee class not found");
+         c.printStackTrace();
+         return;
+      }*/
+
+
 }

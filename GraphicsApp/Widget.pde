@@ -23,7 +23,7 @@ public int clamp(int val, int min, int max)
   return val;
 }
 
-class Widget
+class Widget implements Serializable
 { 
   //defines a widgets behavior when the window is resized
   ALLIGNMENT aligned = ALLIGNMENT.non;

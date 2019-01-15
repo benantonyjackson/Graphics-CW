@@ -54,10 +54,7 @@ class Layer extends Widget
     
   }
  
- 
-}
-//End of class
-
+ //Start of Functions
 PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
   //Create a blank image for the destination imgage
   PImage destinationImage = new PImage(destinationImageWidth, destinationImageHeight);
@@ -138,4 +135,8 @@ color getPixelBilinear(float x, float y, PImage img){
   
   return color(aRed, aGreen,aBlue);
 }
-  
+
+//End of functions
+ 
+}
+//End of class

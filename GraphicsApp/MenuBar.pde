@@ -9,7 +9,8 @@ class MenuBar extends UIManager
     
     fileMenu.add(new Button("New", "mnbtnNew"));
     fileMenu.add(new Button("Open", "mnbtnOpen"));
-    fileMenu.add(new Button("Save"));
+    fileMenu.add(new Button("Load Project", "mnbtnLoad"));
+    fileMenu.add(new Button("Save", "nmbtnSave"));
     fileMenu.add(new Button("Export", "mnbtnExport"));
     fileMenu.setActive(false);
     
@@ -107,6 +108,15 @@ class FileMenu extends Menu
         //canvas.export();
         
         selectOutput("Select save path for image", "export");
+      }
+      if (s == "nmbtnSave")
+      {
+        selectOutput("Select save path for image", "saveCanvas");
+        
+      }
+      if (s == "mnbtnLoad")
+      {
+        selectInput("Select a project: ", "loadProject");
       }
     }
   }

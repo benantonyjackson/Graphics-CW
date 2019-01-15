@@ -12,6 +12,8 @@ class FloatingWindow extends UIManager
     
     widgetList.add(closeButton);
   }
+
+
   
   void draw()
   {
