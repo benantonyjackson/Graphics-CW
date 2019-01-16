@@ -11,10 +11,17 @@ class Canvas extends UIManager implements Serializable
   //Stores the currently selected layers index
   private int layerIndex = -1;
   
-  
-  
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
+
+  //Stores the index of the layer where an operation took place
+  private ArrayList<Integer> undoLayerIndex = new ArrayList<Integer>();
+  //Stores the old layer to be undone to
+  private ArrayList<Layer> undoLayer = new ArrayList<Layer>();
+
+  Layer oldLayer;
+
+  int undoIndex = -1;
   
   Canvas()
   {
@@ -185,6 +192,12 @@ class Canvas extends UIManager implements Serializable
         //println(layerIndex);
         //print("Why are you running");
         layers.get(layerIndex).mousePressed();
+
+        if (layers.get(layerIndex).clicked)
+        {
+          oldLayer = layers.get(layerIndex).clone();
+        }
+        
       }
   }
   
@@ -196,6 +209,31 @@ class Canvas extends UIManager implements Serializable
         //print("Why are you running");
         layers.get(layerIndex).mouseMoved();
       }
+  }
+
+  void mouseReleased()
+  {
+    //super.mouseReleased();
+
+    if (layerIndex != -1)
+    {
+      //println(layerIndex);
+      //print("Why are you running");
+      println(layerIndex);
+      layers.get(layerIndex).mouseReleased();
+
+      if (layers.get(layerIndex).wasClicked == true)
+      {
+        undoLayerIndex.add(layerIndex);
+        undoLayer.add(oldLayer);
+        oldLayer = layers.get(layerIndex);
+        undoIndex++;
+        
+
+        layers.get(layerIndex).wasClicked = false;
+      }
+    }
+
   }
   
 
@@ -321,4 +359,44 @@ class Canvas extends UIManager implements Serializable
    autoSetSize();
    
   }
-}
+
+  void undo()
+  {
+    ArrayList<Layer> tempList = new ArrayList<Layer>();
+
+    for (int i = 0; i < layers.size(); i++)
+    {
+      if (i == undoLayerIndex.get(undoIndex).intValue())
+      {
+        tempList.add(undoLayer.get(undoIndex));
+
+      }
+      else
+      {
+        tempList.add(layers.get(i));
+      }
+
+    }
+
+    layers = null;
+    layers = tempList;
+    /*println("undoIndex: " + undoIndex);
+    Layer l = undoLayer.get(undoIndex);
+    layers.set(undoLayerIndex.get(undoIndex).intValue(), null);
+    layers.set(undoLayerIndex.get(undoIndex).intValue(), l);*/
+
+    undoIndex--;
+
+    autoSetSize();
+  }
+
+  void redo()
+  {
+
+
+  }
+
+
+}// End of canvas class
+
+

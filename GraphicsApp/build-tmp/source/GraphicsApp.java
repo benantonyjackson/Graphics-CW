@@ -25,6 +25,7 @@ public class GraphicsApp extends PApplet {
 
 
 
+
 UIManager ui;
 UIManager drawingUI;
 
@@ -139,7 +140,6 @@ public void setupNewCanvas (int w, int h)
    
    //*******************************
    //end of Main ui
-   
    ui.add(drawingUI);
 }
 
@@ -199,6 +199,7 @@ public void loadProject(File inputDir)
   canvas.loadProject(lines);
 
 }
+
 class Button extends Widget
 {
   //Text which is displayed inside of the button
@@ -344,6 +345,15 @@ class Canvas extends UIManager implements Serializable
   
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
+
+  //Stores the index of the layer where an operation took place
+  private ArrayList<Integer> undoLayerIndex = new ArrayList<Integer>();
+  //Stores the old layer to be undone to
+  private ArrayList<Layer> undoLayer = new ArrayList<Layer>();
+
+  Layer oldLayer;
+
+  int undoIndex = -1;
   
   Canvas()
   {
@@ -422,6 +432,7 @@ class Canvas extends UIManager implements Serializable
     //Draws layers
     try
     {
+      
       for (Layer l: layers)
       {
         l.draw();
@@ -513,6 +524,12 @@ class Canvas extends UIManager implements Serializable
         //println(layerIndex);
         //print("Why are you running");
         layers.get(layerIndex).mousePressed();
+
+        if (layers.get(layerIndex).clicked)
+        {
+          oldLayer = layers.get(layerIndex).clone();
+        }
+        
       }
   }
   
@@ -524,6 +541,31 @@ class Canvas extends UIManager implements Serializable
         //print("Why are you running");
         layers.get(layerIndex).mouseMoved();
       }
+  }
+
+  public void mouseReleased()
+  {
+    //super.mouseReleased();
+
+    if (layerIndex != -1)
+    {
+      //println(layerIndex);
+      //print("Why are you running");
+      println(layerIndex);
+      layers.get(layerIndex).mouseReleased();
+
+      if (layers.get(layerIndex).wasClicked == true)
+      {
+        undoLayerIndex.add(layerIndex);
+        undoLayer.add(oldLayer);
+        oldLayer = layers.get(layerIndex);
+        undoIndex++;
+        
+
+        layers.get(layerIndex).wasClicked = false;
+      }
+    }
+
   }
   
 
@@ -610,12 +652,11 @@ class Canvas extends UIManager implements Serializable
       
       line = Pixels[i++];
       
-      if (line == "/")
+      if (line.contains("/"))
       {
-        println("point b");
         break;
       }
-      println(line);
+      
       int tempW = Integer.parseInt(split(line, ".")[0]);
       int tempH = Integer.parseInt(split(line, ".")[1]);
       int tempX = Integer.parseInt(split(line, ".")[2]);
@@ -647,12 +688,50 @@ class Canvas extends UIManager implements Serializable
      
     }
     
-    
-   
    autoSetSize();
    
   }
-}
+
+  public void undo()
+  {
+    ArrayList<Layer> tempList = new ArrayList<Layer>();
+
+    for (int i = 0; i < layers.size(); i++)
+    {
+      if (i == undoLayerIndex.get(undoIndex).intValue())
+      {
+        tempList.add(undoLayer.get(undoIndex));
+
+      }
+      else
+      {
+        tempList.add(layers.get(i));
+      }
+
+    }
+
+    layers = null;
+    layers = tempList;
+    /*println("undoIndex: " + undoIndex);
+    Layer l = undoLayer.get(undoIndex);
+    layers.set(undoLayerIndex.get(undoIndex).intValue(), null);
+    layers.set(undoLayerIndex.get(undoIndex).intValue(), l);*/
+
+    undoIndex--;
+
+    autoSetSize();
+  }
+
+  public void redo()
+  {
+
+
+  }
+
+
+}// End of canvas class
+
+
 class FloatingWindow extends UIManager
 {
   private int titleBarSize = 20;
@@ -924,6 +1003,13 @@ class Layer extends Widget
     offsetY = oy;
   }
   
+  public Layer clone()
+  {
+    Layer l = new Layer(actImage, offsetX, offsetY);
+
+    return l;
+  }
+
   public void draw()
   {
     image(disImage, x, y);
@@ -1222,8 +1308,8 @@ class MenuBar extends UIManager
     fileMenu.add(new Button("Export", "mnbtnExport"));
     fileMenu.setActive(false);
     
-    Menu editMenu = new Menu();
-    editMenu.add(new Button("Undo"));
+    Menu editMenu = new EditMenu();
+    editMenu.add(new Button("Undo", "mnbtnUndo"));
     Button redo = new Button("Redo");
     redo.clickable = false;
     editMenu.add(redo);
@@ -1328,6 +1414,26 @@ class FileMenu extends Menu
       }
     }
   }
+}
+//End of file menu class
+
+class EditMenu extends Menu
+{
+  public void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnUndo")
+      {
+
+        canvas.undo();
+      }
+
+    }
+  }
+
 }
 class NewCanvasUIManager extends FloatingWindow
 {

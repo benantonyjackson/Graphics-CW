@@ -14,8 +14,8 @@ class MenuBar extends UIManager
     fileMenu.add(new Button("Export", "mnbtnExport"));
     fileMenu.setActive(false);
     
-    Menu editMenu = new Menu();
-    editMenu.add(new Button("Undo"));
+    Menu editMenu = new EditMenu();
+    editMenu.add(new Button("Undo", "mnbtnUndo"));
     Button redo = new Button("Redo");
     redo.clickable = false;
     editMenu.add(redo);
@@ -120,4 +120,24 @@ class FileMenu extends Menu
       }
     }
   }
+}
+//End of file menu class
+
+class EditMenu extends Menu
+{
+  void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnUndo")
+      {
+
+        canvas.undo();
+      }
+
+    }
+  }
+
 }

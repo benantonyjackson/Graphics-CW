@@ -38,6 +38,13 @@ class Layer extends Widget
     offsetY = oy;
   }
   
+  Layer clone()
+  {
+    Layer l = new Layer(actImage, offsetX, offsetY);
+
+    return l;
+  }
+
   void draw()
   {
     image(disImage, x, y);
