@@ -3,6 +3,7 @@ import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+
 UIManager ui;
 UIManager drawingUI;
 
@@ -117,7 +118,6 @@ void setupNewCanvas (int w, int h)
    
    //*******************************
    //end of Main ui
-   
    ui.add(drawingUI);
 }
 

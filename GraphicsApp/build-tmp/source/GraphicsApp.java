@@ -192,7 +192,11 @@ public void loadProject(File inputDir)
          c.printStackTrace();
          return;
       }*/
-
+  String[] lines = loadStrings(inputDir.getAbsolutePath());
+      
+  setupNewCanvas(Integer.parseInt(lines[0]), Integer.parseInt(lines[1]));
+  
+  canvas.loadProject(lines);
 
 }
 class Button extends Widget
@@ -416,10 +420,18 @@ class Canvas extends UIManager implements Serializable
     super.draw();
     
     //Draws layers
-    for (Layer l: layers)
+    try
     {
-      l.draw();
+      for (Layer l: layers)
+      {
+        l.draw();
+      }
     }
+    catch (Exception ex)
+    {
+      
+    }
+    
     //println("canavas " + id);
   }
   
@@ -468,6 +480,15 @@ class Canvas extends UIManager implements Serializable
     autoSetSize();
   }
   
+  public void addLayer(PImage sourceImage, int ox, int oy)
+  {
+    layers.add(new Layer(sourceImage, ox, oy));
+    
+    layerSelector.addLayer();
+    
+    autoSetSize();
+  }
+  
   //gets the current layer index
   public int getLayerIndex()
   { 
@@ -508,16 +529,26 @@ class Canvas extends UIManager implements Serializable
 
   public void saveCanvas(File outputDir)
   {
-    String header;
+    int time = millis();
+    PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
+    
+    //String header;
 
     String data = "";
+    
+    data += canvasWidth;
+    output.println(data);
+    data = "";
+    data += canvasHeight;
+    output.println(data);
+    data = "";
 
     for (Layer l: layers)
     {
       PImage img = l.actImage;
-      println("Point b");
+     // println("Point b");
       l.actImage.loadPixels();
-      println("Point c");
+     // println("Point c");
 
       data += img.width;
       data += ".";
@@ -526,44 +557,100 @@ class Canvas extends UIManager implements Serializable
       data += l.offsetX;
       data += ".";
       data += l.offsetY;
-      data += ".";
+      //data += ".";
+      output.println(data);
+      data = "";
       int i = 0;
       for (int x = 0; x < img.width; x++)
       {
         for (int y = 0; y < img.height; y++)
           {
-            //color currentPixel = img.get(x,y);
-            /*data += red(currentPixel);
-            data += green(currentPixel);
-            data += blue(currentPixel);
-            data += alpha(currentPixel);*/
-            //data += currentPixel;
-            /*data += red(img.pixels[(x*y) + x]);
-            data += green(img.pixels[(x*y) + x]);
-            data += blue(img.pixels[(x*y) + x]);
-            data += alpha(img.pixels[(x*y) + x]);*/
             int currentPixel = img.pixels[i++];
             
             //Gets red chanel value
             data += (currentPixel >> 16) & 0xFF;
+            data += ".";
             //Gets green chanel value
             data += (currentPixel >> 8) & 0xFF;
+            data += ".";
             //Gets blue chanel value
             data += currentPixel & 0xFF;
+            data += ".";
             //Gets Alhpa chanel value
             data += (currentPixel >> 24) & 0xFF;
 
             //curr
+            output.println(data);
+            data = "";
           }
       }
-      print("Point a");
-      data += "/";
+      println("Point a");
+      //output.println(data);
+      //data += "/";
+      //output.println(data);
+      //data = "";
     }
 
-    PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
-    output.println(data);
+    //PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
+    //output.println(data);
+    output.println("/");
     output.flush();
     output.close();
+    
+    print("Time:" + (millis() - time));
+  }
+  
+  public void loadProject(String [] Pixels)
+  {
+    String line;
+    int i = 2;
+    
+    while (true)
+    {
+      
+      line = Pixels[i++];
+      
+      if (line == "/")
+      {
+        println("point b");
+        break;
+      }
+      println(line);
+      int tempW = Integer.parseInt(split(line, ".")[0]);
+      int tempH = Integer.parseInt(split(line, ".")[1]);
+      int tempX = Integer.parseInt(split(line, ".")[2]);
+      int tempY = Integer.parseInt(split(line, ".")[3]);
+      
+      PImage outputImage = new PImage(tempW, tempH);
+      
+      for (int y = 0; y < tempH; y++)
+      {
+       for (int x = 0; x < tempW; x++)
+       {
+         line = (String)Pixels[i++];
+         String [] pixel = split(line, '.');
+         //print(i);
+         
+         int r = Integer.parseInt(pixel[0]);
+         int g = Integer.parseInt(pixel[1]);
+         int b = Integer.parseInt(pixel[2]);
+         int a = Integer.parseInt(pixel[3]);
+         
+         int currentPixel = color(r,g,b,a);
+         
+         outputImage.set(x,y,currentPixel);
+         
+        } 
+     
+       }
+     addLayer(outputImage, tempX, tempY);
+     
+    }
+    
+    
+   
+   autoSetSize();
+   
   }
 }
 class FloatingWindow extends UIManager
@@ -823,6 +910,18 @@ class Layer extends Widget
     name = "layer";
     
     draggable = true;
+  }
+  
+  Layer(PImage p, int ox, int oy)
+  {
+    actImage = p;
+    
+    name = "layer";
+    
+    draggable = true;
+    
+    offsetX = ox;
+    offsetY = oy;
   }
   
   public void draw()

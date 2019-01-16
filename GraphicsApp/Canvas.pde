@@ -11,6 +11,8 @@ class Canvas extends UIManager implements Serializable
   //Stores the currently selected layers index
   private int layerIndex = -1;
   
+  
+  
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
   
@@ -91,6 +93,7 @@ class Canvas extends UIManager implements Serializable
     //Draws layers
     try
     {
+      
       for (Layer l: layers)
       {
         l.draw();
@@ -279,12 +282,11 @@ class Canvas extends UIManager implements Serializable
       
       line = Pixels[i++];
       
-      if (line == "/")
+      if (line.contains("/"))
       {
-        println("point b");
         break;
       }
-      println("point c");
+      
       int tempW = Integer.parseInt(split(line, ".")[0]);
       int tempH = Integer.parseInt(split(line, ".")[1]);
       int tempX = Integer.parseInt(split(line, ".")[2]);
@@ -316,8 +318,6 @@ class Canvas extends UIManager implements Serializable
      
     }
     
-    
-   
    autoSetSize();
    
   }
