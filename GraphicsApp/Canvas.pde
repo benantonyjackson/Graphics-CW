@@ -255,13 +255,14 @@ class Canvas extends UIManager implements Serializable
       }
       println("Point a");
       //output.println(data);
-      data += "/";
-      output.println(data);
-      data = "";
+      //data += "/";
+      //output.println(data);
+      //data = "";
     }
 
     //PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
     //output.println(data);
+    output.println("/");
     output.flush();
     output.close();
     
@@ -272,37 +273,50 @@ class Canvas extends UIManager implements Serializable
   {
     String line;
     int i = 2;
-    line = Pixels[i++];
     
-    int tempW = Integer.parseInt(split(line, ".")[0]);
-    int tempH = Integer.parseInt(split(line, ".")[1]);
-    int tempX = Integer.parseInt(split(line, ".")[2]);
-    int tempY = Integer.parseInt(split(line, ".")[3]);
+    while (true)
+    {
+      
+      line = Pixels[i++];
+      
+      if (line == "/")
+      {
+        println("point b");
+        break;
+      }
+      println("point c");
+      int tempW = Integer.parseInt(split(line, ".")[0]);
+      int tempH = Integer.parseInt(split(line, ".")[1]);
+      int tempX = Integer.parseInt(split(line, ".")[2]);
+      int tempY = Integer.parseInt(split(line, ".")[3]);
+      
+      PImage outputImage = new PImage(tempW, tempH);
+      
+      for (int y = 0; y < tempH; y++)
+      {
+       for (int x = 0; x < tempW; x++)
+       {
+         line = (String)Pixels[i++];
+         String [] pixel = split(line, '.');
+         //print(i);
+         
+         int r = Integer.parseInt(pixel[0]);
+         int g = Integer.parseInt(pixel[1]);
+         int b = Integer.parseInt(pixel[2]);
+         int a = Integer.parseInt(pixel[3]);
+         
+         color currentPixel = color(r,g,b,a);
+         
+         outputImage.set(x,y,currentPixel);
+         
+        } 
+     
+       }
+     addLayer(outputImage, tempX, tempY);
+     
+    }
     
-    PImage outputImage = new PImage(tempW, tempH);
     
-    for (int y = 0; y < tempH; y++)
-   {
-     for (int x = 0; x < tempW; x++)
-     {
-       line = (String)Pixels[i++];
-       String [] pixel = split(line, '.');
-       //print(i);
-       
-       int r = Integer.parseInt(pixel[0]);
-       int g = Integer.parseInt(pixel[1]);
-       int b = Integer.parseInt(pixel[2]);
-       int a = Integer.parseInt(pixel[3]);
-       
-       color currentPixel = color(r,g,b,a);
-       
-       outputImage.set(x,y,currentPixel);
-       
-     }
-   
-   }
-   
-   addLayer(outputImage, tempX, tempY);
    
    autoSetSize();
    
