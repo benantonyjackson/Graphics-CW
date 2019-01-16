@@ -26,6 +26,18 @@ class Layer extends Widget
     draggable = true;
   }
   
+  Layer(PImage p, int ox, int oy)
+  {
+    actImage = p;
+    
+    name = "layer";
+    
+    draggable = true;
+    
+    offsetX = ox;
+    offsetY = oy;
+  }
+  
   void draw()
   {
     image(disImage, x, y);

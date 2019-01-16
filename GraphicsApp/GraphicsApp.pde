@@ -170,6 +170,10 @@ void loadProject(File inputDir)
          c.printStackTrace();
          return;
       }*/
-
+  String[] lines = loadStrings(inputDir.getAbsolutePath());
+      
+  setupNewCanvas(Integer.parseInt(lines[0]), Integer.parseInt(lines[1]));
+  
+  canvas.loadProject(lines);
 
 }

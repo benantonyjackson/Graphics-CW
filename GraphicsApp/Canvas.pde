@@ -98,7 +98,7 @@ class Canvas extends UIManager implements Serializable
     }
     catch (Exception ex)
     {
-    
+      
     }
     
     //println("canavas " + id);
@@ -149,6 +149,15 @@ class Canvas extends UIManager implements Serializable
     autoSetSize();
   }
   
+  public void addLayer(PImage sourceImage, int ox, int oy)
+  {
+    layers.add(new Layer(sourceImage, ox, oy));
+    
+    layerSelector.addLayer();
+    
+    autoSetSize();
+  }
+  
   //gets the current layer index
   int getLayerIndex()
   { 
@@ -192,9 +201,16 @@ class Canvas extends UIManager implements Serializable
     int time = millis();
     PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
     
-    String header;
+    //String header;
 
     String data = "";
+    
+    data += canvasWidth;
+    output.println(data);
+    data = "";
+    data += canvasHeight;
+    output.println(data);
+    data = "";
 
     for (Layer l: layers)
     {
@@ -210,52 +226,37 @@ class Canvas extends UIManager implements Serializable
       data += l.offsetX;
       data += ".";
       data += l.offsetY;
-      data += ".";
+      //data += ".";
+      output.println(data);
+      data = "";
       int i = 0;
       for (int x = 0; x < img.width; x++)
       {
         for (int y = 0; y < img.height; y++)
           {
-            //color currentPixel = img.get(x,y);
-            /*data += red(currentPixel);
-            data += green(currentPixel);
-            data += blue(currentPixel);
-            data += alpha(currentPixel);*/
-            //data += currentPixel;
-            /*data += red(img.pixels[(x*y) + x]);
-            data += green(img.pixels[(x*y) + x]);
-            data += blue(img.pixels[(x*y) + x]);
-            data += alpha(img.pixels[(x*y) + x]);*/
             color currentPixel = img.pixels[i++];
             
             //Gets red chanel value
             data += (currentPixel >> 16) & 0xFF;
+            data += ".";
             //Gets green chanel value
             data += (currentPixel >> 8) & 0xFF;
+            data += ".";
             //Gets blue chanel value
             data += currentPixel & 0xFF;
+            data += ".";
             //Gets Alhpa chanel value
             data += (currentPixel >> 24) & 0xFF;
-            
-            /*//Gets red chanel value
-            data = data + ((currentPixel >> 16) & 0xFF);
-            //Gets green chanel value
-            data = data + ((currentPixel >> 8) & 0xFF);
-            //Gets blue chanel value
-            data = data + (currentPixel & 0xFF);
-            //Gets Alhpa chanel value
-            data = data + ((currentPixel >> 24) & 0xFF);*/
 
             //curr
             output.println(data);
             data = "";
           }
-          output.println(data);
-          data = "";
       }
       println("Point a");
-      output.println(data);
+      //output.println(data);
       data += "/";
+      output.println(data);
       data = "";
     }
 
@@ -265,5 +266,45 @@ class Canvas extends UIManager implements Serializable
     output.close();
     
     print("Time:" + (millis() - time));
+  }
+  
+  void loadProject(String [] Pixels)
+  {
+    String line;
+    int i = 2;
+    line = Pixels[i++];
+    
+    int tempW = Integer.parseInt(split(line, ".")[0]);
+    int tempH = Integer.parseInt(split(line, ".")[1]);
+    int tempX = Integer.parseInt(split(line, ".")[2]);
+    int tempY = Integer.parseInt(split(line, ".")[3]);
+    
+    PImage outputImage = new PImage(tempW, tempH);
+    
+    for (int y = 0; y < tempH; y++)
+   {
+     for (int x = 0; x < tempW; x++)
+     {
+       line = (String)Pixels[i++];
+       String [] pixel = split(line, '.');
+       //print(i);
+       
+       int r = Integer.parseInt(pixel[0]);
+       int g = Integer.parseInt(pixel[1]);
+       int b = Integer.parseInt(pixel[2]);
+       int a = Integer.parseInt(pixel[3]);
+       
+       color currentPixel = color(r,g,b,a);
+       
+       outputImage.set(x,y,currentPixel);
+       
+     }
+   
+   }
+   
+   addLayer(outputImage, tempX, tempY);
+   
+   autoSetSize();
+   
   }
 }
