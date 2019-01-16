@@ -219,19 +219,57 @@ class Canvas extends UIManager implements Serializable
     {
       //println(layerIndex);
       //print("Why are you running");
-      println(layerIndex);
+      //println(layerIndex);
       layers.get(layerIndex).mouseReleased();
 
       if (layers.get(layerIndex).wasClicked == true)
       {
-        undoLayerIndex.add(layerIndex);
-        undoLayer.add(oldLayer);
-        oldLayer = layers.get(layerIndex);
-        undoIndex++;
+        undoIndex += 1;
+        println(undoIndex);
+        if (undoLayer.size() - 1 < undoIndex)
+        {
+          undoLayerIndex.add(layerIndex);
+          undoLayer.add(oldLayer);
+          
+        }
+        else
+        {
+          
+          //undoLayer.set(undoLayerIndex.get(undoIndex).intValue(), oldLayer);
+          //undoLayerIndex.set(undoLayerIndex.get(undoIndex).intValue(), layerIndex);
+          //int len = undoLayer.size();
+          for (int i = undoIndex; i < undoLayer.size(); ) 
+          {
+            undoLayer.remove(i);
+            undoLayerIndex.remove(i);
+          }
+          undoLayerIndex.add(layerIndex);
+          undoLayer.add(oldLayer);
+
+
+         /*while (undoLayer.size() - 1 > undoIndex)
+          {
+            undoLayer.remove(undoLayer.size() - 1);
+            undoLayerIndex.remove(undoLayer.size() - 1);
+
+            
+          }
+          undoLayerIndex.add(layerIndex);
+          undoLayer.add(oldLayer);
+          */
+        }
+
+        oldLayer = layers.get(undoLayerIndex.get(undoIndex).intValue());
+        
+
+        //oldLayer = layers.get(layerIndex);
+        
         
 
         layers.get(layerIndex).wasClicked = false;
+
       }
+      println("Undo size:" + undoLayer.size());
     }
 
   }
@@ -385,7 +423,8 @@ class Canvas extends UIManager implements Serializable
     layers.set(undoLayerIndex.get(undoIndex).intValue(), null);
     layers.set(undoLayerIndex.get(undoIndex).intValue(), l);*/
 
-    undoIndex--;
+    undoIndex -= 1;
+    println(undoIndex);
 
     autoSetSize();
   }
