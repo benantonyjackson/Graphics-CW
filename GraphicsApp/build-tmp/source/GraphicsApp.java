@@ -346,14 +346,12 @@ class Canvas extends UIManager implements Serializable
   //Stores a list of layers
   private ArrayList<Layer> layers = new ArrayList<Layer>();
 
-  //Stores the index of the layer where an operation took place
-  private ArrayList<Integer> undoLayerIndex = new ArrayList<Integer>();
-  //Stores the old layer to be undone to
-  private ArrayList<Layer> undoLayer = new ArrayList<Layer>();
+  undoListNode undoList = new undoListNode();
+  undoListNode head = undoList;
+  
 
-  Layer oldLayer;
 
-  int undoIndex = -1;
+  //Layer oldLayer;
   
   Canvas()
   {
@@ -521,13 +519,19 @@ class Canvas extends UIManager implements Serializable
   {
       if (layerIndex != -1)
       {
-        //println(layerIndex);
-        //print("Why are you running");
+        
         layers.get(layerIndex).mousePressed();
 
         if (layers.get(layerIndex).clicked)
         {
-          oldLayer = layers.get(layerIndex).clone();
+          undoList.l = layers.get(layerIndex).clone();
+          undoList.layerIndex = layerIndex+0;
+          
+          if (undoList.l != null)
+          {
+            print("Not null");
+            print(undoList.layerIndex);
+          }
         }
         
       }
@@ -549,59 +553,26 @@ class Canvas extends UIManager implements Serializable
 
     if (layerIndex != -1)
     {
-      //println(layerIndex);
-      //print("Why are you running");
-      //println(layerIndex);
       layers.get(layerIndex).mouseReleased();
 
       if (layers.get(layerIndex).wasClicked == true)
       {
-        undoIndex += 1;
-        println(undoIndex);
-        if (undoLayer.size() - 1 < undoIndex)
+        print(undoList.layerIndex);
+        
+        undoList.forward = new undoListNode();
+        
+        undoList.forward.backward = undoList;
+        
+        undoList = undoList.forward;
+        
+        if (undoList.backward.l != null)
         {
-          undoLayerIndex.add(layerIndex);
-          undoLayer.add(oldLayer);
-          
+          print("Not null");
+          print(undoList.backward.layerIndex);
         }
-        else
-        {
-          print("fucking fuck");
-          //undoLayer.set(undoLayerIndex.get(undoIndex).intValue(), oldLayer);
-          //undoLayerIndex.set(undoLayerIndex.get(undoIndex).intValue(), layerIndex);
-          //int len = undoLayer.size();
-          for (int i = undoIndex; i < undoLayer.size(); ) 
-          {
-            undoLayer.remove(i);
-            undoLayerIndex.remove(i);
-          }
-          undoLayerIndex.add(layerIndex);
-          undoLayer.add(oldLayer);
-
-
-         /*while (undoLayer.size() - 1 > undoIndex)
-          {
-            undoLayer.remove(undoLayer.size() - 1);
-            undoLayerIndex.remove(undoLayer.size() - 1);
-
-            print("fucking fuck");
-          }
-          undoLayerIndex.add(layerIndex);
-          undoLayer.add(oldLayer);
-          */
-        }
-
-        oldLayer = layers.get(undoLayerIndex.get(undoIndex).intValue());
-        
-
-        //oldLayer = layers.get(layerIndex);
-        
-        
-
         layers.get(layerIndex).wasClicked = false;
-
       }
-      println("Undo size:" + undoLayer.size());
+      //print(undoList.backward.layerIndex);
     }
 
   }
@@ -732,45 +703,59 @@ class Canvas extends UIManager implements Serializable
 
   public void undo()
   {
-    ArrayList<Layer> tempList = new ArrayList<Layer>();
-
+    undoList = undoList.backward;
+    
+    ArrayList<Layer> tempLayerList = new ArrayList<Layer>();
+    
     for (int i = 0; i < layers.size(); i++)
     {
-      if (i == undoLayerIndex.get(undoIndex).intValue())
+      if (i == undoList.layerIndex)
       {
-        tempList.add(undoLayer.get(undoIndex));
-
+        tempLayerList.add(undoList.l);
+        print(undoList.layerIndex);
+        if (undoList.l != null)
+        {
+          print("Not null");
+          print(undoList.layerIndex);
+        }
       }
       else
       {
-        tempList.add(layers.get(i));
+        tempLayerList.add(layers.get(i));
       }
-
     }
-
-    layers = null;
-    layers = tempList;
-    /*println("undoIndex: " + undoIndex);
-    Layer l = undoLayer.get(undoIndex);
-    layers.set(undoLayerIndex.get(undoIndex).intValue(), null);
-    layers.set(undoLayerIndex.get(undoIndex).intValue(), l);*/
-
-    undoIndex -= 1;
-    println(undoIndex);
-
+    
+    //layers = null;
+    layers = tempLayerList;
+    
     autoSetSize();
+    
+    //undoList = undoList.backward;
   }
 
   public void redo()
-  {
+  {  
 
-
+  
   }
 
 
 }// End of canvas class
 
 
+class undoListNode
+{
+  Layer l;
+  int layerIndex =-1;
+  undoListNode forward;
+  undoListNode backward;
+  
+  undoListNode ()
+  {
+  }
+
+  
+}
 class FloatingWindow extends UIManager
 {
   private int titleBarSize = 20;
@@ -1349,8 +1334,8 @@ class MenuBar extends UIManager
     
     Menu editMenu = new EditMenu();
     editMenu.add(new Button("Undo", "mnbtnUndo"));
-    Button redo = new Button("Redo");
-    redo.clickable = false;
+    Button redo = new Button("Redo", "mnbtnRedo");
+    //redo.clickable = false;
     editMenu.add(redo);
     editMenu.add(new Button("Cut"));
     editMenu.add(new Button("Copy"));
@@ -1470,6 +1455,10 @@ class EditMenu extends Menu
         canvas.undo();
       }
 
+      if (s == "mnbtnRedo")
+      {
+        canvas.redo();
+      }
     }
   }
 

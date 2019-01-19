@@ -16,8 +16,8 @@ class MenuBar extends UIManager
     
     Menu editMenu = new EditMenu();
     editMenu.add(new Button("Undo", "mnbtnUndo"));
-    Button redo = new Button("Redo");
-    redo.clickable = false;
+    Button redo = new Button("Redo", "mnbtnRedo");
+    //redo.clickable = false;
     editMenu.add(redo);
     editMenu.add(new Button("Cut"));
     editMenu.add(new Button("Copy"));
@@ -137,6 +137,10 @@ class EditMenu extends Menu
         canvas.undo();
       }
 
+      if (s == "mnbtnRedo")
+      {
+        canvas.redo();
+      }
     }
   }
 
