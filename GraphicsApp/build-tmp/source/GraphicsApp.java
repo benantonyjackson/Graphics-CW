@@ -525,13 +525,8 @@ class Canvas extends UIManager implements Serializable
         if (layers.get(layerIndex).clicked)
         {
           undoList.l = layers.get(layerIndex).clone();
-          undoList.layerIndex = layerIndex+0;
+          undoList.layerIndex = layerIndex;
           
-          if (undoList.l != null)
-          {
-            print("Not null");
-            print(undoList.layerIndex);
-          }
         }
         
       }
@@ -541,8 +536,6 @@ class Canvas extends UIManager implements Serializable
   {
       if (layerIndex != -1)
       {
-        //println(layerIndex);
-        //print("Why are you running");
         layers.get(layerIndex).mouseMoved();
       }
   }
@@ -556,23 +549,15 @@ class Canvas extends UIManager implements Serializable
       layers.get(layerIndex).mouseReleased();
 
       if (layers.get(layerIndex).wasClicked == true)
-      {
-        print(undoList.layerIndex);
-        
+      { 
         undoList.forward = new undoListNode();
         
         undoList.forward.backward = undoList;
         
         undoList = undoList.forward;
         
-        if (undoList.backward.l != null)
-        {
-          print("Not null");
-          print(undoList.backward.layerIndex);
-        }
         layers.get(layerIndex).wasClicked = false;
       }
-      //print(undoList.backward.layerIndex);
     }
 
   }
@@ -703,7 +688,64 @@ class Canvas extends UIManager implements Serializable
 
   public void undo()
   {
+    if (undoList.backward == null)
+    {
+      //TODO:
+      //Disable undo button 
+      print("Cannot undo anymore");
+      return;
+    }
+
+    if (undoList.forward == null)
+    {
+      undoList.l = layers.get(layerIndex).clone();
+      undoList.layerIndex = layerIndex;
+    }
+
+
+    /*if (undoList.forward == null)
+    {
+      undoList.forward = new undoListNode();
+      undoListNode temp = undoList.forward;
+      //undoListNode temp = undoList;
+      temp.backward = undoList;
+      temp.layerIndex = layerIndex;
+      temp.l = layers.get(layerIndex).clone();
+    } */
+
     undoList = undoList.backward;
+    
+    //Adds old layer to the layer list
+    ArrayList<Layer> tempLayerList = new ArrayList<Layer>();
+    for (int i = 0; i < layers.size(); i++)
+    {
+      if (i == undoList.layerIndex)
+      {
+        tempLayerList.add(undoList.l);
+      }
+      else
+      {
+        tempLayerList.add(layers.get(i));
+      }
+    }
+
+    layers = tempLayerList;
+    
+    autoSetSize();
+    
+  }
+
+  public void redo()
+  {  
+    if (undoList.forward == null)
+    {
+      //TODO:
+      //Disable undo button 
+      print("Cannot redo anymore");
+      return;
+    }
+
+    undoList = undoList.forward;
     
     ArrayList<Layer> tempLayerList = new ArrayList<Layer>();
     
@@ -712,12 +754,6 @@ class Canvas extends UIManager implements Serializable
       if (i == undoList.layerIndex)
       {
         tempLayerList.add(undoList.l);
-        print(undoList.layerIndex);
-        if (undoList.l != null)
-        {
-          print("Not null");
-          print(undoList.layerIndex);
-        }
       }
       else
       {
@@ -725,17 +761,9 @@ class Canvas extends UIManager implements Serializable
       }
     }
     
-    //layers = null;
     layers = tempLayerList;
     
     autoSetSize();
-    
-    //undoList = undoList.backward;
-  }
-
-  public void redo()
-  {  
-
   
   }
 
