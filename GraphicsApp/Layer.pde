@@ -43,6 +43,7 @@ class Layer extends Widget
   Layer clone()
   {
     Layer l = new Layer(actImage, offsetX, offsetY);
+    l.changed = changed;
 
     return l;
   }

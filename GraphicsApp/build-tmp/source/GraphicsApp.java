@@ -560,11 +560,12 @@ class Canvas extends UIManager implements Serializable
           {
             if (i == layerIndex)
             {
-              undoList.layers.add(layers.get(layerIndex).clone());
               layers.get(i).changed = true;
+              undoList.layers.add(layers.get(layerIndex).clone());
             } 
             else if (layers.get(i).changed)
             {
+              
               undoList.layers.add(layers.get(i).clone());
               layers.get(i).changed = false;
             }
@@ -612,6 +613,7 @@ class Canvas extends UIManager implements Serializable
           // (i == layerIndex)
           if (layers.get(i).changed)
           {
+            
             undoList.layers.add(layers.get(i).clone());
             layers.get(i).changed = false;
             println(i);
@@ -775,7 +777,8 @@ class Canvas extends UIManager implements Serializable
       if (undoList.layers.get(i) != null)
       {
         tempLayerList.add(undoList.layers.get(i).clone());
-        println("Index" + i);
+        //println("Index" + i);
+        println(undoList.layers.get(i).changed);
       }
       else
       {
@@ -808,7 +811,7 @@ class Canvas extends UIManager implements Serializable
       if (undoList.layers.get(i) != null)
       {
         tempLayerList.add(undoList.layers.get(i).clone());
-        println("Index" + i);
+        println(undoList.layers.get(i).changed);
       }
       else
       {
@@ -1115,6 +1118,7 @@ class Layer extends Widget
   public Layer clone()
   {
     Layer l = new Layer(actImage, offsetX, offsetY);
+    l.changed = changed;
 
     return l;
   }
