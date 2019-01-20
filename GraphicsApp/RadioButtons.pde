@@ -13,6 +13,8 @@ class RadioButtons extends UIManager
   
   void mouseReleased()
   {
+    
+    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseReleased();
@@ -28,6 +30,14 @@ class RadioButtons extends UIManager
         activeButton = i;
       }
     }
+    
+    /*ArrayList<Widget> temp = widgetList;
+    
+    widgetList = new ArrayList<Widget>();
+    
+    super.mouseReleased();
+    
+    widgetList = temp;*/
   }
   
   void add(Button btn)

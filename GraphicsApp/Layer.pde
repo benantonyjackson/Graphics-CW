@@ -10,6 +10,8 @@ class Layer extends Widget
   int offsetX = 100;
   int offsetY = 100;
   
+  //Set to true if a change needs to be added to the undo list
+  boolean changed = false;
   
   float scalar;
   

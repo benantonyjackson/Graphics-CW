@@ -6,6 +6,8 @@ class LayerSelector extends UIManager
   
   int numberOfLayers = 0;
   
+  int oldIndex = -1;
+
   LayerSelector()
   {
     x = width - 120;
@@ -29,9 +31,26 @@ class LayerSelector extends UIManager
       {
         //println(wdgt);
         addLayer();
+        
       }
+       
+      /*if (layerButtons.layerChanged)
+      {
+        println("w: " + layerButtons.w + " h: " + layerButtons.h + " x: " + layerButtons.x + " y: " + y);
+        
+        if (layerButtons.activeButton == -1)
+        {
+          canvas.setLayerIndex(-1);
+        }
+        else 
+        {
+          canvas.setLayerIndex((numberOfLayers-1) - (layerButtons.activeButton));
+        }
+      }*/
     }
     
+    //println("w: " + layerButtons.w + " h: " + layerButtons.h + " x: " + layerButtons.x + " y: " + layerButtons.y);
+    //println("Mousex: " + mouseX + " MouseY:" + mouseY);
     
     if (layerButtons.activeButton == -1)
     {
@@ -39,9 +58,10 @@ class LayerSelector extends UIManager
     }
     else 
     {
+      if (oldIndex != layerButtons.activeButton) 
       canvas.setLayerIndex((numberOfLayers-1) - (layerButtons.activeButton));
     }
-    
+    oldIndex = layerButtons.activeButton;
     
   }
   

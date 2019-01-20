@@ -199,7 +199,6 @@ public void loadProject(File inputDir)
   canvas.loadProject(lines);
 
 }
-
 class Button extends Widget
 {
   //Text which is displayed inside of the button
@@ -472,11 +471,39 @@ class Canvas extends UIManager implements Serializable
   }
   
   //Sets the active layer
-  public void setLayerIndex(int i)
+  public void setLayerIndex(int index)
   {
     //println("AHoifadofhadono");
-    layerIndex = i;
+   
     
+    /*if (layerIndex != -1 && layers.get(layerIndex).changed == true)
+    {
+      
+      
+      layers.get(layerIndex).changed = false;
+      
+      undoList.layers = new ArrayList<Layer>();
+      for (int i = 0; i < layers.size(); i++)
+      {
+        if (i == layerIndex)
+        {
+          undoList.layers.add(layers.get(layerIndex).clone());
+
+        } 
+        else
+        {
+          undoList.layers.add(null);
+        }
+      }
+
+      undoList.forward = new undoListNode();
+        
+      undoList.forward.backward = undoList;
+        
+      undoList = undoList.forward;
+    
+    }*/
+     layerIndex = index;
   }
   
   //Adds a new picture layer to the project
@@ -524,8 +551,28 @@ class Canvas extends UIManager implements Serializable
 
         if (layers.get(layerIndex).clicked)
         {
-          undoList.l = layers.get(layerIndex).clone();
-          undoList.layerIndex = layerIndex;
+          //undoList.l = layers.get(layerIndex).clone();
+          //undoList.layerIndex = layerIndex+0;
+          //println(undoList.layerIndex + "Mouse clicked");
+          println("Mouse pressed");
+          undoList.layers = new ArrayList<Layer>();
+          for (int i = 0; i < layers.size(); i++)
+          {
+            if (i == layerIndex)
+            {
+              undoList.layers.add(layers.get(layerIndex).clone());
+              layers.get(i).changed = true;
+            } 
+            else if (layers.get(i).changed)
+            {
+              undoList.layers.add(layers.get(i).clone());
+              layers.get(i).changed = false;
+            }
+            else
+            {
+              undoList.layers.add(null);
+            }
+          }
           
         }
         
@@ -550,12 +597,34 @@ class Canvas extends UIManager implements Serializable
 
       if (layers.get(layerIndex).wasClicked == true)
       { 
+        //Saves the current undo node
         undoList.forward = new undoListNode();
-        
         undoList.forward.backward = undoList;
-        
         undoList = undoList.forward;
         
+        //undoList.l = layers.get(layerIndex).clone();
+        //undoList.layerIndex = layerIndex+0;
+        
+        //Sets up the current node
+        undoList.layers = new ArrayList<Layer>();
+        for (int i = 0; i < layers.size(); i++)
+        {
+          // (i == layerIndex)
+          if (layers.get(i).changed)
+          {
+            undoList.layers.add(layers.get(i).clone());
+            layers.get(i).changed = false;
+            println(i);
+          } 
+          else
+          {
+            undoList.layers.add(null);
+          }
+        }
+        
+        //layers.get(layerIndex).changed = true;
+        layers.get(layerIndex).changed = true;
+
         layers.get(layerIndex).wasClicked = false;
       }
     }
@@ -696,32 +765,17 @@ class Canvas extends UIManager implements Serializable
       return;
     }
 
-    if (undoList.forward == null)
-    {
-      undoList.l = layers.get(layerIndex).clone();
-      undoList.layerIndex = layerIndex;
-    }
-
-
-    /*if (undoList.forward == null)
-    {
-      undoList.forward = new undoListNode();
-      undoListNode temp = undoList.forward;
-      //undoListNode temp = undoList;
-      temp.backward = undoList;
-      temp.layerIndex = layerIndex;
-      temp.l = layers.get(layerIndex).clone();
-    } */
-
     undoList = undoList.backward;
     
     //Adds old layer to the layer list
     ArrayList<Layer> tempLayerList = new ArrayList<Layer>();
-    for (int i = 0; i < layers.size(); i++)
+    
+    for (int i = 0; i < undoList.layers.size(); i++)
     {
-      if (i == undoList.layerIndex)
+      if (undoList.layers.get(i) != null)
       {
-        tempLayerList.add(undoList.l);
+        tempLayerList.add(undoList.layers.get(i).clone());
+        println("Index" + i);
       }
       else
       {
@@ -744,16 +798,17 @@ class Canvas extends UIManager implements Serializable
       print("Cannot redo anymore");
       return;
     }
-
+    //if (undoList.backward == null)
     undoList = undoList.forward;
     
     ArrayList<Layer> tempLayerList = new ArrayList<Layer>();
     
-    for (int i = 0; i < layers.size(); i++)
+    for (int i = 0; i < undoList.layers.size(); i++)
     {
-      if (i == undoList.layerIndex)
+      if (undoList.layers.get(i) != null)
       {
-        tempLayerList.add(undoList.l);
+        tempLayerList.add(undoList.layers.get(i).clone());
+        println("Index" + i);
       }
       else
       {
@@ -762,7 +817,8 @@ class Canvas extends UIManager implements Serializable
     }
     
     layers = tempLayerList;
-    
+    //if (undoList.backward != null)
+    //undoList = undoList.forward;
     autoSetSize();
   
   }
@@ -773,8 +829,7 @@ class Canvas extends UIManager implements Serializable
 
 class undoListNode
 {
-  Layer l;
-  int layerIndex =-1;
+  ArrayList<Layer> layers = new ArrayList<Layer>();
   undoListNode forward;
   undoListNode backward;
   
@@ -1027,6 +1082,8 @@ class Layer extends Widget
   int offsetX = 100;
   int offsetY = 100;
   
+  //Set to true if a change needs to be added to the undo list
+  boolean changed = false;
   
   float scalar;
   
@@ -1193,14 +1250,51 @@ class LayerButton extends Button
 }
 class LayerButtons extends RadioButtons
 {
+  
+  boolean layerChanged = false;
+  
+  LayerButtons()
+  {
+    x = width - 120;
+    y = 45;
+    allignX = 120;
+    aligned = ALLIGNMENT.right;
+    name = "LayerButtons";  
+  }
+  
+  
   public void add (Button btn)
   {
     super.add(btn);
     allignX = 120;
     btn.allignX = 120;
     h += btn.h;
+    
+    if (btn.w > w)
+    {
+      w = btn.w;
+    }
+    
     //println(h);
+    
+    btn.name = "LayerButton";
     btn.aligned = ALLIGNMENT.right;
+  }
+  
+  public void mouseReleased()
+  {
+    super.mouseReleased();
+
+    //print(clickedList.size());
+
+    if (clickedList.size() > 1)
+    {
+      layerChanged = true;
+    }
+    else 
+    {
+      layerChanged = false;
+    }
   }
 }
 class LayerResizeSelector extends FloatingWindow
@@ -1220,6 +1314,8 @@ class LayerSelector extends UIManager
   
   int numberOfLayers = 0;
   
+  int oldIndex = -1;
+
   LayerSelector()
   {
     x = width - 120;
@@ -1243,9 +1339,26 @@ class LayerSelector extends UIManager
       {
         //println(wdgt);
         addLayer();
+        
       }
+       
+      /*if (layerButtons.layerChanged)
+      {
+        println("w: " + layerButtons.w + " h: " + layerButtons.h + " x: " + layerButtons.x + " y: " + y);
+        
+        if (layerButtons.activeButton == -1)
+        {
+          canvas.setLayerIndex(-1);
+        }
+        else 
+        {
+          canvas.setLayerIndex((numberOfLayers-1) - (layerButtons.activeButton));
+        }
+      }*/
     }
     
+    //println("w: " + layerButtons.w + " h: " + layerButtons.h + " x: " + layerButtons.x + " y: " + layerButtons.y);
+    //println("Mousex: " + mouseX + " MouseY:" + mouseY);
     
     if (layerButtons.activeButton == -1)
     {
@@ -1253,9 +1366,10 @@ class LayerSelector extends UIManager
     }
     else 
     {
+      if (oldIndex != layerButtons.activeButton) 
       canvas.setLayerIndex((numberOfLayers-1) - (layerButtons.activeButton));
     }
-    
+    oldIndex = layerButtons.activeButton;
     
   }
   
@@ -1586,6 +1700,8 @@ class RadioButtons extends UIManager
   
   public void mouseReleased()
   {
+    
+    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseReleased();
@@ -1601,6 +1717,14 @@ class RadioButtons extends UIManager
         activeButton = i;
       }
     }
+    
+    /*ArrayList<Widget> temp = widgetList;
+    
+    widgetList = new ArrayList<Widget>();
+    
+    super.mouseReleased();
+    
+    widgetList = temp;*/
   }
   
   public void add(Button btn)
@@ -2167,6 +2291,11 @@ class Widget implements Serializable
       toggled = false;
     }
     
+    if (name == "LayerButtons")
+    {
+      //println(name);
+      //println("w: " + w + " h: " + h + " x: " + x + " y: " + y);
+    }
     
   }
   
