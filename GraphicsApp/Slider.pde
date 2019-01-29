@@ -2,7 +2,7 @@ class Slider extends Widget
 {
   int rectX;
   int min, max;
-  float value;
+  private float value;
   
   TextInput textInput;
   
@@ -57,12 +57,36 @@ class Slider extends Widget
     value = ((float)(max - min) * value) + min;
     return value;
   }
+
+  void setValue(float val)
+  {
+    //Restricts the value of the slider
+    value = clamp(val, min, max);
+
+    //Sets the position of the rotation
+    rectX = (int) map(value, min, max, x, w);
+
+    //Changes the display text
+    textInput.setString(Float.toString(value));
+  }
   
+  void resize(int dtW, int dtH)
+  {
+    super.resize(dtW, dtH);
+
+    textInput.aligned = aligned;
+    textInput.allignX = allignX;
+    textInput.allignY = allignY;
+
+    textInput.resize(dtW, dtH);
+  }
+
   void draw()
   {
     fill(0,0,0);
+    //Draws the line which shows where the slide bar begins and ends
     rect(x,y + 5,w,0);
-    
+    //Draw the bar that the user slides
     rect(rectX, y, 7, 10);
     
     textInput.draw();

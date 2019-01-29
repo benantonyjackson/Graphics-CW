@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-class Canvas extends UIManager implements Serializable
+class Canvas extends UIManager
 {
   //The dimentions of the resultant PImage
   int canvasWidth;
@@ -17,7 +17,7 @@ class Canvas extends UIManager implements Serializable
   undoListNode undoList = new undoListNode();
   undoListNode head = undoList;
   
-
+  Slider rotation;
 
   //Layer oldLayer;
   
@@ -37,6 +37,11 @@ class Canvas extends UIManager implements Serializable
     tbxZoom.allignX = 180;
     tbxZoom.allignY = 10;
     add(tbxZoom);
+
+    rotation = new Slider(10, height - 20, 100, 0, 360);
+    rotation.aligned = ALLIGNMENT.bottom;
+    rotation.allignY = 20;
+    add(rotation);
     
     autoSetSize();
   }
@@ -142,37 +147,15 @@ class Canvas extends UIManager implements Serializable
   //Sets the active layer
   void setLayerIndex(int index)
   {
-    //println("AHoifadofhadono");
-   
-    
-    /*if (layerIndex != -1 && layers.get(layerIndex).changed == true)
-    {
-      
-      
-      layers.get(layerIndex).changed = false;
-      
-      undoList.layers = new ArrayList<Layer>();
-      for (int i = 0; i < layers.size(); i++)
-      {
-        if (i == layerIndex)
-        {
-          undoList.layers.add(layers.get(layerIndex).clone());
+    if (layerIndex >= 0)
+    layers.get(layerIndex).setSelected(false);
 
-        } 
-        else
-        {
-          undoList.layers.add(null);
-        }
-      }
+    layerIndex = index;
 
-      undoList.forward = new undoListNode();
-        
-      undoList.forward.backward = undoList;
-        
-      undoList = undoList.forward;
-    
-    }*/
-     layerIndex = index;
+    if (layerIndex >= 0)
+    layers.get(layerIndex).setSelected(true);
+    if (layerIndex >= 0)
+    rotation.setValue(layers.get(layerIndex).getRotation());
   }
   
   //Adds a new picture layer to the project
@@ -203,6 +186,7 @@ class Canvas extends UIManager implements Serializable
   
   void mouseDragged()
   {
+    super.mouseDragged();
       if (layerIndex != -1)
       {
         //println(layerIndex);
@@ -213,6 +197,7 @@ class Canvas extends UIManager implements Serializable
   
   void mousePressed()
   {
+    super.mousePressed();
       if (layerIndex != -1)
       {
         
@@ -251,6 +236,7 @@ class Canvas extends UIManager implements Serializable
   
   void mouseMoved()
   {
+    super.mouseMoved();
       if (layerIndex != -1)
       {
         layers.get(layerIndex).mouseMoved();
@@ -259,7 +245,7 @@ class Canvas extends UIManager implements Serializable
 
   void mouseReleased()
   {
-    //super.mouseReleased();
+    super.mouseReleased();
 
     if (layerIndex != -1)
     {

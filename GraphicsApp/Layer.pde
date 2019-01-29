@@ -14,7 +14,11 @@ class Layer extends Widget
   boolean changed = false;
   
   float scalar;
+
+  //Indicates whether or not the layer is selected
+  private boolean selected = false;
   
+  private float rotation = 0; 
   
   Layer(File sourceImage)
   {
@@ -51,8 +55,33 @@ class Layer extends Widget
   void draw()
   {
     image(disImage, x, y);
+
+    if (selected)
+    {
+      noFill();
+      strokeWeight(3);
+      rect(x, y, w, h);
+
+      strokeWeight(1);
+    }
   }
   
+  //Sets whether or not the layer is selected or not
+  void setSelected(boolean flag)
+  {
+    selected = flag;
+  }
+
+  void setRotation(float r)
+  {
+    rotation = r;
+  }
+
+  float getRotation()
+  {
+    return rotation;
+  }
+
   void scaleAfterReize(float scalar)
   {
     //Scales display image to the size of the canvas 
@@ -158,7 +187,8 @@ color getPixelBilinear(float x, float y, PImage img){
   return color(aRed, aGreen,aBlue);
 }
 
-//End of functions
+
  
 }
-//End of class
+//End of layer class
+

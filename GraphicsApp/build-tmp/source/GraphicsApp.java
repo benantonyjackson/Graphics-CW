@@ -331,7 +331,7 @@ class Button extends Widget
 }
 
 
-class Canvas extends UIManager implements Serializable
+class Canvas extends UIManager
 {
   //The dimentions of the resultant PImage
   int canvasWidth;
@@ -348,7 +348,7 @@ class Canvas extends UIManager implements Serializable
   undoListNode undoList = new undoListNode();
   undoListNode head = undoList;
   
-
+  Slider rotation;
 
   //Layer oldLayer;
   
@@ -368,6 +368,11 @@ class Canvas extends UIManager implements Serializable
     tbxZoom.allignX = 180;
     tbxZoom.allignY = 10;
     add(tbxZoom);
+
+    rotation = new Slider(10, height - 20, 100, 0, 360);
+    rotation.aligned = ALLIGNMENT.bottom;
+    rotation.allignY = 20;
+    add(rotation);
     
     autoSetSize();
   }
@@ -473,37 +478,15 @@ class Canvas extends UIManager implements Serializable
   //Sets the active layer
   public void setLayerIndex(int index)
   {
-    //println("AHoifadofhadono");
-   
-    
-    /*if (layerIndex != -1 && layers.get(layerIndex).changed == true)
-    {
-      
-      
-      layers.get(layerIndex).changed = false;
-      
-      undoList.layers = new ArrayList<Layer>();
-      for (int i = 0; i < layers.size(); i++)
-      {
-        if (i == layerIndex)
-        {
-          undoList.layers.add(layers.get(layerIndex).clone());
+    if (layerIndex >= 0)
+    layers.get(layerIndex).setSelected(false);
 
-        } 
-        else
-        {
-          undoList.layers.add(null);
-        }
-      }
+    layerIndex = index;
 
-      undoList.forward = new undoListNode();
-        
-      undoList.forward.backward = undoList;
-        
-      undoList = undoList.forward;
-    
-    }*/
-     layerIndex = index;
+    if (layerIndex >= 0)
+    layers.get(layerIndex).setSelected(true);
+    if (layerIndex >= 0)
+    rotation.setValue(layers.get(layerIndex).getRotation());
   }
   
   //Adds a new picture layer to the project
@@ -534,6 +517,7 @@ class Canvas extends UIManager implements Serializable
   
   public void mouseDragged()
   {
+    super.mouseDragged();
       if (layerIndex != -1)
       {
         //println(layerIndex);
@@ -544,6 +528,7 @@ class Canvas extends UIManager implements Serializable
   
   public void mousePressed()
   {
+    super.mousePressed();
       if (layerIndex != -1)
       {
         
@@ -582,6 +567,7 @@ class Canvas extends UIManager implements Serializable
   
   public void mouseMoved()
   {
+    super.mouseMoved();
       if (layerIndex != -1)
       {
         layers.get(layerIndex).mouseMoved();
@@ -590,7 +576,7 @@ class Canvas extends UIManager implements Serializable
 
   public void mouseReleased()
   {
-    //super.mouseReleased();
+    super.mouseReleased();
 
     if (layerIndex != -1)
     {
@@ -1089,7 +1075,11 @@ class Layer extends Widget
   boolean changed = false;
   
   float scalar;
+
+  //Indicates whether or not the layer is selected
+  private boolean selected = false;
   
+  private float rotation = 0; 
   
   Layer(File sourceImage)
   {
@@ -1126,8 +1116,33 @@ class Layer extends Widget
   public void draw()
   {
     image(disImage, x, y);
+
+    if (selected)
+    {
+      noFill();
+      strokeWeight(3);
+      rect(x, y, w, h);
+
+      strokeWeight(1);
+    }
   }
   
+  //Sets whether or not the layer is selected or not
+  public void setSelected(boolean flag)
+  {
+    selected = flag;
+  }
+
+  public void setRotation(float r)
+  {
+    rotation = r;
+  }
+
+  public float getRotation()
+  {
+    return rotation;
+  }
+
   public void scaleAfterReize(float scalar)
   {
     //Scales display image to the size of the canvas 
@@ -1233,10 +1248,11 @@ public int getPixelBilinear(float x, float y, PImage img){
   return color(aRed, aGreen,aBlue);
 }
 
-//End of functions
+
  
 }
-//End of class
+//End of layer class
+
 class LayerButton extends Button
 {
   PImage layerIMG;
@@ -1346,23 +1362,8 @@ class LayerSelector extends UIManager
         
       }
        
-      /*if (layerButtons.layerChanged)
-      {
-        println("w: " + layerButtons.w + " h: " + layerButtons.h + " x: " + layerButtons.x + " y: " + y);
-        
-        if (layerButtons.activeButton == -1)
-        {
-          canvas.setLayerIndex(-1);
-        }
-        else 
-        {
-          canvas.setLayerIndex((numberOfLayers-1) - (layerButtons.activeButton));
-        }
-      }*/
     }
     
-    //println("w: " + layerButtons.w + " h: " + layerButtons.h + " x: " + layerButtons.x + " y: " + layerButtons.y);
-    //println("Mousex: " + mouseX + " MouseY:" + mouseY);
     
     if (layerButtons.activeButton == -1)
     {
@@ -1874,7 +1875,7 @@ class Slider extends Widget
 {
   int rectX;
   int min, max;
-  float value;
+  private float value;
   
   TextInput textInput;
   
@@ -1929,12 +1930,36 @@ class Slider extends Widget
     value = ((float)(max - min) * value) + min;
     return value;
   }
+
+  public void setValue(float val)
+  {
+    //Restricts the value of the slider
+    value = clamp(val, min, max);
+
+    //Sets the position of the rotation
+    rectX = (int) map(value, min, max, x, w);
+
+    //Changes the display text
+    textInput.setString(Float.toString(value));
+  }
   
+  public void resize(int dtW, int dtH)
+  {
+    super.resize(dtW, dtH);
+
+    textInput.aligned = aligned;
+    textInput.allignX = allignX;
+    textInput.allignY = allignY;
+
+    textInput.resize(dtW, dtH);
+  }
+
   public void draw()
   {
     fill(0,0,0);
+    //Draws the line which shows where the slide bar begins and ends
     rect(x,y + 5,w,0);
-    
+    //Draw the bar that the user slides
     rect(rectX, y, 7, 10);
     
     textInput.draw();
