@@ -23,12 +23,18 @@ class MenuBar extends UIManager
     editMenu.add(new Button("Copy"));
     editMenu.add(new Button("Paste"));
     editMenu.setActive(false);
-    
+
+    Menu imageMenu = new ImageMenu();
+    imageMenu.add(new Button("Select color", "mnbtnSelectColor"));
+    imageMenu.setActive(false);
+
     addButton("File");
     addMenu(fileMenu);
     addButton("Edit");
     addMenu(editMenu);
-    
+    addButton("Image");
+    addMenu(imageMenu);
+
     
     widgetList.addAll(buttonList);
     widgetList.addAll(menuList);
@@ -140,6 +146,24 @@ class EditMenu extends Menu
       if (s == "mnbtnRedo")
       {
         canvas.redo();
+      }
+    }
+  }
+
+} // end of edit menu class
+
+class ImageMenu extends Menu
+{
+  void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnSelectColor")
+      {
+        PickColor();
+
       }
     }
   }

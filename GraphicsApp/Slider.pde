@@ -3,12 +3,13 @@ class Slider extends Widget
   int rectX;
   int min, max;
   private float value;
-  
+  private int oldX;
   TextInput textInput;
   
   Slider(int x, int y, int w, int min, int max)
   {
     this.x = x;
+    oldX = x;
     this.y = y - 5;
     this.w=w;
     this.min = min;
@@ -35,6 +36,10 @@ class Slider extends Widget
       //Displays current value of the slider
       textInput.setString(Float.toString(value));
     }
+
+    rectX += x - oldX;
+
+    oldX = x;
   }
   
   void mouseReleased()

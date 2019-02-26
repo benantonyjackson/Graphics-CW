@@ -1,5 +1,7 @@
 import java.io.Serializable;
 
+color selectedColor = color(0,0,0);
+
 class Canvas extends UIManager
 {
   //The dimentions of the resultant PImage

@@ -39,6 +39,9 @@ int windowColor = color(25,25,25);
 public Canvas canvas;
 public LayerSelector layerSelector;
 
+
+
+
 public void setup()
 {
   
@@ -156,48 +159,21 @@ public void openCanvasConfigWindow()
 
 public void saveCanvas(File outputDir)
 {
-  //https://examples.javacodegeeks.com/core-java/io/fileoutputstream/how-to-write-an-object-to-file-in-java/
-  //https://www.codementor.io/java/tutorial/serialization-and-deserialization-in-java
   canvas.saveCanvas(outputDir);
-  /*try 
-  {
-    FileOutputStream fileOut = new FileOutputStream(outputDir.getAbsolutePath());
-    ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-    objectOut.writeObject(canvas);
-    objectOut.close();
-  
-  } 
-  catch (Exception ex) 
-  {
-    ex.printStackTrace();
-  }*/
-
-  //String header;
-
 }
 
 public void loadProject(File inputDir)
 {
-  /*try {
-         FileInputStream fileIn = new FileInputStream(inputDir.getAbsolutePath());
-         ObjectInputStream in = new ObjectInputStream(fileIn);
-         canvas = (Canvas) in.readObject();
-         in.close();
-         fileIn.close();
-      } catch (IOException i) {
-         i.printStackTrace();
-         return;
-      } catch (ClassNotFoundException c) {
-         System.out.println("Employee class not found");
-         c.printStackTrace();
-         return;
-      }*/
   String[] lines = loadStrings(inputDir.getAbsolutePath());
       
   setupNewCanvas(Integer.parseInt(lines[0]), Integer.parseInt(lines[1]));
   
   canvas.loadProject(lines);
+}
 
+public void PickColor()
+{
+  ui.add(new ColorPickerWindow());
 }
 class Button extends Widget
 {
@@ -330,6 +306,8 @@ class Button extends Widget
   }
 }
 
+
+int selectedColor = color(0,0,0);
 
 class Canvas extends UIManager
 {
@@ -828,6 +806,58 @@ class undoListNode
 
   
 }
+class ColorPickerWindow extends FloatingWindow
+{
+	private PImage colorChart;
+	private Slider bSlider;
+	private int chartSize = 255;
+	ColorPickerWindow()
+	{
+		x = 50;
+		y = 50;
+		w = 400;
+		h = 400;
+
+		bSlider = new Slider(10, 350, 255, 0, 255);
+		add(bSlider);
+
+		closeButton.x = x+w - 20;
+    	closeButton.y =  y;
+    	colorChart = new PImage(chartSize, chartSize);
+    	setCharColor();
+
+	}
+
+	private void setCharColor()
+	{
+		for (int x = 0; x < chartSize; x ++)
+    	{
+    		for (int y = 0; y < chartSize; y++)
+    		{
+    			colorChart.set(x, y, color(x, y, bSlider.getValue()));
+
+    		}
+    	}
+	}
+
+	public void mouseDragged()
+	{
+		super.mouseDragged();
+		setCharColor();
+	}
+
+	public void mousePressed()
+	{
+		super.mousePressed();
+		setCharColor();
+	}
+
+	public void draw()
+	{
+		super.draw();
+		image(colorChart, x + 10, y + 30);
+	}
+}
 class FloatingWindow extends UIManager
 {
   private int titleBarSize = 20;
@@ -1059,7 +1089,7 @@ class Label extends Widget
     }
   }
 }
-class Layer extends Widget
+class Layer extends UIManager
 {
   //Image that is actually used to write to file
   PImage actImage;
@@ -1080,6 +1110,8 @@ class Layer extends Widget
   private boolean selected = false;
   
   private float rotation = 0; 
+
+  ArrayList<Shape> shapeList = new ArrayList<Shape>();
   
   Layer(File sourceImage)
   {
@@ -1091,6 +1123,8 @@ class Layer extends Widget
     name = "layer";
     
     draggable = true;
+
+
   }
   
   Layer(PImage p, int ox, int oy)
@@ -1125,6 +1159,11 @@ class Layer extends Widget
 
       strokeWeight(1);
     }
+
+    for (Shape s: shapeList)
+    {
+      s.draw();
+    }
   }
   
   //Sets whether or not the layer is selected or not
@@ -1155,6 +1194,14 @@ class Layer extends Widget
     y = (int)((float)offsetY * scalar) + canvas.y;
     
     this.scalar = scalar;
+
+    for (Shape s: shapeList)
+    {
+      s.scaleAfterReize(scalar);
+    }
+
+    if (shapeList.size() < 1)
+    addShape(new Polygon(scalar));
   }
   
   public void mouseDragged()
@@ -1164,6 +1211,12 @@ class Layer extends Widget
     offsetX = (int)(((float)x - (float)canvas.x) / scalar);
     offsetY = (int)(((float)y - (float)canvas.y) / scalar);
     
+  }
+
+  public void addShape(Shape s)
+  {
+    add(s);
+    shapeList.add(s);
   }
  
  //Start of Functions
@@ -1253,6 +1306,270 @@ public int getPixelBilinear(float x, float y, PImage img){
 }
 //End of layer class
 
+class Point
+{
+  public int x, y;
+  Point(int x,int y)
+  {
+    this.x=x;
+    this.y=y;
+  }
+
+  public Point scale(float scalar)
+  {
+    float tx = x * scalar;
+    float ty = y * scalar;
+
+    return new Point(round(tx)+canvas.x,round(ty)+canvas.y);
+  }
+}
+
+class Shape extends Widget
+{
+  boolean filled;
+  int fillColor;
+  int lineColor;
+  float rotation = 0;
+  boolean placed = false;
+  float scalar;
+
+  public void setFilled(boolean f)
+  {
+    filled = f;
+  }
+
+  public boolean getFilled()
+  {
+    return filled;
+  }
+
+  public void setFillColor (int c)
+  {
+    fillColor = c;
+  }
+
+  public int getFillColor()
+  {
+    return fillColor;
+  }
+
+  public void setRotation(float r)
+  {
+    rotation = r;
+  }
+
+  public float getRotation()
+  {
+    return rotation;
+  }
+
+  public void scaleAfterReize(float scalar)
+  {
+    this.scalar = scalar;
+  }
+} // End if shape class
+
+class Polygon extends Shape
+{
+  //Points to display
+  ArrayList<Point> points = new ArrayList<Point>();
+  //Stores points before the scalar is applied
+  ArrayList<Point> actPoints = new ArrayList<Point>();
+
+  Polygon(float scalar)
+  {
+    this.scalar = scalar;
+    lineColor = color(255, 0, 0);
+  } 
+
+  public void addPoint()
+  {
+    Point p = new Point(mouseX, mouseY);
+    points.add(p);
+    Point ap = new Point(round((mouseX-canvas.x) / scalar), round((mouseY-canvas.y) / scalar));
+    actPoints.add(ap);
+  }
+
+  public void mouseReleased()
+  {
+    if (!placed)
+    {
+      if (mouseButton == LEFT)
+      {
+        addPoint();
+      }
+      else if (mouseButton == RIGHT)
+      {
+        placed = true;
+      }
+      
+    }
+  }
+
+  public void scaleAfterReize(float scalar)
+  {
+    
+    super.scaleAfterReize(scalar);
+    points = new ArrayList<Point>();
+    for (Point p: actPoints)
+    {
+      points.add(p.scale(scalar));
+    }
+  }
+
+  public void draw()
+  {
+    Point prevPoint =null;
+    for (Point p: points)
+    {
+
+      if(prevPoint == null)
+      {
+        prevPoint = p;
+      }
+      
+      //DrawLine between prevPoint and p
+      stroke(lineColor);
+      drawLine(prevPoint, p);
+      stroke(color(0,0,0));
+
+      prevPoint = p;
+    }
+
+    if (!placed)
+    {
+      
+      Point mPoint = new Point(mouseX, mouseY);
+      stroke(lineColor);
+      drawLine (prevPoint, mPoint);
+      stroke(color(0,0,0));
+    }
+
+    if (filled)
+    {
+      //TODO add code to fill shape
+    }
+
+
+}// end of polygon class
+
+public void drawLine(Point pointA, Point pointB)
+{
+  //bresLine(pointA.x, pointA.y, pointB.x, pointB.y, col);
+  //testDrawLine(pointA.x, pointA.y, pointB.x, pointB.y, col);
+
+
+  line(pointA.x, pointA.y, pointB.x, pointB.y);
+}
+
+public void bresLine(int x1, int y1, int x2, int y2, int col){
+  stroke(col);
+  int incY = 1;
+  if (y1 > y2)
+  {
+    /*int temp = y2;
+    y2 = y1;
+    y1 = temp;*/
+    incY = -1;
+  }
+  int yd=y2-y1;  
+  
+  int lineEnd=x2;
+
+  int inc = 1;
+  if (x2 < x1)
+  {
+    /*int temp = x2;
+    x2=x1;
+    x1 = temp;*/
+    
+    inc = -1;
+    lineEnd = x1;
+  }
+  int xd=x2-x1;  
+  
+  int e=0;  
+  int y=y1;  
+  for (int x=x1; x>=x2 && x<=x1; x+=inc){  
+  point(x,y);
+  if((2*(e+yd))<xd){  
+    e+=yd;  
+      }else{  
+    y += incY;  
+    e+=(yd-xd);  
+     }
+  }
+  stroke(color(0,0,0));
+}
+
+public void swap(double a, double b)
+{
+  a = a + b;
+}
+
+//Called to draw line to final image
+//Currently unfished. Need to adapt to write to image instead of screen
+public void flattenLine(float x1, float y1, float x2, float y2, int col)
+{
+  //Ensures that line is drawn lowest point to highest point
+  if (y1 > y2)
+  {
+    //swap(x1, x2);
+    float temp = x1;
+    x1 = x2;
+    x2 = temp;
+    swap(y1, y2);
+    temp = y1;
+    y1=y2;
+    y2=temp;
+  }
+
+  //Stores the gradient of the line
+  float gradient = 0;
+  //
+  float increment = 1;
+
+   //Prevent divide by 0 error
+  if (x1 == x2)
+  {
+    //If the line is perfectly horizontal then the line has no gradient
+    gradient = 1;
+  }
+  else if (y1 != y2)
+  {
+    //Calculates the gradient of the line
+    float o = y2 - y1;
+    float a = abs(x2 - x1);
+    gradient = (o / a);
+
+    //Ensures pixels are no skippped at more extreme gradients
+    increment = 1 / (gradient + 1);
+    gradient /= gradient + 1;
+  }
+
+  //Determines whether the line is drawn left to right or right to left
+  if (x2 < x1)
+  {
+    increment = -increment;
+  }
+
+  //Stores the y value of the current pixel being drawn
+  //Initialised to the y value of lowest of the two points
+  float y = y1;
+  
+  for (float x = x1; (int)x != (int)x2; x += increment)
+  {
+    //Increases y by the gradient
+    y += gradient;
+
+    stroke(col);
+    point(x,y);
+    stroke(color(0,0,0));
+  }
+
+}
+
+}
 class LayerButton extends Button
 {
   PImage layerIMG;
@@ -1488,12 +1805,18 @@ class MenuBar extends UIManager
     editMenu.add(new Button("Copy"));
     editMenu.add(new Button("Paste"));
     editMenu.setActive(false);
-    
+
+    Menu imageMenu = new ImageMenu();
+    imageMenu.add(new Button("Select color", "mnbtnSelectColor"));
+    imageMenu.setActive(false);
+
     addButton("File");
     addMenu(fileMenu);
     addButton("Edit");
     addMenu(editMenu);
-    
+    addButton("Image");
+    addMenu(imageMenu);
+
     
     widgetList.addAll(buttonList);
     widgetList.addAll(menuList);
@@ -1605,6 +1928,24 @@ class EditMenu extends Menu
       if (s == "mnbtnRedo")
       {
         canvas.redo();
+      }
+    }
+  }
+
+} // end of edit menu class
+
+class ImageMenu extends Menu
+{
+  public void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnSelectColor")
+      {
+        PickColor();
+
       }
     }
   }
@@ -1876,12 +2217,13 @@ class Slider extends Widget
   int rectX;
   int min, max;
   private float value;
-  
+  private int oldX;
   TextInput textInput;
   
   Slider(int x, int y, int w, int min, int max)
   {
     this.x = x;
+    oldX = x;
     this.y = y - 5;
     this.w=w;
     this.min = min;
@@ -1908,6 +2250,10 @@ class Slider extends Widget
       //Displays current value of the slider
       textInput.setString(Float.toString(value));
     }
+
+    rectX += x - oldX;
+
+    oldX = x;
   }
   
   public void mouseReleased()
