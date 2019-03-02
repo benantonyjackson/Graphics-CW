@@ -308,12 +308,26 @@ class Polygon extends Shape
 
   } 
 
-  void addPoint()
+  void addPointAtMouseCursor()
   {
-    Point p = new Point(mouseX, mouseY);
+   addPoint(mouseX, mouseY); 
+  }
+
+  void addPoint(int x, int y)
+  {
+    Point p = new Point(x, y);
     points.add(p);
-    Point ap = new Point(round((mouseX-canvas.x) / scalar), round((mouseY-canvas.y) / scalar));
+    Point ap = new Point(round((x-canvas.x) / scalar), round((y-canvas.y) / scalar));
     actPoints.add(ap);
+  }
+
+  protected void place()
+  {
+     placed = true;
+     if (closedShape && points.size() > 0)
+     {
+      addPoint(points.get(0).x, points.get(0).y);
+     }
   }
 
   void mouseReleased()
@@ -322,11 +336,11 @@ class Polygon extends Shape
     {
       if (mouseButton == LEFT)
       {
-        addPoint();
+        addPointAtMouseCursor();
       }
       else if (mouseButton == RIGHT)
       {
-        placed = true;
+       place();
       }
       
     }

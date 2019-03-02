@@ -29,7 +29,8 @@ class MenuBar extends UIManager
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
-    shapeMenu.add(new Button("Polyline", "mnbtnPollyline"));
+    shapeMenu.add(new Button("Polyline", "mnbtnPolyline"));
+    shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
     shapeMenu.setActive(false);
 
     addButton("File");
@@ -191,11 +192,16 @@ class ShapeMenu extends Menu
     
     for (String s: clickedList)
     {
-      if (s == "mnbtnPollyline")
+      if (s == "mnbtnPolyline")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
           , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
 
+      }
+      if (s == "mnbtnPolyshape")
+      {
+        canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/true
+          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
       }
     }
   }

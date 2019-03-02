@@ -1406,12 +1406,26 @@ class Polygon extends Shape
 
   } 
 
-  public void addPoint()
+  public void addPointAtMouseCursor()
   {
-    Point p = new Point(mouseX, mouseY);
+   addPoint(mouseX, mouseY); 
+  }
+
+  public void addPoint(int x, int y)
+  {
+    Point p = new Point(x, y);
     points.add(p);
-    Point ap = new Point(round((mouseX-canvas.x) / scalar), round((mouseY-canvas.y) / scalar));
+    Point ap = new Point(round((x-canvas.x) / scalar), round((y-canvas.y) / scalar));
     actPoints.add(ap);
+  }
+
+  protected void place()
+  {
+     placed = true;
+     if (closedShape && points.size() > 0)
+     {
+      addPoint(points.get(0).x, points.get(0).y);
+     }
   }
 
   public void mouseReleased()
@@ -1420,11 +1434,11 @@ class Polygon extends Shape
     {
       if (mouseButton == LEFT)
       {
-        addPoint();
+        addPointAtMouseCursor();
       }
       else if (mouseButton == RIGHT)
       {
-        placed = true;
+       place();
       }
       
     }
@@ -1835,7 +1849,8 @@ class MenuBar extends UIManager
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
-    shapeMenu.add(new Button("Polyline", "mnbtnPollyline"));
+    shapeMenu.add(new Button("Polyline", "mnbtnPolyline"));
+    shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
     shapeMenu.setActive(false);
 
     addButton("File");
@@ -1997,11 +2012,16 @@ class ShapeMenu extends Menu
     
     for (String s: clickedList)
     {
-      if (s == "mnbtnPollyline")
+      if (s == "mnbtnPolyline")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
           , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
 
+      }
+      if (s == "mnbtnPolyshape")
+      {
+        canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/true
+          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
       }
     }
   }
