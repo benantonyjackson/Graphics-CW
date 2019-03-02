@@ -108,9 +108,6 @@ class Layer extends UIManager
     {
       s.scaleAfterReize(scalar);
     }
-
-    if (shapeList.size() < 1)
-    addShape(new Polygon(scalar));
   }
   
   void mouseDragged()
@@ -126,6 +123,11 @@ class Layer extends UIManager
   {
     add(s);
     shapeList.add(s);
+  }
+
+  void addPolygon(boolean filled, boolean closedShape, color lineColor, color fillColor)
+  {
+    addShape(new Polygon(scalar, filled, closedShape, lineColor, fillColor));
   }
  
  //Start of Functions
@@ -247,6 +249,14 @@ class Shape extends Widget
     filled = f;
   }
 
+  void setFilled(boolean f, color c)
+  {
+    setFilled(f);
+    setFillColor(c);
+  }
+
+
+
   boolean getFilled()
   {
     return filled;
@@ -285,10 +295,17 @@ class Polygon extends Shape
   //Stores points before the scalar is applied
   ArrayList<Point> actPoints = new ArrayList<Point>();
 
-  Polygon(float scalar)
+  boolean filled;
+  boolean closedShape;
+
+  Polygon(float scalar, boolean filled, boolean closedShape, color lineColor, color fillColor)
   {
     this.scalar = scalar;
-    lineColor = color(255, 0, 0);
+    this.lineColor = lineColor;
+    this.filled = filled;
+    this.closedShape = closedShape;
+    this.fillColor = fillColor;
+
   } 
 
   void addPoint()
@@ -345,7 +362,7 @@ class Polygon extends Shape
       prevPoint = p;
     }
 
-    if (!placed)
+    if (!placed && points.size() > 0)
     {
       
       Point mPoint = new Point(mouseX, mouseY);

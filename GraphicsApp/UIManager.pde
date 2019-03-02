@@ -54,7 +54,10 @@ class UIManager extends Widget
   void mouseClicked ()
   {
     if (menuBar != null)
-    menuBar.mouseClicked();
+    {
+      menuBar.mouseClicked();
+    }
+    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseClicked();
@@ -78,8 +81,16 @@ class UIManager extends Widget
   void mouseReleased()
   {
     if (menuBar != null)
-    menuBar.mouseReleased();
+    {
+      menuBar.mouseReleased();
     
+      if (menuBar.wasClicked)
+      {
+        return;
+      }
+    }
+    
+
     //Updates the array of widgets that were clicked
     clickedList = new ArrayList<String>();
     for (int i = 0; i < widgetList.size(); i++)

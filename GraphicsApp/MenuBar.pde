@@ -28,12 +28,18 @@ class MenuBar extends UIManager
     imageMenu.add(new Button("Select color", "mnbtnSelectColor"));
     imageMenu.setActive(false);
 
+    Menu shapeMenu = new ShapeMenu();
+    shapeMenu.add(new Button("Polyline", "mnbtnPollyline"));
+    shapeMenu.setActive(false);
+
     addButton("File");
     addMenu(fileMenu);
     addButton("Edit");
     addMenu(editMenu);
     addButton("Image");
     addMenu(imageMenu);
+    addButton("Shapes");
+    addMenu(shapeMenu);
 
     
     widgetList.addAll(buttonList);
@@ -42,6 +48,7 @@ class MenuBar extends UIManager
   
   void mouseReleased()
   {
+    wasClicked = false;
     super.mouseReleased();
     
     //Loops through each button on the menu bar
@@ -49,6 +56,12 @@ class MenuBar extends UIManager
     for(int i = 0; i < buttonList.size(); i++)
     {
         menuList.get(i).setActive(buttonList.get(i).toggled);
+
+        if (menuList.get(i).clickedList.size() > 0)
+        {
+          wasClicked = true;
+        }
+        
     }
     
     
@@ -163,6 +176,25 @@ class ImageMenu extends Menu
       if (s == "mnbtnSelectColor")
       {
         PickColor();
+
+      }
+    }
+  }
+
+}
+
+class ShapeMenu extends Menu
+{
+  void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnPollyline")
+      {
+        canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
+          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
 
       }
     }

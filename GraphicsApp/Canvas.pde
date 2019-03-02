@@ -48,6 +48,12 @@ class Canvas extends UIManager
     autoSetSize();
   }
   
+  void addPolygon(boolean filled, boolean closedShape, color lineColor, color fillColor)
+  {
+    if (layerIndex > -1)
+    layers.get(layerIndex).addPolygon(filled,closedShape,lineColor,fillColor);
+  }
+
   void autoSetSize()
   {
     float scalar;

@@ -175,6 +175,7 @@ public void PickColor()
 {
   ui.add(new ColorPickerWindow());
 }
+
 class Button extends Widget
 {
   //Text which is displayed inside of the button
@@ -355,6 +356,12 @@ class Canvas extends UIManager
     autoSetSize();
   }
   
+  public void addPolygon(boolean filled, boolean closedShape, int lineColor, int fillColor)
+  {
+    if (layerIndex > -1)
+    layers.get(layerIndex).addPolygon(filled,closedShape,lineColor,fillColor);
+  }
+
   public void autoSetSize()
   {
     float scalar;
@@ -1199,9 +1206,6 @@ class Layer extends UIManager
     {
       s.scaleAfterReize(scalar);
     }
-
-    if (shapeList.size() < 1)
-    addShape(new Polygon(scalar));
   }
   
   public void mouseDragged()
@@ -1217,6 +1221,11 @@ class Layer extends UIManager
   {
     add(s);
     shapeList.add(s);
+  }
+
+  public void addPolygon(boolean filled, boolean closedShape, int lineColor, int fillColor)
+  {
+    addShape(new Polygon(scalar, filled, closedShape, lineColor, fillColor));
   }
  
  //Start of Functions
@@ -1338,6 +1347,14 @@ class Shape extends Widget
     filled = f;
   }
 
+  public void setFilled(boolean f, int c)
+  {
+    setFilled(f);
+    setFillColor(c);
+  }
+
+
+
   public boolean getFilled()
   {
     return filled;
@@ -1376,10 +1393,17 @@ class Polygon extends Shape
   //Stores points before the scalar is applied
   ArrayList<Point> actPoints = new ArrayList<Point>();
 
-  Polygon(float scalar)
+  boolean filled;
+  boolean closedShape;
+
+  Polygon(float scalar, boolean filled, boolean closedShape, int lineColor, int fillColor)
   {
     this.scalar = scalar;
-    lineColor = color(255, 0, 0);
+    this.lineColor = lineColor;
+    this.filled = filled;
+    this.closedShape = closedShape;
+    this.fillColor = fillColor;
+
   } 
 
   public void addPoint()
@@ -1436,7 +1460,7 @@ class Polygon extends Shape
       prevPoint = p;
     }
 
-    if (!placed)
+    if (!placed && points.size() > 0)
     {
       
       Point mPoint = new Point(mouseX, mouseY);
@@ -1810,12 +1834,18 @@ class MenuBar extends UIManager
     imageMenu.add(new Button("Select color", "mnbtnSelectColor"));
     imageMenu.setActive(false);
 
+    Menu shapeMenu = new ShapeMenu();
+    shapeMenu.add(new Button("Polyline", "mnbtnPollyline"));
+    shapeMenu.setActive(false);
+
     addButton("File");
     addMenu(fileMenu);
     addButton("Edit");
     addMenu(editMenu);
     addButton("Image");
     addMenu(imageMenu);
+    addButton("Shapes");
+    addMenu(shapeMenu);
 
     
     widgetList.addAll(buttonList);
@@ -1824,6 +1854,7 @@ class MenuBar extends UIManager
   
   public void mouseReleased()
   {
+    wasClicked = false;
     super.mouseReleased();
     
     //Loops through each button on the menu bar
@@ -1831,6 +1862,12 @@ class MenuBar extends UIManager
     for(int i = 0; i < buttonList.size(); i++)
     {
         menuList.get(i).setActive(buttonList.get(i).toggled);
+
+        if (menuList.get(i).clickedList.size() > 0)
+        {
+          wasClicked = true;
+        }
+        
     }
     
     
@@ -1945,6 +1982,25 @@ class ImageMenu extends Menu
       if (s == "mnbtnSelectColor")
       {
         PickColor();
+
+      }
+    }
+  }
+
+}
+
+class ShapeMenu extends Menu
+{
+  public void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnPollyline")
+      {
+        canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
+          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
 
       }
     }
@@ -2423,7 +2479,10 @@ class UIManager extends Widget
   public void mouseClicked ()
   {
     if (menuBar != null)
-    menuBar.mouseClicked();
+    {
+      menuBar.mouseClicked();
+    }
+    
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseClicked();
@@ -2447,8 +2506,16 @@ class UIManager extends Widget
   public void mouseReleased()
   {
     if (menuBar != null)
-    menuBar.mouseReleased();
+    {
+      menuBar.mouseReleased();
     
+      if (menuBar.wasClicked)
+      {
+        return;
+      }
+    }
+    
+
     //Updates the array of widgets that were clicked
     clickedList = new ArrayList<String>();
     for (int i = 0; i < widgetList.size(); i++)
