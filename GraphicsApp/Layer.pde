@@ -74,6 +74,18 @@ class Layer extends UIManager
       s.draw();
     }
   }
+
+  //
+  void flatten(PGraphics pg)
+  {
+    pg.image(actImage, offsetX, offsetY);
+
+    for(Shape s: shapeList)
+    {
+      s.flatten(pg, offsetX, offsetY);
+    }
+
+  }
   
   //Sets whether or not the layer is selected or not
   void setSelected(boolean flag)
@@ -286,6 +298,11 @@ class Shape extends Widget
   {
     this.scalar = scalar;
   }
+
+  void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+
+  }
 } // End if shape class
 
 class Polygon extends Shape
@@ -370,9 +387,10 @@ class Polygon extends Shape
       
       //DrawLine between prevPoint and p
       stroke(lineColor);
+      //strokeWeight(20);
       drawLine(prevPoint, p);
       stroke(color(0,0,0));
-
+      //strokeWeight(0);
       prevPoint = p;
     }
 
@@ -389,6 +407,23 @@ class Polygon extends Shape
     {
       //TODO add code to fill shape
     }
+  }
+
+  void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+    pg.stroke(lineColor);
+    for (int i = 0; i < actPoints.size() - 1; i++)
+    {
+      pg.line(actPoints.get(i).x, actPoints.get(i).y, actPoints.get(i+1).x, actPoints.get(i+1).y);
+    }
+
+    if (closedShape)
+    {
+      pg.line(actPoints.get(actPoints.size()-1).x, actPoints.get(actPoints.size()-1).y,
+       actPoints.get(0).x, actPoints.get(0).y);
+    }
+    pg.stroke(0);
+  }
 
 
 }// end of polygon class
@@ -509,4 +544,3 @@ void flattenLine(float x1, float y1, float x2, float y2, color col)
 
 }
 
-}

@@ -443,21 +443,15 @@ class Canvas extends UIManager
   //Saves image to png file
   public void export(File outputDir)
   { 
-    //Stores the image to be written to disk
-    PImage output = new PImage(canvasWidth, canvasHeight);
-    //Writes each layer to the output image
+    //Testing using pgraphic
+    PGraphics pg = createGraphics(canvasWidth, canvasHeight);
+    pg.beginDraw();
+    //pg.image(output,0,0);
     for (Layer l: layers)
     {
-      for (int x = 0; x < l.actImage.width; x++)
-      {
-        for (int y = 0; y < l.actImage.height; y++)
-        {
-          output.set(x + l.offsetX,y + l.offsetY,l.actImage.get(x,y));
-        }
-      }
+      l.flatten(pg);
     }
-    //output.save(dataPath("") + "scaleUp1_bilinear.png");
-    output.save(outputDir.getAbsolutePath() + ".png");
+    pg.save(outputDir.getAbsolutePath() + ".png");
   }
   
   //Sets the active layer
@@ -1172,6 +1166,18 @@ class Layer extends UIManager
       s.draw();
     }
   }
+
+  //
+  public void flatten(PGraphics pg)
+  {
+    pg.image(actImage, offsetX, offsetY);
+
+    for(Shape s: shapeList)
+    {
+      s.flatten(pg, offsetX, offsetY);
+    }
+
+  }
   
   //Sets whether or not the layer is selected or not
   public void setSelected(boolean flag)
@@ -1384,6 +1390,11 @@ class Shape extends Widget
   {
     this.scalar = scalar;
   }
+
+  public void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+
+  }
 } // End if shape class
 
 class Polygon extends Shape
@@ -1468,9 +1479,10 @@ class Polygon extends Shape
       
       //DrawLine between prevPoint and p
       stroke(lineColor);
+      //strokeWeight(20);
       drawLine(prevPoint, p);
       stroke(color(0,0,0));
-
+      //strokeWeight(0);
       prevPoint = p;
     }
 
@@ -1487,6 +1499,23 @@ class Polygon extends Shape
     {
       //TODO add code to fill shape
     }
+  }
+
+  public void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+    pg.stroke(lineColor);
+    for (int i = 0; i < actPoints.size() - 1; i++)
+    {
+      pg.line(actPoints.get(i).x, actPoints.get(i).y, actPoints.get(i+1).x, actPoints.get(i+1).y);
+    }
+
+    if (closedShape)
+    {
+      pg.line(actPoints.get(actPoints.size()-1).x, actPoints.get(actPoints.size()-1).y,
+       actPoints.get(0).x, actPoints.get(0).y);
+    }
+    pg.stroke(0);
+  }
 
 
 }// end of polygon class
@@ -1607,7 +1636,6 @@ public void flattenLine(float x1, float y1, float x2, float y2, int col)
 
 }
 
-}
 class LayerButton extends Button
 {
   PImage layerIMG;
@@ -2015,13 +2043,13 @@ class ShapeMenu extends Menu
       if (s == "mnbtnPolyline")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
-          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
+          , /*color lineColor*/color(0,0,255), /*color fillColor*/color(0,0,0));
 
       }
       if (s == "mnbtnPolyshape")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/true
-          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
+          , /*color lineColor*/color(255,0,0), /*color fillColor*/color(0,0,0));
       }
     }
   }

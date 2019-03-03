@@ -135,21 +135,15 @@ class Canvas extends UIManager
   //Saves image to png file
   void export(File outputDir)
   { 
-    //Stores the image to be written to disk
-    PImage output = new PImage(canvasWidth, canvasHeight);
-    //Writes each layer to the output image
+    //Testing using pgraphic
+    PGraphics pg = createGraphics(canvasWidth, canvasHeight);
+    pg.beginDraw();
+    //pg.image(output,0,0);
     for (Layer l: layers)
     {
-      for (int x = 0; x < l.actImage.width; x++)
-      {
-        for (int y = 0; y < l.actImage.height; y++)
-        {
-          output.set(x + l.offsetX,y + l.offsetY,l.actImage.get(x,y));
-        }
-      }
+      l.flatten(pg);
     }
-    //output.save(dataPath("") + "scaleUp1_bilinear.png");
-    output.save(outputDir.getAbsolutePath() + ".png");
+    pg.save(outputDir.getAbsolutePath() + ".png");
   }
   
   //Sets the active layer

@@ -195,13 +195,13 @@ class ShapeMenu extends Menu
       if (s == "mnbtnPolyline")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
-          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
+          , /*color lineColor*/color(0,0,255), /*color fillColor*/color(0,0,0));
 
       }
       if (s == "mnbtnPolyshape")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/true
-          , /*color lineColor*/color(0,255,0), /*color fillColor*/color(0,0,0));
+          , /*color lineColor*/color(255,0,0), /*color fillColor*/color(0,0,0));
       }
     }
   }
