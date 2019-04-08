@@ -70,7 +70,6 @@ class Button extends Widget
   void WidgetClickEvent()
   {
     super.WidgetClickEvent();
-    //print(text + "\n");
   }
   
   void draw()

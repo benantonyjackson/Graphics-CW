@@ -47,7 +47,6 @@ void draw()
   oldWidth = width;
   oldHeight = height;
   
-  //print("width: " + width + " height: " + height + "\n");
   
   background(25,25,25);
   

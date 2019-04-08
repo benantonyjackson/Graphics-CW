@@ -53,6 +53,14 @@ class Layer extends UIManager
     Layer l = new Layer(actImage, offsetX, offsetY);
     l.changed = changed;
 
+    for (Shape shape: shapeList)
+    {
+      l.addShape(shape.clone());
+
+    }
+
+
+
     return l;
   }
 
@@ -75,7 +83,23 @@ class Layer extends UIManager
     }
   }
 
-  //
+  void mouseReleased()
+  {
+    super.mouseReleased();
+    for (Shape s: shapeList)
+    {
+      s.mouseReleased();
+
+      if (s.wasClicked)
+      {
+        print("Masive chungus");
+        wasClicked = true;
+        s.wasClicked = false;
+      }
+    }
+  }
+
+  //Writes shape data to the final PGraphic 
   void flatten(PGraphics pg)
   {
     pg.image(actImage, offsetX, offsetY);
@@ -303,6 +327,20 @@ class Shape extends Widget
   {
 
   }
+
+  Shape clone()
+  {
+    Shape temp = new Shape();
+
+    temp.filled = filled;
+    temp.fillColor=fillColor;
+    temp.lineColor=lineColor;
+    temp.rotation = 0;
+    temp.placed = false;
+    temp.scalar=scalar;
+
+    return temp;
+  }
 } // End if shape class
 
 class Polygon extends Shape
@@ -312,8 +350,8 @@ class Polygon extends Shape
   //Stores points before the scalar is applied
   ArrayList<Point> actPoints = new ArrayList<Point>();
 
-  boolean filled;
-  boolean closedShape;
+  boolean filled=false;
+  boolean closedShape=false;
 
   Polygon(float scalar, boolean filled, boolean closedShape, color lineColor, color fillColor)
   {
@@ -324,6 +362,26 @@ class Polygon extends Shape
     this.fillColor = fillColor;
 
   } 
+
+  Polygon(){}
+
+  Shape clone()
+  {
+    Polygon temp = new Polygon( scalar,  filled,  closedShape,  lineColor,  fillColor);
+    
+    temp.placed=true;
+    temp.x=x;
+    temp.y=y;
+    temp.h=h;
+    temp.w=w;
+
+    for (Point p: points)
+    {
+      temp.addPoint(p.x,p.y);
+    }
+
+    return temp;
+  }
 
   void addPointAtMouseCursor()
   {
@@ -336,15 +394,38 @@ class Polygon extends Shape
     points.add(p);
     Point ap = new Point(round((x-canvas.x) / scalar), round((y-canvas.y) / scalar));
     actPoints.add(ap);
+
+    if (x < this.x)
+    {
+      this.x=x;
+    }
+
+    if (y < this.y)
+    {
+      this.y=y;
+    }
+
+    if (x > this.w)
+    {
+      this.w=x;
+    }
+
+    if (y > this.h)
+    {
+      this.h = y;
+    }
   }
 
-  protected void place()
+  void place()
   {
      placed = true;
      if (closedShape && points.size() > 0)
      {
       addPoint(points.get(0).x, points.get(0).y);
      }
+
+     wasClicked = true;
+
   }
 
   void mouseReleased()

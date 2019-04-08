@@ -24,9 +24,7 @@ class LayerButtons extends RadioButtons
     {
       w = btn.w;
     }
-    
-    //println(h);
-    
+        
     btn.name = "LayerButton";
     btn.aligned = ALLIGNMENT.right;
   }
@@ -34,8 +32,6 @@ class LayerButtons extends RadioButtons
   void mouseReleased()
   {
     super.mouseReleased();
-
-    //print(clickedList.size());
 
     if (clickedList.size() > 1)
     {

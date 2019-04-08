@@ -191,8 +191,6 @@ class Canvas extends UIManager
     super.mouseDragged();
       if (layerIndex != -1)
       {
-        //println(layerIndex);
-        //print("Why are you running");
         layers.get(layerIndex).mouseDragged();
       }
   }
@@ -207,10 +205,6 @@ class Canvas extends UIManager
 
         if (layers.get(layerIndex).clicked)
         {
-          //undoList.l = layers.get(layerIndex).clone();
-          //undoList.layerIndex = layerIndex+0;
-          //println(undoList.layerIndex + "Mouse clicked");
-          println("Mouse pressed");
           undoList.layers = new ArrayList<Layer>();
           for (int i = 0; i < layers.size(); i++)
           {
@@ -273,7 +267,7 @@ class Canvas extends UIManager
             
             undoList.layers.add(layers.get(i).clone());
             layers.get(i).changed = false;
-            println(i);
+
           } 
           else
           {
@@ -392,7 +386,6 @@ class Canvas extends UIManager
        {
          line = (String)Pixels[i++];
          String [] pixel = split(line, '.');
-         //print(i);
          
          int r = Integer.parseInt(pixel[0]);
          int g = Integer.parseInt(pixel[1]);
@@ -434,8 +427,6 @@ class Canvas extends UIManager
       if (undoList.layers.get(i) != null)
       {
         tempLayerList.add(undoList.layers.get(i).clone());
-        //println("Index" + i);
-        println(undoList.layers.get(i).changed);
       }
       else
       {
