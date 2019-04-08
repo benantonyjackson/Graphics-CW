@@ -29,9 +29,7 @@ class LayerSelector extends UIManager
     {
       if (wdgt == "newLayer")
       {
-        //println(wdgt);
         addLayer();
-        
       }
        
     }

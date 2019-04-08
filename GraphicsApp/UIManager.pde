@@ -172,7 +172,6 @@ class UIManager extends Widget
   {
     for (int i = 0; i < widgetList.size(); i++)
     {
-      println("Point a");
       if (widgetList.get(i).id == WidgetID)
       {
         return i;
@@ -188,9 +187,6 @@ class UIManager extends Widget
     if (widget != null)
     {
       i = getIndexFromID(widget.id);
-
-      println("Widet id: " + widget.id);
-      println("Widget index: " + i);
     }
     
 

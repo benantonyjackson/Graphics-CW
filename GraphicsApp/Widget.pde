@@ -106,12 +106,6 @@ class Widget implements Serializable
       toggled = false;
     }
     
-    if (name == "LayerButtons")
-    {
-      //println(name);
-      //println("w: " + w + " h: " + h + " x: " + x + " y: " + y);
-    }
-    
   }
   
   void mouseMoved()

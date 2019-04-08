@@ -92,7 +92,7 @@ class Layer extends UIManager
 
       if (s.wasClicked)
       {
-        print("Masive chungus");
+
         wasClicked = true;
         s.wasClicked = false;
       }
@@ -229,15 +229,6 @@ color getPixelBilinear(float x, float y, PImage img){
   float areaC = ((1.0 - mx) * my);
   
   float areaD = (mx*my);
-  
-  // sanity chack that all the areas add up to 1
-  
-  
-  //if ((areaA + areaB + areaC + areaD) != 1.0)
-  //{
-    //System.out.println((areaA + areaB + areaC + areaD));
-    //System.out.println("Not 1!");
-  //}
   
   // now average all the red colours based on their relative amounts in A,B,C & D
   int aRed = int(areaA * red(pA) + areaB * red(pB) + areaC * red(pC) + areaD * red(pD) );

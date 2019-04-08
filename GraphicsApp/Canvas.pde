@@ -122,7 +122,6 @@ class Canvas extends UIManager
       
     }
     
-    //println("canavas " + id);
   }
   
   void resize(int dtW, int dtH)
@@ -343,14 +342,8 @@ class Canvas extends UIManager
           }
       }
       println("Point a");
-      //output.println(data);
-      //data += "/";
-      //output.println(data);
-      //data = "";
     }
 
-    //PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
-    //output.println(data);
     output.println("/");
     output.flush();
     output.close();
@@ -459,7 +452,6 @@ class Canvas extends UIManager
       if (undoList.layers.get(i) != null)
       {
         tempLayerList.add(undoList.layers.get(i).clone());
-        println(undoList.layers.get(i).changed);
       }
       else
       {
