@@ -80,6 +80,11 @@ class UIManager extends Widget
   
   void mouseReleased()
   {
+    for (Widget widget: widgetList)
+    {
+      widget.wasClicked = false;
+    }
+
     if (menuBar != null)
     {
       menuBar.mouseReleased();
@@ -99,7 +104,7 @@ class UIManager extends Widget
       if (widgetList.get(i).wasClicked)
       {
         clickedList.add(widgetList.get(i).name);
-        widgetList.get(i).wasClicked = false;
+        //widgetList.get(i).wasClicked = false;
       }
       
       if (widgetList.get(i).closed)

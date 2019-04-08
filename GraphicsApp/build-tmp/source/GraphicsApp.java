@@ -69,7 +69,6 @@ public void draw()
   oldWidth = width;
   oldHeight = height;
   
-  //print("width: " + width + " height: " + height + "\n");
   
   background(25,25,25);
   
@@ -248,7 +247,6 @@ class Button extends Widget
   public void WidgetClickEvent()
   {
     super.WidgetClickEvent();
-    //print(text + "\n");
   }
   
   public void draw()
@@ -430,7 +428,6 @@ class Canvas extends UIManager
       
     }
     
-    //println("canavas " + id);
   }
   
   public void resize(int dtW, int dtH)
@@ -575,7 +572,7 @@ class Canvas extends UIManager
             
             undoList.layers.add(layers.get(i).clone());
             layers.get(i).changed = false;
-            println(i);
+
           } 
           else
           {
@@ -651,14 +648,8 @@ class Canvas extends UIManager
           }
       }
       println("Point a");
-      //output.println(data);
-      //data += "/";
-      //output.println(data);
-      //data = "";
     }
 
-    //PrintWriter output = createWriter(outputDir.getAbsolutePath() + ".gff");
-    //output.println(data);
     output.println("/");
     output.flush();
     output.close();
@@ -694,7 +685,6 @@ class Canvas extends UIManager
        {
          line = (String)Pixels[i++];
          String [] pixel = split(line, '.');
-         //print(i);
          
          int r = Integer.parseInt(pixel[0]);
          int g = Integer.parseInt(pixel[1]);
@@ -736,8 +726,6 @@ class Canvas extends UIManager
       if (undoList.layers.get(i) != null)
       {
         tempLayerList.add(undoList.layers.get(i).clone());
-        //println("Index" + i);
-        println(undoList.layers.get(i).changed);
       }
       else
       {
@@ -770,7 +758,6 @@ class Canvas extends UIManager
       if (undoList.layers.get(i) != null)
       {
         tempLayerList.add(undoList.layers.get(i).clone());
-        println(undoList.layers.get(i).changed);
       }
       else
       {
@@ -890,7 +877,6 @@ class FloatingWindow extends UIManager
     if (closeButton.wasClicked)
     {
       closed = true;
-//print
     }
     
     super.mouseReleased();
@@ -1142,7 +1128,6 @@ class Layer extends UIManager
     for (Shape shape: shapeList)
     {
       l.addShape(shape.clone());
-
     }
 
 
@@ -1171,14 +1156,16 @@ class Layer extends UIManager
 
   public void mouseReleased()
   {
+    println("point d");
     super.mouseReleased();
     for (Shape s: shapeList)
     {
-      s.mouseReleased();
-
+      //s.mouseReleased();
+      println("Point b");
+      println("Was clicked 2: " + s.wasClicked);
       if (s.wasClicked)
       {
-        print("Masive chungus");
+        println("Point a");
         wasClicked = true;
         s.wasClicked = false;
       }
@@ -1315,15 +1302,6 @@ public int getPixelBilinear(float x, float y, PImage img){
   float areaC = ((1.0f - mx) * my);
   
   float areaD = (mx*my);
-  
-  // sanity chack that all the areas add up to 1
-  
-  
-  //if ((areaA + areaB + areaC + areaD) != 1.0)
-  //{
-    //System.out.println((areaA + areaB + areaC + areaD));
-    //System.out.println("Not 1!");
-  //}
   
   // now average all the red colours based on their relative amounts in A,B,C & D
   int aRed = PApplet.parseInt(areaA * red(pA) + areaB * red(pB) + areaC * red(pC) + areaD * red(pD) );
@@ -1510,12 +1488,15 @@ class Polygon extends Shape
       addPoint(points.get(0).x, points.get(0).y);
      }
 
+     println("point c");
      wasClicked = true;
 
   }
 
   public void mouseReleased()
   {
+    super.mouseReleased();
+
     if (!placed)
     {
       if (mouseButton == LEFT)
@@ -1525,9 +1506,10 @@ class Polygon extends Shape
       else if (mouseButton == RIGHT)
       {
        place();
-      }
-      
+      } 
     }
+
+    println("Was clicked: " + wasClicked);
   }
 
   public void scaleAfterReize(float scalar)
@@ -1752,9 +1734,7 @@ class LayerButtons extends RadioButtons
     {
       w = btn.w;
     }
-    
-    //println(h);
-    
+        
     btn.name = "LayerButton";
     btn.aligned = ALLIGNMENT.right;
   }
@@ -1762,8 +1742,6 @@ class LayerButtons extends RadioButtons
   public void mouseReleased()
   {
     super.mouseReleased();
-
-    //print(clickedList.size());
 
     if (clickedList.size() > 1)
     {
@@ -1815,9 +1793,7 @@ class LayerSelector extends UIManager
     {
       if (wdgt == "newLayer")
       {
-        //println(wdgt);
         addLayer();
-        
       }
        
     }
@@ -2628,6 +2604,11 @@ class UIManager extends Widget
   
   public void mouseReleased()
   {
+    for (Widget widget: widgetList)
+    {
+      widget.wasClicked = false;
+    }
+
     if (menuBar != null)
     {
       menuBar.mouseReleased();
@@ -2647,7 +2628,7 @@ class UIManager extends Widget
       if (widgetList.get(i).wasClicked)
       {
         clickedList.add(widgetList.get(i).name);
-        widgetList.get(i).wasClicked = false;
+        //widgetList.get(i).wasClicked = false;
       }
       
       if (widgetList.get(i).closed)
@@ -2720,7 +2701,6 @@ class UIManager extends Widget
   {
     for (int i = 0; i < widgetList.size(); i++)
     {
-      println("Point a");
       if (widgetList.get(i).id == WidgetID)
       {
         return i;
@@ -2736,9 +2716,6 @@ class UIManager extends Widget
     if (widget != null)
     {
       i = getIndexFromID(widget.id);
-
-      println("Widet id: " + widget.id);
-      println("Widget index: " + i);
     }
     
 
@@ -2854,12 +2831,6 @@ class Widget implements Serializable
     else if (untoggleAfterClick)
     {
       toggled = false;
-    }
-    
-    if (name == "LayerButtons")
-    {
-      //println(name);
-      //println("w: " + w + " h: " + h + " x: " + x + " y: " + y);
     }
     
   }

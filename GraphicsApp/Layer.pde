@@ -56,7 +56,6 @@ class Layer extends UIManager
     for (Shape shape: shapeList)
     {
       l.addShape(shape.clone());
-
     }
 
 
@@ -85,14 +84,16 @@ class Layer extends UIManager
 
   void mouseReleased()
   {
+    println("point d");
     super.mouseReleased();
     for (Shape s: shapeList)
     {
-      s.mouseReleased();
-
+      //s.mouseReleased();
+      println("Point b");
+      println("Was clicked 2: " + s.wasClicked);
       if (s.wasClicked)
       {
-
+        println("Point a");
         wasClicked = true;
         s.wasClicked = false;
       }
@@ -415,12 +416,15 @@ class Polygon extends Shape
       addPoint(points.get(0).x, points.get(0).y);
      }
 
+     println("point c");
      wasClicked = true;
 
   }
 
   void mouseReleased()
   {
+    super.mouseReleased();
+
     if (!placed)
     {
       if (mouseButton == LEFT)
@@ -430,9 +434,10 @@ class Polygon extends Shape
       else if (mouseButton == RIGHT)
       {
        place();
-      }
-      
+      } 
     }
+
+    println("Was clicked: " + wasClicked);
   }
 
   void scaleAfterReize(float scalar)
