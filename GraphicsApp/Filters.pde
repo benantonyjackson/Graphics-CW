@@ -1,4 +1,3 @@
-
 PImage BlackAndWhite(PImage img)
 {
 	PImage res = new PImage(img.width, img.height);
@@ -17,6 +16,22 @@ PImage BlackAndWhite(PImage img)
 			{
 				res.set(x,y,color(0,0,0));
 			}
+		}
+	}
+	return res;
+}
+
+PImage Greyscale(PImage img)
+{
+	PImage res = new PImage(img.width, img.height);
+	for (int x = 0; x < img.width; x++)
+	{
+		for (int y = 0; y < img.height; y++)
+		{
+			color c = img.get(x,y);
+			int val = (int)(red(c) + green(c) + blue(c));
+
+			res.set(x,y, color(round(val/3)));
 		}
 	}
 	return res;

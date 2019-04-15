@@ -245,6 +245,11 @@ void blackAndWhite()
   disImage = BlackAndWhite(disImage);
 }
 
+void greyscale()
+{
+  actImage = Greyscale(actImage);
+  disImage = Greyscale(disImage);
+}
  
 }
 //End of layer class

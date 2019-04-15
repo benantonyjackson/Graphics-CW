@@ -230,7 +230,9 @@ class FilterMenu extends Menu
       }
 
       if(s == "mnbtnGreyscale")
-      {}
+      {
+        canvas.greyscale();
+      }
     }
 
   }

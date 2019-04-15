@@ -480,6 +480,14 @@ class Canvas extends UIManager
       }
   }
 
+  void greyscale()
+  {
+      if (layerIndex != -1)
+      {
+        layers.get(layerIndex).greyscale();
+      }
+  }
+
 
 }// End of canvas class
 

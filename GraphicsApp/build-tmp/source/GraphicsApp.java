@@ -786,6 +786,14 @@ class Canvas extends UIManager
       }
   }
 
+  public void greyscale()
+  {
+      if (layerIndex != -1)
+      {
+        layers.get(layerIndex).greyscale();
+      }
+  }
+
 
 }// End of canvas class
 
@@ -854,7 +862,6 @@ class ColorPickerWindow extends FloatingWindow
 		image(colorChart, x + 10, y + 30);
 	}
 }
-
 public PImage BlackAndWhite(PImage img)
 {
 	PImage res = new PImage(img.width, img.height);
@@ -873,6 +880,22 @@ public PImage BlackAndWhite(PImage img)
 			{
 				res.set(x,y,color(0,0,0));
 			}
+		}
+	}
+	return res;
+}
+
+public PImage Greyscale(PImage img)
+{
+	PImage res = new PImage(img.width, img.height);
+	for (int x = 0; x < img.width; x++)
+	{
+		for (int y = 0; y < img.height; y++)
+		{
+			int c = img.get(x,y);
+			int val = (int)(red(c) + green(c) + blue(c));
+
+			res.set(x,y, color(round(val/3)));
 		}
 	}
 	return res;
@@ -1354,6 +1377,11 @@ public void blackAndWhite()
   disImage = BlackAndWhite(disImage);
 }
 
+public void greyscale()
+{
+  actImage = Greyscale(actImage);
+  disImage = Greyscale(disImage);
+}
  
 }
 //End of layer class
@@ -2170,7 +2198,9 @@ class FilterMenu extends Menu
       }
 
       if(s == "mnbtnGreyscale")
-      {}
+      {
+        canvas.greyscale();
+      }
     }
 
   }
