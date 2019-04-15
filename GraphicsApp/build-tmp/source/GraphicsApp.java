@@ -357,7 +357,11 @@ class Canvas extends UIManager
   public void addPolygon(boolean filled, boolean closedShape, int lineColor, int fillColor)
   {
     if (layerIndex > -1)
-    layers.get(layerIndex).addPolygon(filled,closedShape,lineColor,fillColor);
+    {
+      saveLayersToUndo(true);
+      layers.get(layerIndex).addPolygon(filled,closedShape,lineColor,fillColor);
+    }
+    
   }
 
   public void autoSetSize()
@@ -499,22 +503,15 @@ class Canvas extends UIManager
         layers.get(layerIndex).mouseDragged();
       }
   }
-  
-  public void mousePressed()
-  {
-    super.mousePressed();
-      if (layerIndex != -1)
-      {
-        
-        layers.get(layerIndex).mousePressed();
 
-        if (layers.get(layerIndex).clicked)
-        {
+  public void saveLayersToUndo(boolean cloneCurrentLayer)
+  {
           undoList.layers = new ArrayList<Layer>();
           for (int i = 0; i < layers.size(); i++)
           {
-            if (i == layerIndex)
+            if (i == layerIndex && cloneCurrentLayer)
             {
+              println("Point b");
               layers.get(i).changed = true;
               undoList.layers.add(layers.get(layerIndex).clone());
             } 
@@ -529,9 +526,16 @@ class Canvas extends UIManager
               undoList.layers.add(null);
             }
           }
-          
-        }
+  }
+  
+  public void mousePressed()
+  {
+    super.mousePressed();
+      if (layerIndex != -1)
+      {
         
+        layers.get(layerIndex).mousePressed();
+        saveLayersToUndo(layers.get(layerIndex).clicked);
       }
   }
   
@@ -567,7 +571,7 @@ class Canvas extends UIManager
         for (int i = 0; i < layers.size(); i++)
         {
           // (i == layerIndex)
-          if (layers.get(i).changed)
+          if (layers.get(i).changed || layers.get(i).wasClicked)
           {
             
             undoList.layers.add(layers.get(i).clone());
@@ -712,7 +716,7 @@ class Canvas extends UIManager
     {
       //TODO:
       //Disable undo button 
-      print("Cannot undo anymore");
+      println("Cannot undo anymore");
       return;
     }
 
@@ -745,7 +749,7 @@ class Canvas extends UIManager
     {
       //TODO:
       //Disable undo button 
-      print("Cannot redo anymore");
+      println("Cannot redo anymore");
       return;
     }
     //if (undoList.backward == null)
@@ -770,6 +774,16 @@ class Canvas extends UIManager
     //undoList = undoList.forward;
     autoSetSize();
   
+  }
+
+  //Filters
+
+  public void blackAndWhite()
+  {
+    if (layerIndex != -1)
+      {
+        layers.get(layerIndex).blackAndWhite();
+      }
   }
 
 
@@ -839,6 +853,29 @@ class ColorPickerWindow extends FloatingWindow
 		super.draw();
 		image(colorChart, x + 10, y + 30);
 	}
+}
+
+public PImage BlackAndWhite(PImage img)
+{
+	PImage res = new PImage(img.width, img.height);
+	for (int x = 0; x < img.width; x++)
+	{
+		for (int y = 0; y < img.height; y++)
+		{
+			int c = img.get(x,y);
+			int val = (int)(red(c) + green(c) + blue(c));
+
+			if (val > 384)
+			{
+				res.set(x,y,color(255,255,255));
+			}
+			else 
+			{
+				res.set(x,y,color(0,0,0));
+			}
+		}
+	}
+	return res;
 }
 class FloatingWindow extends UIManager
 {
@@ -1130,8 +1167,6 @@ class Layer extends UIManager
       l.addShape(shape.clone());
     }
 
-
-
     return l;
   }
 
@@ -1156,16 +1191,16 @@ class Layer extends UIManager
 
   public void mouseReleased()
   {
-    println("point d");
+    //println("point d");
     super.mouseReleased();
     for (Shape s: shapeList)
     {
       //s.mouseReleased();
-      println("Point b");
-      println("Was clicked 2: " + s.wasClicked);
+      //println("Point b");
+      //println("Was clicked 2: " + s.wasClicked);
       if (s.wasClicked)
       {
-        println("Point a");
+        //println("Point a");
         wasClicked = true;
         s.wasClicked = false;
       }
@@ -1232,6 +1267,7 @@ class Layer extends UIManager
   {
     add(s);
     shapeList.add(s);
+    clicked = true;
   }
 
   public void addPolygon(boolean filled, boolean closedShape, int lineColor, int fillColor)
@@ -1312,6 +1348,11 @@ public int getPixelBilinear(float x, float y, PImage img){
   return color(aRed, aGreen,aBlue);
 }
 
+public void blackAndWhite()
+{
+  actImage = BlackAndWhite(actImage);
+  disImage = BlackAndWhite(disImage);
+}
 
  
 }
@@ -1488,7 +1529,7 @@ class Polygon extends Shape
       addPoint(points.get(0).x, points.get(0).y);
      }
 
-     println("point c");
+     //println("point c");
      wasClicked = true;
 
   }
@@ -1509,7 +1550,7 @@ class Polygon extends Shape
       } 
     }
 
-    println("Was clicked: " + wasClicked);
+    //println("Was clicked: " + wasClicked);
   }
 
   public void scaleAfterReize(float scalar)
@@ -1932,6 +1973,11 @@ class MenuBar extends UIManager
     shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
     shapeMenu.setActive(false);
 
+    Menu filterMenu = new FilterMenu();
+    filterMenu.add(new Button("Black and white", "mnbtnBlackAndWhite"));
+    filterMenu.add(new Button("Greyscale", "mnbtnGreyscale"));
+    filterMenu.setActive(false);
+
     addButton("File");
     addMenu(fileMenu);
     addButton("Edit");
@@ -1940,6 +1986,8 @@ class MenuBar extends UIManager
     addMenu(imageMenu);
     addButton("Shapes");
     addMenu(shapeMenu);
+    addButton("Filters");
+    addMenu(filterMenu);
 
     
     widgetList.addAll(buttonList);
@@ -2052,7 +2100,6 @@ class EditMenu extends Menu
     {
       if (s == "mnbtnUndo")
       {
-
         canvas.undo();
       }
 
@@ -2105,6 +2152,28 @@ class ShapeMenu extends Menu
     }
   }
 
+}
+
+
+class FilterMenu extends Menu
+{
+
+  public void mouseReleased()
+  {
+    super.mouseReleased();
+
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnBlackAndWhite")
+      {
+        canvas.blackAndWhite();
+      }
+
+      if(s == "mnbtnGreyscale")
+      {}
+    }
+
+  }
 }
 class NewCanvasUIManager extends FloatingWindow
 {

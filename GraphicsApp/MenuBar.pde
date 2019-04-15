@@ -33,6 +33,11 @@ class MenuBar extends UIManager
     shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
     shapeMenu.setActive(false);
 
+    Menu filterMenu = new FilterMenu();
+    filterMenu.add(new Button("Black and white", "mnbtnBlackAndWhite"));
+    filterMenu.add(new Button("Greyscale", "mnbtnGreyscale"));
+    filterMenu.setActive(false);
+
     addButton("File");
     addMenu(fileMenu);
     addButton("Edit");
@@ -41,6 +46,8 @@ class MenuBar extends UIManager
     addMenu(imageMenu);
     addButton("Shapes");
     addMenu(shapeMenu);
+    addButton("Filters");
+    addMenu(filterMenu);
 
     
     widgetList.addAll(buttonList);
@@ -153,7 +160,6 @@ class EditMenu extends Menu
     {
       if (s == "mnbtnUndo")
       {
-
         canvas.undo();
       }
 
@@ -206,4 +212,26 @@ class ShapeMenu extends Menu
     }
   }
 
+}
+
+
+class FilterMenu extends Menu
+{
+
+  void mouseReleased()
+  {
+    super.mouseReleased();
+
+    for (String s: clickedList)
+    {
+      if (s == "mnbtnBlackAndWhite")
+      {
+        canvas.blackAndWhite();
+      }
+
+      if(s == "mnbtnGreyscale")
+      {}
+    }
+
+  }
 }

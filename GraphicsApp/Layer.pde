@@ -58,8 +58,6 @@ class Layer extends UIManager
       l.addShape(shape.clone());
     }
 
-
-
     return l;
   }
 
@@ -84,16 +82,16 @@ class Layer extends UIManager
 
   void mouseReleased()
   {
-    println("point d");
+    //println("point d");
     super.mouseReleased();
     for (Shape s: shapeList)
     {
       //s.mouseReleased();
-      println("Point b");
-      println("Was clicked 2: " + s.wasClicked);
+      //println("Point b");
+      //println("Was clicked 2: " + s.wasClicked);
       if (s.wasClicked)
       {
-        println("Point a");
+        //println("Point a");
         wasClicked = true;
         s.wasClicked = false;
       }
@@ -160,6 +158,7 @@ class Layer extends UIManager
   {
     add(s);
     shapeList.add(s);
+    clicked = true;
   }
 
   void addPolygon(boolean filled, boolean closedShape, color lineColor, color fillColor)
@@ -240,6 +239,11 @@ color getPixelBilinear(float x, float y, PImage img){
   return color(aRed, aGreen,aBlue);
 }
 
+void blackAndWhite()
+{
+  actImage = BlackAndWhite(actImage);
+  disImage = BlackAndWhite(disImage);
+}
 
  
 }
@@ -416,7 +420,7 @@ class Polygon extends Shape
       addPoint(points.get(0).x, points.get(0).y);
      }
 
-     println("point c");
+     //println("point c");
      wasClicked = true;
 
   }
@@ -437,7 +441,7 @@ class Polygon extends Shape
       } 
     }
 
-    println("Was clicked: " + wasClicked);
+    //println("Was clicked: " + wasClicked);
   }
 
   void scaleAfterReize(float scalar)

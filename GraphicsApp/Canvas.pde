@@ -51,7 +51,11 @@ class Canvas extends UIManager
   void addPolygon(boolean filled, boolean closedShape, color lineColor, color fillColor)
   {
     if (layerIndex > -1)
-    layers.get(layerIndex).addPolygon(filled,closedShape,lineColor,fillColor);
+    {
+      saveLayersToUndo(true);
+      layers.get(layerIndex).addPolygon(filled,closedShape,lineColor,fillColor);
+    }
+    
   }
 
   void autoSetSize()
@@ -193,22 +197,15 @@ class Canvas extends UIManager
         layers.get(layerIndex).mouseDragged();
       }
   }
-  
-  void mousePressed()
-  {
-    super.mousePressed();
-      if (layerIndex != -1)
-      {
-        
-        layers.get(layerIndex).mousePressed();
 
-        if (layers.get(layerIndex).clicked)
-        {
+  void saveLayersToUndo(boolean cloneCurrentLayer)
+  {
           undoList.layers = new ArrayList<Layer>();
           for (int i = 0; i < layers.size(); i++)
           {
-            if (i == layerIndex)
+            if (i == layerIndex && cloneCurrentLayer)
             {
+              println("Point b");
               layers.get(i).changed = true;
               undoList.layers.add(layers.get(layerIndex).clone());
             } 
@@ -223,9 +220,16 @@ class Canvas extends UIManager
               undoList.layers.add(null);
             }
           }
-          
-        }
+  }
+  
+  void mousePressed()
+  {
+    super.mousePressed();
+      if (layerIndex != -1)
+      {
         
+        layers.get(layerIndex).mousePressed();
+        saveLayersToUndo(layers.get(layerIndex).clicked);
       }
   }
   
@@ -261,7 +265,7 @@ class Canvas extends UIManager
         for (int i = 0; i < layers.size(); i++)
         {
           // (i == layerIndex)
-          if (layers.get(i).changed)
+          if (layers.get(i).changed || layers.get(i).wasClicked)
           {
             
             undoList.layers.add(layers.get(i).clone());
@@ -406,7 +410,7 @@ class Canvas extends UIManager
     {
       //TODO:
       //Disable undo button 
-      print("Cannot undo anymore");
+      println("Cannot undo anymore");
       return;
     }
 
@@ -439,7 +443,7 @@ class Canvas extends UIManager
     {
       //TODO:
       //Disable undo button 
-      print("Cannot redo anymore");
+      println("Cannot redo anymore");
       return;
     }
     //if (undoList.backward == null)
@@ -464,6 +468,16 @@ class Canvas extends UIManager
     //undoList = undoList.forward;
     autoSetSize();
   
+  }
+
+  //Filters
+
+  void blackAndWhite()
+  {
+    if (layerIndex != -1)
+      {
+        layers.get(layerIndex).blackAndWhite();
+      }
   }
 
 
