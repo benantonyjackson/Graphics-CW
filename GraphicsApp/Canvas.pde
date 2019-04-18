@@ -492,7 +492,7 @@ class Canvas extends UIManager
   {
     if (layerIndex != -1)
       {
-        layers.get(layerIndex).convolute(blur_matrix);
+        layers.get(layerIndex).convolute(matrix);
       }
   }
 

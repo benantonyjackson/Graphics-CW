@@ -37,6 +37,9 @@ class MenuBar extends UIManager
     filterMenu.add(new Button("Black and white", "mnbtnBlackAndWhite"));
     filterMenu.add(new Button("Greyscale", "mnbtnGreyscale"));
     filterMenu.add(new Button("Blur", "mnbtnBlur"));
+    filterMenu.add(new Button("Sharpen", "mnbtnSharpen"));
+    filterMenu.add(new Button("Edge detect", "mnbtnEdgeDetect"));
+
     filterMenu.setActive(false);
 
     addButton("File");
@@ -238,6 +241,16 @@ class FilterMenu extends Menu
       if (s == "mnbtnBlur")
       {
         canvas.convolute(blur_matrix);
+      }
+
+      if (s == "mnbtnSharpen")
+      {
+        canvas.convolute(sharpen_matrix);
+      }
+
+      if (s == "mnbtnEdgeDetect")
+      {
+        canvas.convolute(edge_matrix);
       }
     }
 
