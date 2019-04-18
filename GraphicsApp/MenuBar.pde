@@ -36,6 +36,7 @@ class MenuBar extends UIManager
     Menu filterMenu = new FilterMenu();
     filterMenu.add(new Button("Black and white", "mnbtnBlackAndWhite"));
     filterMenu.add(new Button("Greyscale", "mnbtnGreyscale"));
+    filterMenu.add(new Button("Blur", "mnbtnBlur"));
     filterMenu.setActive(false);
 
     addButton("File");
@@ -232,6 +233,11 @@ class FilterMenu extends Menu
       if(s == "mnbtnGreyscale")
       {
         canvas.greyscale();
+      }
+
+      if (s == "mnbtnBlur")
+      {
+        canvas.convolute(blur_matrix);
       }
     }
 

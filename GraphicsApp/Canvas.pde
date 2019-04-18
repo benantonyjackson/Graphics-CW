@@ -488,6 +488,14 @@ class Canvas extends UIManager
       }
   }
 
+  void convolute(float [][] matrix)
+  {
+    if (layerIndex != -1)
+      {
+        layers.get(layerIndex).convolute(blur_matrix);
+      }
+  }
+
 
 }// End of canvas class
 

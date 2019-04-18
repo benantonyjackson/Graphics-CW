@@ -250,6 +250,11 @@ void greyscale()
   actImage = Greyscale(actImage);
   disImage = Greyscale(disImage);
 }
+void convolute(float [][] matrix)
+{
+  actImage = Convolute(actImage, matrix);
+  disImage = Convolute(disImage, matrix);
+}
  
 }
 //End of layer class
