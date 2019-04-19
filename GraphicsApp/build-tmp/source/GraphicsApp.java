@@ -702,24 +702,28 @@ class Canvas extends UIManager
 
       if (line.contentEquals("**"))
       {
-        println("Point c");
         continue;
       }
       if (line.contentEquals("Polygon"))
       {
-        println("Point a");
         Polygon poly = new Polygon(Float.parseFloat(Pixels[i++])
           , Boolean.parseBoolean(Pixels[i++]), Boolean.parseBoolean(Pixels[i++])
           , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
 
-        while (!Pixels[i++].contentEquals("*"))
+        while (!Pixels[i].contentEquals("*"))
         {
-          poly.actPoints.add(new Point(Integer.parseInt(Pixels[i]), Integer.parseInt(Pixels[i++])));
+
+          int pointX = Integer.parseInt(Pixels[i++]);
+          int pointY = Integer.parseInt(Pixels[i++]);
+
+          poly.actPoints.add(new Point(pointX, pointY));
         }
 
         poly.placed = true;
-
         layers.get(layers.size()-1).addShape(poly);
+        //The current line was read by the while loop but the line index was not incremented
+        //So the line index must be incremented now for the next itteration of the loop
+        i++;
         continue;
       }
       
