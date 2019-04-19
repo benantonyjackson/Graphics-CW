@@ -154,7 +154,7 @@ class Layer extends UIManager
     
   }
 
-  void addShape(Shape s)
+  public void addShape(Shape s)
   {
     add(s);
     shapeList.add(s);
@@ -277,7 +277,7 @@ class Point
   }
 }
 
-class Shape extends Widget
+public class Shape extends Widget
 {
   boolean filled;
   color fillColor;
@@ -285,6 +285,8 @@ class Shape extends Widget
   float rotation = 0;
   boolean placed = false;
   float scalar;
+  String type = "";
+
 
   void setFilled(boolean f)
   {
@@ -349,7 +351,7 @@ class Shape extends Widget
   }
 } // End if shape class
 
-class Polygon extends Shape
+public class Polygon extends Shape
 {
   //Points to display
   ArrayList<Point> points = new ArrayList<Point>();
@@ -361,6 +363,9 @@ class Polygon extends Shape
 
   Polygon(float scalar, boolean filled, boolean closedShape, color lineColor, color fillColor)
   {
+    type = "Polygon";
+
+
     this.scalar = scalar;
     this.lineColor = lineColor;
     this.filled = filled;
@@ -375,6 +380,8 @@ class Polygon extends Shape
   {
     Polygon temp = new Polygon( scalar,  filled,  closedShape,  lineColor,  fillColor);
     
+    type = "Polygon";
+
     temp.placed=true;
     temp.x=x;
     temp.y=y;
@@ -526,112 +533,5 @@ void drawLine(Point pointA, Point pointB)
 
 
   line(pointA.x, pointA.y, pointB.x, pointB.y);
-}
-
-void bresLine(int x1, int y1, int x2, int y2, color col){
-  stroke(col);
-  int incY = 1;
-  if (y1 > y2)
-  {
-    /*int temp = y2;
-    y2 = y1;
-    y1 = temp;*/
-    incY = -1;
-  }
-  int yd=y2-y1;  
-  
-  int lineEnd=x2;
-
-  int inc = 1;
-  if (x2 < x1)
-  {
-    /*int temp = x2;
-    x2=x1;
-    x1 = temp;*/
-    
-    inc = -1;
-    lineEnd = x1;
-  }
-  int xd=x2-x1;  
-  
-  int e=0;  
-  int y=y1;  
-  for (int x=x1; x>=x2 && x<=x1; x+=inc){  
-  point(x,y);
-  if((2*(e+yd))<xd){  
-    e+=yd;  
-      }else{  
-    y += incY;  
-    e+=(yd-xd);  
-     }
-  }
-  stroke(color(0,0,0));
-}
-
-void swap(double a, double b)
-{
-  a = a + b;
-}
-
-//Called to draw line to final image
-//Currently unfished. Need to adapt to write to image instead of screen
-void flattenLine(float x1, float y1, float x2, float y2, color col)
-{
-  //Ensures that line is drawn lowest point to highest point
-  if (y1 > y2)
-  {
-    //swap(x1, x2);
-    float temp = x1;
-    x1 = x2;
-    x2 = temp;
-    swap(y1, y2);
-    temp = y1;
-    y1=y2;
-    y2=temp;
-  }
-
-  //Stores the gradient of the line
-  float gradient = 0;
-  //
-  float increment = 1;
-
-   //Prevent divide by 0 error
-  if (x1 == x2)
-  {
-    //If the line is perfectly horizontal then the line has no gradient
-    gradient = 1;
-  }
-  else if (y1 != y2)
-  {
-    //Calculates the gradient of the line
-    float o = y2 - y1;
-    float a = abs(x2 - x1);
-    gradient = (o / a);
-
-    //Ensures pixels are no skippped at more extreme gradients
-    increment = 1 / (gradient + 1);
-    gradient /= gradient + 1;
-  }
-
-  //Determines whether the line is drawn left to right or right to left
-  if (x2 < x1)
-  {
-    increment = -increment;
-  }
-
-  //Stores the y value of the current pixel being drawn
-  //Initialised to the y value of lowest of the two points
-  float y = y1;
-  
-  for (float x = x1; (int)x != (int)x2; x += increment)
-  {
-    //Increases y by the gradient
-    y += gradient;
-
-    stroke(col);
-    point(x,y);
-    stroke(color(0,0,0));
-  }
-
 }
 

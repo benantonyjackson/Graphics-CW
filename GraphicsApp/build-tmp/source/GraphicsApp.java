@@ -320,7 +320,7 @@ class Canvas extends UIManager
   private int layerIndex = -1;
   
   //Stores a list of layers
-  private ArrayList<Layer> layers = new ArrayList<Layer>();
+  public ArrayList<Layer> layers = new ArrayList<Layer>();
 
   undoListNode undoList = new undoListNode();
   undoListNode head = undoList;
@@ -651,7 +651,33 @@ class Canvas extends UIManager
             data = "";
           }
       }
-      println("Point a");
+
+      for (Shape s: l.shapeList)
+      {
+        if (s.type == "Polygon")
+        {
+          output.println("Polygon");
+
+          Polygon poly = (Polygon) s;
+
+          output.println(poly.scalar);
+          output.println(poly.filled);
+          output.println(poly.closedShape);
+          output.println(poly.lineColor);
+          output.println(poly.fillColor);
+
+          for (Point p: poly.actPoints)
+          {
+            output.println(p.x);
+            output.println(p.y);
+          }
+        }
+        //Marks the end of a layers shape data
+        output.println("*");
+
+      }
+      //marks the end of a layers data
+      output.println("**");
     }
 
     output.println("/");
@@ -668,12 +694,33 @@ class Canvas extends UIManager
     
     while (true)
     {
-      
       line = Pixels[i++];
-      
       if (line.contains("/"))
       {
         break;
+      }
+
+      if (line.contentEquals("**"))
+      {
+        println("Point c");
+        continue;
+      }
+      if (line.contentEquals("Polygon"))
+      {
+        println("Point a");
+        Polygon poly = new Polygon(Float.parseFloat(Pixels[i++])
+          , Boolean.parseBoolean(Pixels[i++]), Boolean.parseBoolean(Pixels[i++])
+          , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
+
+        while (!Pixels[i++].contentEquals("*"))
+        {
+          poly.actPoints.add(new Point(Integer.parseInt(Pixels[i]), Integer.parseInt(Pixels[i++])));
+        }
+
+        poly.placed = true;
+
+        layers.get(layers.size()-1).addShape(poly);
+        continue;
       }
       
       int tempW = Integer.parseInt(split(line, ".")[0]);
@@ -1475,7 +1522,7 @@ class Point
   }
 }
 
-class Shape extends Widget
+public class Shape extends Widget
 {
   boolean filled;
   int fillColor;
@@ -1483,6 +1530,8 @@ class Shape extends Widget
   float rotation = 0;
   boolean placed = false;
   float scalar;
+  String type = "";
+
 
   public void setFilled(boolean f)
   {
@@ -1547,7 +1596,7 @@ class Shape extends Widget
   }
 } // End if shape class
 
-class Polygon extends Shape
+public class Polygon extends Shape
 {
   //Points to display
   ArrayList<Point> points = new ArrayList<Point>();
@@ -1559,6 +1608,9 @@ class Polygon extends Shape
 
   Polygon(float scalar, boolean filled, boolean closedShape, int lineColor, int fillColor)
   {
+    type = "Polygon";
+
+
     this.scalar = scalar;
     this.lineColor = lineColor;
     this.filled = filled;
@@ -1573,6 +1625,8 @@ class Polygon extends Shape
   {
     Polygon temp = new Polygon( scalar,  filled,  closedShape,  lineColor,  fillColor);
     
+    type = "Polygon";
+
     temp.placed=true;
     temp.x=x;
     temp.y=y;
@@ -1724,113 +1778,6 @@ public void drawLine(Point pointA, Point pointB)
 
 
   line(pointA.x, pointA.y, pointB.x, pointB.y);
-}
-
-public void bresLine(int x1, int y1, int x2, int y2, int col){
-  stroke(col);
-  int incY = 1;
-  if (y1 > y2)
-  {
-    /*int temp = y2;
-    y2 = y1;
-    y1 = temp;*/
-    incY = -1;
-  }
-  int yd=y2-y1;  
-  
-  int lineEnd=x2;
-
-  int inc = 1;
-  if (x2 < x1)
-  {
-    /*int temp = x2;
-    x2=x1;
-    x1 = temp;*/
-    
-    inc = -1;
-    lineEnd = x1;
-  }
-  int xd=x2-x1;  
-  
-  int e=0;  
-  int y=y1;  
-  for (int x=x1; x>=x2 && x<=x1; x+=inc){  
-  point(x,y);
-  if((2*(e+yd))<xd){  
-    e+=yd;  
-      }else{  
-    y += incY;  
-    e+=(yd-xd);  
-     }
-  }
-  stroke(color(0,0,0));
-}
-
-public void swap(double a, double b)
-{
-  a = a + b;
-}
-
-//Called to draw line to final image
-//Currently unfished. Need to adapt to write to image instead of screen
-public void flattenLine(float x1, float y1, float x2, float y2, int col)
-{
-  //Ensures that line is drawn lowest point to highest point
-  if (y1 > y2)
-  {
-    //swap(x1, x2);
-    float temp = x1;
-    x1 = x2;
-    x2 = temp;
-    swap(y1, y2);
-    temp = y1;
-    y1=y2;
-    y2=temp;
-  }
-
-  //Stores the gradient of the line
-  float gradient = 0;
-  //
-  float increment = 1;
-
-   //Prevent divide by 0 error
-  if (x1 == x2)
-  {
-    //If the line is perfectly horizontal then the line has no gradient
-    gradient = 1;
-  }
-  else if (y1 != y2)
-  {
-    //Calculates the gradient of the line
-    float o = y2 - y1;
-    float a = abs(x2 - x1);
-    gradient = (o / a);
-
-    //Ensures pixels are no skippped at more extreme gradients
-    increment = 1 / (gradient + 1);
-    gradient /= gradient + 1;
-  }
-
-  //Determines whether the line is drawn left to right or right to left
-  if (x2 < x1)
-  {
-    increment = -increment;
-  }
-
-  //Stores the y value of the current pixel being drawn
-  //Initialised to the y value of lowest of the two points
-  float y = y1;
-  
-  for (float x = x1; (int)x != (int)x2; x += increment)
-  {
-    //Increases y by the gradient
-    y += gradient;
-
-    stroke(col);
-    point(x,y);
-    stroke(color(0,0,0));
-  }
-
 }
 
 class LayerButton extends Button

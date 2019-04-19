@@ -14,7 +14,7 @@ class Canvas extends UIManager
   private int layerIndex = -1;
   
   //Stores a list of layers
-  private ArrayList<Layer> layers = new ArrayList<Layer>();
+  public ArrayList<Layer> layers = new ArrayList<Layer>();
 
   undoListNode undoList = new undoListNode();
   undoListNode head = undoList;
@@ -345,7 +345,33 @@ class Canvas extends UIManager
             data = "";
           }
       }
-      println("Point a");
+
+      for (Shape s: l.shapeList)
+      {
+        if (s.type == "Polygon")
+        {
+          output.println("Polygon");
+
+          Polygon poly = (Polygon) s;
+
+          output.println(poly.scalar);
+          output.println(poly.filled);
+          output.println(poly.closedShape);
+          output.println(poly.lineColor);
+          output.println(poly.fillColor);
+
+          for (Point p: poly.actPoints)
+          {
+            output.println(p.x);
+            output.println(p.y);
+          }
+        }
+        //Marks the end of a layers shape data
+        output.println("*");
+
+      }
+      //marks the end of a layers data
+      output.println("**");
     }
 
     output.println("/");
@@ -362,12 +388,33 @@ class Canvas extends UIManager
     
     while (true)
     {
-      
       line = Pixels[i++];
-      
       if (line.contains("/"))
       {
         break;
+      }
+
+      if (line.contentEquals("**"))
+      {
+        println("Point c");
+        continue;
+      }
+      if (line.contentEquals("Polygon"))
+      {
+        println("Point a");
+        Polygon poly = new Polygon(Float.parseFloat(Pixels[i++])
+          , Boolean.parseBoolean(Pixels[i++]), Boolean.parseBoolean(Pixels[i++])
+          , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
+
+        while (!Pixels[i++].contentEquals("*"))
+        {
+          poly.actPoints.add(new Point(Integer.parseInt(Pixels[i]), Integer.parseInt(Pixels[i++])));
+        }
+
+        poly.placed = true;
+
+        layers.get(layers.size()-1).addShape(poly);
+        continue;
       }
       
       int tempW = Integer.parseInt(split(line, ".")[0]);
