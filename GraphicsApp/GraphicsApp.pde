@@ -16,7 +16,10 @@ color windowColor = color(25,25,25);
 
 public Canvas canvas;
 public LayerSelector layerSelector;
-public ColorSelector lineColor = new ColorSelector(10, 100);
+//public Label lblLineColor = new Label(10, 100, "Line");
+//public Label lblFillColor = new Label(10, 100, "Fill");
+public ColorSelector lineColor = new ColorSelector(35, 100);
+public ColorSelector fillColor = new ColorSelector(35, 130);
 
 
 
@@ -30,6 +33,11 @@ void setup()
   surface.setResizable(true);
   ui = new UIManager(new MenuBar());
   ui.add(lineColor);
+  ui.add(fillColor);
+  ui.add(new Label(10, 100, "Line"));
+  ui.add(new Label(10, 130, "Fill"));
+ // ui.add(lblLineColor);
+  //ui.add(lblFillColor);
   ui.name="ui";
   
   

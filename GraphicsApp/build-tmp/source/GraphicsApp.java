@@ -38,7 +38,10 @@ int windowColor = color(25,25,25);
 
 public Canvas canvas;
 public LayerSelector layerSelector;
-public ColorSelector lineColor = new ColorSelector(10, 100);
+//public Label lblLineColor = new Label(10, 100, "Line");
+//public Label lblFillColor = new Label(10, 100, "Fill");
+public ColorSelector lineColor = new ColorSelector(35, 100);
+public ColorSelector fillColor = new ColorSelector(35, 130);
 
 
 
@@ -52,6 +55,11 @@ public void setup()
   surface.setResizable(true);
   ui = new UIManager(new MenuBar());
   ui.add(lineColor);
+  ui.add(fillColor);
+  ui.add(new Label(10, 100, "Line"));
+  ui.add(new Label(10, 130, "Fill"));
+ // ui.add(lblLineColor);
+  //ui.add(lblFillColor);
   ui.name="ui";
   
   
@@ -1676,6 +1684,8 @@ public class Polygon extends Shape
   boolean filled=false;
   boolean closedShape=false;
 
+  PShape shape = createShape();
+
   Polygon(float scalar, boolean filled, boolean closedShape, int lineColor, int fillColor)
   {
     type = "Polygon";
@@ -1709,6 +1719,38 @@ public class Polygon extends Shape
     }
 
     return temp;
+  }
+
+  public void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+    PShape shape=createShape();
+
+    shape.beginShape();
+    if(!filled)
+    {
+      shape.noFill();
+    }
+    else
+    {
+      shape.fill(fillColor);
+    }
+
+    shape.stroke(lineColor);
+
+    for (Point p: actPoints)
+    {
+      shape.vertex(p.x, p.y);
+    }
+    if (closedShape)
+    {
+      shape.endShape(CLOSE);
+    }
+    else
+    {
+      shape.endShape();
+    }
+
+    pg.shape(shape, 0, 0);
   }
 
   public void addPointAtMouseCursor()
@@ -1752,7 +1794,8 @@ public class Polygon extends Shape
       addPoint(points.get(0).x, points.get(0).y);
      }
 
-     //println("point c");
+     scaleAfterReize(scalar);
+
      wasClicked = true;
 
   }
@@ -1785,57 +1828,58 @@ public class Polygon extends Shape
     {
       points.add(p.scale(scalar));
     }
+
+    shape=createShape();
+
+    shape.beginShape();
+    if(!filled)
+    {
+      shape.noFill();
+    }
+    else
+    {
+      shape.fill(fillColor);
+    }
+
+    shape.stroke(lineColor);
+
+    for (Point p: points)
+    {
+      shape.vertex(p.x, p.y);
+    }
+    if (closedShape)
+    {
+      shape.endShape(CLOSE);
+    }
+    else
+    {
+
+      shape.endShape();
+    }
   }
 
   public void draw()
   {
-    Point prevPoint =null;
-    for (Point p: points)
+    
+    if (!placed)
     {
+      shape=createShape();
 
-      if(prevPoint == null)
+      shape.beginShape();
+      shape.stroke(lineColor);
+
+      for (Point p: points)
       {
-        prevPoint = p;
+        shape.vertex(p.x, p.y);
       }
-      
-      //DrawLine between prevPoint and p
-      stroke(lineColor);
-      //strokeWeight(20);
-      drawLine(prevPoint, p);
-      stroke(color(0,0,0));
-      //strokeWeight(0);
-      prevPoint = p;
-    }
 
-    if (!placed && points.size() > 0)
-    {
-      
-      Point mPoint = new Point(mouseX, mouseY);
-      stroke(lineColor);
-      drawLine (prevPoint, mPoint);
-      stroke(color(0,0,0));
+      shape.vertex(mouseX, mouseY);
+      shape.endShape();
     }
+    
 
-    if (filled)
-    {
-      //TODO add code to fill shape
-    }
-  }
+    shape(shape,0,0);
 
-  public void flatten(PGraphics pg, int offsetX, int offsetY)
-  {
-    pg.stroke(lineColor);
-    for (int i = 0; i < actPoints.size() - 1; i++)
-    {
-      pg.line(actPoints.get(i).x, actPoints.get(i).y, actPoints.get(i+1).x, actPoints.get(i+1).y);
-    }
-
-    if (closedShape)
-    {
-      pg.line(actPoints.get(actPoints.size()-1).x, actPoints.get(actPoints.size()-1).y,
-       actPoints.get(0).x, actPoints.get(0).y);
-    }
-    pg.stroke(0);
   }
 
 
@@ -2261,13 +2305,13 @@ class ShapeMenu extends Menu
       if (s == "mnbtnPolyline")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
-          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/color(0,0,0));
+          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/fillColor.selectedColor);
 
       }
       if (s == "mnbtnPolyshape")
       {
-        canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/true
-          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/color(0,0,0));
+        canvas.addPolygon(/*boolean filled*/true, /*boolean closedShape*/true
+          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/fillColor.selectedColor);
       }
     }
   }

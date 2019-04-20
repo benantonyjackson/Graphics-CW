@@ -361,6 +361,8 @@ public class Polygon extends Shape
   boolean filled=false;
   boolean closedShape=false;
 
+  PShape shape = createShape();
+
   Polygon(float scalar, boolean filled, boolean closedShape, color lineColor, color fillColor)
   {
     type = "Polygon";
@@ -394,6 +396,38 @@ public class Polygon extends Shape
     }
 
     return temp;
+  }
+
+  void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+    PShape shape=createShape();
+
+    shape.beginShape();
+    if(!filled)
+    {
+      shape.noFill();
+    }
+    else
+    {
+      shape.fill(fillColor);
+    }
+
+    shape.stroke(lineColor);
+
+    for (Point p: actPoints)
+    {
+      shape.vertex(p.x, p.y);
+    }
+    if (closedShape)
+    {
+      shape.endShape(CLOSE);
+    }
+    else
+    {
+      shape.endShape();
+    }
+
+    pg.shape(shape, 0, 0);
   }
 
   void addPointAtMouseCursor()
@@ -437,7 +471,8 @@ public class Polygon extends Shape
       addPoint(points.get(0).x, points.get(0).y);
      }
 
-     //println("point c");
+     scaleAfterReize(scalar);
+
      wasClicked = true;
 
   }
@@ -470,57 +505,58 @@ public class Polygon extends Shape
     {
       points.add(p.scale(scalar));
     }
+
+    shape=createShape();
+
+    shape.beginShape();
+    if(!filled)
+    {
+      shape.noFill();
+    }
+    else
+    {
+      shape.fill(fillColor);
+    }
+
+    shape.stroke(lineColor);
+
+    for (Point p: points)
+    {
+      shape.vertex(p.x, p.y);
+    }
+    if (closedShape)
+    {
+      shape.endShape(CLOSE);
+    }
+    else
+    {
+
+      shape.endShape();
+    }
   }
 
   void draw()
   {
-    Point prevPoint =null;
-    for (Point p: points)
+    
+    if (!placed)
     {
+      shape=createShape();
 
-      if(prevPoint == null)
+      shape.beginShape();
+      shape.stroke(lineColor);
+
+      for (Point p: points)
       {
-        prevPoint = p;
+        shape.vertex(p.x, p.y);
       }
-      
-      //DrawLine between prevPoint and p
-      stroke(lineColor);
-      //strokeWeight(20);
-      drawLine(prevPoint, p);
-      stroke(color(0,0,0));
-      //strokeWeight(0);
-      prevPoint = p;
-    }
 
-    if (!placed && points.size() > 0)
-    {
-      
-      Point mPoint = new Point(mouseX, mouseY);
-      stroke(lineColor);
-      drawLine (prevPoint, mPoint);
-      stroke(color(0,0,0));
+      shape.vertex(mouseX, mouseY);
+      shape.endShape();
     }
+    
 
-    if (filled)
-    {
-      //TODO add code to fill shape
-    }
-  }
+    shape(shape,0,0);
 
-  void flatten(PGraphics pg, int offsetX, int offsetY)
-  {
-    pg.stroke(lineColor);
-    for (int i = 0; i < actPoints.size() - 1; i++)
-    {
-      pg.line(actPoints.get(i).x, actPoints.get(i).y, actPoints.get(i+1).x, actPoints.get(i+1).y);
-    }
-
-    if (closedShape)
-    {
-      pg.line(actPoints.get(actPoints.size()-1).x, actPoints.get(actPoints.size()-1).y,
-       actPoints.get(0).x, actPoints.get(0).y);
-    }
-    pg.stroke(0);
   }
 
 
