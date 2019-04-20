@@ -286,7 +286,7 @@ public class Shape extends Widget
   boolean placed = false;
   float scalar;
   String type = "";
-
+  boolean selected = false;
 
   void setFilled(boolean f)
   {
@@ -299,6 +299,12 @@ public class Shape extends Widget
     setFillColor(c);
   }
 
+  void mouseReleased()
+  {
+    super.mouseReleased();
+
+    selected = wasClicked;
+  }
 
 
   boolean getFilled()
@@ -442,24 +448,26 @@ public class Polygon extends Shape
     Point ap = new Point(round((x-canvas.x) / scalar), round((y-canvas.y) / scalar));
     actPoints.add(ap);
 
-    if (x < this.x)
+    if (x < this.x || points.size() == 1)
     {
+      w += abs(this.x-x);
       this.x=x;
     }
 
-    if (y < this.y)
+    if (y < this.y || points.size() == 1)
     {
+      h += abs(this.y-y);
       this.y=y;
     }
 
-    if (x > this.w)
+    if (x > this.x+this.w)
     {
-      this.w=x;
+      this.w=x-this.x;
     }
 
-    if (y > this.h)
+    if (y > this.y+this.h)
     {
-      this.h = y;
+      this.h = y-this.y;
     }
   }
 
@@ -492,8 +500,6 @@ public class Polygon extends Shape
        place();
       } 
     }
-
-    //println("Was clicked: " + wasClicked);
   }
 
   void scaleAfterReize(float scalar)
@@ -533,6 +539,37 @@ public class Polygon extends Shape
 
       shape.endShape();
     }
+
+
+    for (Point p: points)
+    {
+
+      int x = p.x;
+      int y = p.y;
+
+      if (x < this.x || points.size() == 1)
+      {
+        w += abs(this.x-x);
+        this.x=x;
+      }
+
+      if (y < this.y || points.size() == 1)
+      {
+        h += abs(this.y-y);
+        this.y=y;
+      }
+
+      if (x > this.x+this.w)
+      {
+        this.w=x-this.x;
+      }
+
+      if (y > this.y+this.h)
+      {
+        this.h = y-this.y;
+      }
+    }
+
   }
 
   void draw()
@@ -556,6 +593,11 @@ public class Polygon extends Shape
     
 
     shape(shape,0,0);
+
+    if (selected && placed)
+    {
+      rect(x,y,w,h);
+    }
 
   }
 
