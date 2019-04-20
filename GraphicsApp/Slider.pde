@@ -88,6 +88,9 @@ class Slider extends Widget
 
   void draw()
   {
+    textInput.x= x+w+10;
+    textInput.y = y;
+
     fill(0,0,0);
     //Draws the line which shows where the slide bar begins and ends
     rect(x,y + 5,w,0);

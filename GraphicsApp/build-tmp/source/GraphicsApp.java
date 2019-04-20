@@ -38,7 +38,7 @@ int windowColor = color(25,25,25);
 
 public Canvas canvas;
 public LayerSelector layerSelector;
-
+public ColorSelector lineColor = new ColorSelector(10, 100);
 
 
 
@@ -51,6 +51,7 @@ public void setup()
   
   surface.setResizable(true);
   ui = new UIManager(new MenuBar());
+  ui.add(lineColor);
   ui.name="ui";
   
   
@@ -170,9 +171,9 @@ public void loadProject(File inputDir)
   canvas.loadProject(lines);
 }
 
-public void PickColor()
+public void PickColor(ColorSelector sel)
 {
-  ui.add(new ColorPickerWindow());
+  ui.add(new ColorPickerWindow(sel));
 }
 
 class Button extends Widget
@@ -872,22 +873,38 @@ class undoListNode
 class ColorPickerWindow extends FloatingWindow
 {
 	private PImage colorChart;
+	private Slider rSlider;
+	private Slider gSlider;
 	private Slider bSlider;
 	private int chartSize = 255;
-	ColorPickerWindow()
+	private Button confirmButton = null;
+
+	ColorSelector selector = null;
+	ColorPickerWindow(ColorSelector sel)
 	{
 		x = 50;
 		y = 50;
 		w = 400;
 		h = 400;
 
+		rSlider = new Slider(10, 290, 255, 0, 255);
+		gSlider = new Slider(10, 320, 255, 0, 255);
 		bSlider = new Slider(10, 350, 255, 0, 255);
+
+		add(rSlider);
+		add(gSlider);
 		add(bSlider);
 
 		closeButton.x = x+w - 20;
     	closeButton.y =  y;
     	colorChart = new PImage(chartSize, chartSize);
     	setCharColor();
+
+    	selector = sel;
+
+    	confirmButton = new Button("Confirm", 320, 300, 50, 25);
+
+    	add(confirmButton);
 
 	}
 
@@ -897,8 +914,7 @@ class ColorPickerWindow extends FloatingWindow
     	{
     		for (int y = 0; y < chartSize; y++)
     		{
-    			colorChart.set(x, y, color(x, y, bSlider.getValue()));
-
+    			colorChart.set(x, y, color(rSlider.getValue() ,gSlider.getValue() ,bSlider.getValue()));
     		}
     	}
 	}
@@ -915,11 +931,61 @@ class ColorPickerWindow extends FloatingWindow
 		setCharColor();
 	}
 
+	public void mouseReleased()
+	{
+		super.mouseReleased();
+
+		if (confirmButton.wasClicked)
+		{
+			closed=true;
+
+			if(selector != null)
+			{
+				selector.selectedColor = color(rSlider.getValue() ,gSlider.getValue() ,bSlider.getValue());
+			}
+			
+		}
+	}
+
 	public void draw()
 	{
 		super.draw();
+
+
+
 		image(colorChart, x + 10, y + 30);
 	}
+}
+class ColorSelector extends Widget
+{
+
+	int selectedColor = color(255,0,0);
+	ColorSelector(int x, int y)
+	{
+		w = 20;
+		h = 20;
+		this.x=x;
+		this.y=y;
+	}
+
+	public void draw()
+	{
+		stroke(selectedColor);
+		fill(selectedColor);
+		rect(x,y,w,h);
+		stroke(0);
+	}
+
+	public void mouseReleased()
+	{
+		super.mouseReleased();
+		if (wasClicked)
+		{
+			PickColor(this);
+		}
+
+	}
+
 }
 public PImage BlackAndWhite(PImage img)
 {
@@ -2176,7 +2242,7 @@ class ImageMenu extends Menu
     {
       if (s == "mnbtnSelectColor")
       {
-        PickColor();
+        PickColor(null);
 
       }
     }
@@ -2597,6 +2663,9 @@ class Slider extends Widget
 
   public void draw()
   {
+    textInput.x= x+w+10;
+    textInput.y = y;
+
     fill(0,0,0);
     //Draws the line which shows where the slide bar begins and ends
     rect(x,y + 5,w,0);

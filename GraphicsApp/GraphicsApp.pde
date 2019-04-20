@@ -16,7 +16,7 @@ color windowColor = color(25,25,25);
 
 public Canvas canvas;
 public LayerSelector layerSelector;
-
+public ColorSelector lineColor = new ColorSelector(10, 100);
 
 
 
@@ -29,6 +29,7 @@ void setup()
   
   surface.setResizable(true);
   ui = new UIManager(new MenuBar());
+  ui.add(lineColor);
   ui.name="ui";
   
   
@@ -148,8 +149,8 @@ void loadProject(File inputDir)
   canvas.loadProject(lines);
 }
 
-void PickColor()
+void PickColor(ColorSelector sel)
 {
-  ui.add(new ColorPickerWindow());
+  ui.add(new ColorPickerWindow(sel));
 }
 

@@ -186,7 +186,7 @@ class ImageMenu extends Menu
     {
       if (s == "mnbtnSelectColor")
       {
-        PickColor();
+        PickColor(null);
 
       }
     }
