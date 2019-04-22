@@ -181,6 +181,11 @@ class Layer extends UIManager
   {
     addShape(new Polygon(scalar, filled, closedShape, lineColor, fillColor));
   }
+
+  void addRectangle(boolean filled, color lineColor, color fillColor)
+  {
+    addShape(new Rectangle(scalar, filled, lineColor, fillColor));
+  }
  
  //Start of Functions
 PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
@@ -318,6 +323,12 @@ public class Shape extends Widget
   void mouseReleased()
   {
     super.mouseReleased();
+
+    if (wasClicked)
+    {
+      lineColorSelector.selectedColor = lineColor;
+      fillColorSelector.selectedColor = fillColor;
+    }
   }
 
 
@@ -370,6 +381,88 @@ public class Shape extends Widget
     return temp;
   }
 } // End if shape class
+
+public class Rectangle extends Shape 
+{
+  Rectangle(float scalar, boolean filled, color lineColor, color fillColor)
+  {
+    type = "Rectangle";
+
+    toggleable = true;
+    w=0;
+    h=0;
+
+    this.scalar = scalar;
+    this.lineColor = lineColor;
+    this.filled = filled;
+    this.fillColor = fillColor;
+
+  }
+
+  void mousePressed()
+  {
+    if (!placed)
+    {
+      x=mouseX;
+      y=mouseY;
+    }
+  }
+
+  void mouseReleased()
+  {
+
+    if (!placed)
+    {
+      placed = true;
+      w = mouseX - x;
+      h = mouseY - y;
+    }
+    super.mouseReleased();
+
+
+    
+  }
+
+  void draw()
+  {
+    if (!placed)
+    {
+
+      if (mousePressed)
+      {
+        rect(x,y, (mouseX - x), (mouseY - y));
+      }
+
+      
+    }
+    else 
+    {
+      stroke(lineColor);
+      if (!filled)
+      {
+        noFill();
+      }
+      else
+      {
+        fill(fillColor);
+      }
+      rect(x,y,w,h);
+
+      stroke(0);
+
+      if (selected)
+      {
+        noFill();
+        strokeWeight(5);
+
+        rect(x,y,w,h);
+
+        strokeWeight(1);
+      }
+    }
+
+  }
+}
 
 public class Polygon extends Shape
 {
@@ -498,14 +591,6 @@ public class Polygon extends Shape
       {
        place();
       } 
-    }
-
-    if (wasClicked)
-    {
-      lineColorSelector.selectedColor = lineColor;
-      fillColorSelector.selectedColor = fillColor;
-
-      println("blue: " + blue(lineColor));
     }
   }
 

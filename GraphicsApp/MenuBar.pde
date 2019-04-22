@@ -31,6 +31,7 @@ class MenuBar extends UIManager
     Menu shapeMenu = new ShapeMenu();
     shapeMenu.add(new Button("Polyline", "mnbtnPolyline"));
     shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
+    shapeMenu.add(new Button("Rectangle", "mnbtnRectangle"));
     shapeMenu.setActive(false);
 
     Menu filterMenu = new FilterMenu();
@@ -211,6 +212,12 @@ class ShapeMenu extends Menu
       if (s == "mnbtnPolyshape")
       {
         canvas.addPolygon(/*boolean filled*/true, /*boolean closedShape*/true
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
+      }
+
+      if (s == "mnbtnRectangle")
+      {
+        canvas.addRectangle(/*boolean filled*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }

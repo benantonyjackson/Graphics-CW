@@ -58,6 +58,16 @@ class Canvas extends UIManager
     
   }
 
+  void addRectangle(boolean filled, color lineColor, color fillColor)
+  {
+    if (layerIndex > -1)
+    {
+      saveLayersToUndo(true);
+      layers.get(layerIndex).addRectangle(filled,lineColor,fillColor);
+    }
+    
+  }
+
   void autoSetSize()
   {
     float scalar;

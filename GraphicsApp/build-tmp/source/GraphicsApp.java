@@ -404,6 +404,16 @@ class Canvas extends UIManager
     
   }
 
+  public void addRectangle(boolean filled, int lineColor, int fillColor)
+  {
+    if (layerIndex > -1)
+    {
+      saveLayersToUndo(true);
+      layers.get(layerIndex).addRectangle(filled,lineColor,fillColor);
+    }
+    
+  }
+
   public void autoSetSize()
   {
     float scalar;
@@ -1542,6 +1552,11 @@ class Layer extends UIManager
   {
     addShape(new Polygon(scalar, filled, closedShape, lineColor, fillColor));
   }
+
+  public void addRectangle(boolean filled, int lineColor, int fillColor)
+  {
+    addShape(new Rectangle(scalar, filled, lineColor, fillColor));
+  }
  
  //Start of Functions
 public PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
@@ -1679,6 +1694,12 @@ public class Shape extends Widget
   public void mouseReleased()
   {
     super.mouseReleased();
+
+    if (wasClicked)
+    {
+      lineColorSelector.selectedColor = lineColor;
+      fillColorSelector.selectedColor = fillColor;
+    }
   }
 
 
@@ -1731,6 +1752,88 @@ public class Shape extends Widget
     return temp;
   }
 } // End if shape class
+
+public class Rectangle extends Shape 
+{
+  Rectangle(float scalar, boolean filled, int lineColor, int fillColor)
+  {
+    type = "Rectangle";
+
+    toggleable = true;
+    w=0;
+    h=0;
+
+    this.scalar = scalar;
+    this.lineColor = lineColor;
+    this.filled = filled;
+    this.fillColor = fillColor;
+
+  }
+
+  public void mousePressed()
+  {
+    if (!placed)
+    {
+      x=mouseX;
+      y=mouseY;
+    }
+  }
+
+  public void mouseReleased()
+  {
+
+    if (!placed)
+    {
+      placed = true;
+      w = mouseX - x;
+      h = mouseY - y;
+    }
+    super.mouseReleased();
+
+
+    
+  }
+
+  public void draw()
+  {
+    if (!placed)
+    {
+
+      if (mousePressed)
+      {
+        rect(x,y, (mouseX - x), (mouseY - y));
+      }
+
+      
+    }
+    else 
+    {
+      stroke(lineColor);
+      if (!filled)
+      {
+        noFill();
+      }
+      else
+      {
+        fill(fillColor);
+      }
+      rect(x,y,w,h);
+
+      stroke(0);
+
+      if (selected)
+      {
+        noFill();
+        strokeWeight(5);
+
+        rect(x,y,w,h);
+
+        strokeWeight(1);
+      }
+    }
+
+  }
+}
 
 public class Polygon extends Shape
 {
@@ -1859,14 +1962,6 @@ public class Polygon extends Shape
       {
        place();
       } 
-    }
-
-    if (wasClicked)
-    {
-      lineColorSelector.selectedColor = lineColor;
-      fillColorSelector.selectedColor = fillColor;
-
-      println("blue: " + blue(lineColor));
     }
   }
 
@@ -2221,6 +2316,7 @@ class MenuBar extends UIManager
     Menu shapeMenu = new ShapeMenu();
     shapeMenu.add(new Button("Polyline", "mnbtnPolyline"));
     shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
+    shapeMenu.add(new Button("Rectangle", "mnbtnRectangle"));
     shapeMenu.setActive(false);
 
     Menu filterMenu = new FilterMenu();
@@ -2401,6 +2497,12 @@ class ShapeMenu extends Menu
       if (s == "mnbtnPolyshape")
       {
         canvas.addPolygon(/*boolean filled*/true, /*boolean closedShape*/true
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
+      }
+
+      if (s == "mnbtnRectangle")
+      {
+        canvas.addRectangle(/*boolean filled*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }
