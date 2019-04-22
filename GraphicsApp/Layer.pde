@@ -20,6 +20,8 @@ class Layer extends UIManager
   
   private float rotation = 0; 
 
+  Shape selectedShape = null;
+
   ArrayList<Shape> shapeList = new ArrayList<Shape>();
   
   Layer(File sourceImage)
@@ -82,19 +84,27 @@ class Layer extends UIManager
 
   void mouseReleased()
   {
-    //println("point d");
+
     super.mouseReleased();
     for (Shape s: shapeList)
     {
-      //s.mouseReleased();
-      //println("Point b");
-      //println("Was clicked 2: " + s.wasClicked);
       if (s.wasClicked)
       {
-        //println("Point a");
         wasClicked = true;
         s.wasClicked = false;
+        selectedShape = s;
+        s.selected = true;
+        break;
       }
+    }
+
+    if (selectedShape != null)
+    {
+      //println(selectedShape.type);
+    }
+    else 
+    {
+      //println("Null");
     }
   }
 
@@ -302,8 +312,6 @@ public class Shape extends Widget
   void mouseReleased()
   {
     super.mouseReleased();
-
-    selected = wasClicked;
   }
 
 
@@ -372,6 +380,8 @@ public class Polygon extends Shape
   Polygon(float scalar, boolean filled, boolean closedShape, color lineColor, color fillColor)
   {
     type = "Polygon";
+
+    toggleable = true;
 
 
     this.scalar = scalar;
@@ -499,6 +509,12 @@ public class Polygon extends Shape
       {
        place();
       } 
+    }
+
+    if (selected)
+    {
+      lineColorSelector.selectedColor = lineColor;
+      fillColorSelector.selectedColor = fillColor;
     }
   }
 

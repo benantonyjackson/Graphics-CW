@@ -186,7 +186,7 @@ class ImageMenu extends Menu
     {
       if (s == "mnbtnSelectColor")
       {
-        PickColor(null);
+        PickColor(null,255,0,0);
 
       }
     }
@@ -205,13 +205,13 @@ class ShapeMenu extends Menu
       if (s == "mnbtnPolyline")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
-          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/fillColor.selectedColor);
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
 
       }
       if (s == "mnbtnPolyshape")
       {
         canvas.addPolygon(/*boolean filled*/true, /*boolean closedShape*/true
-          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/fillColor.selectedColor);
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }
   }

@@ -205,7 +205,6 @@ class Canvas extends UIManager
           {
             if (i == layerIndex && cloneCurrentLayer)
             {
-              println("Point b");
               layers.get(i).changed = true;
               undoList.layers.add(layers.get(layerIndex).clone());
             } 

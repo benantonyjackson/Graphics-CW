@@ -8,7 +8,7 @@ class ColorPickerWindow extends FloatingWindow
 	private Button confirmButton = null;
 
 	ColorSelector selector = null;
-	ColorPickerWindow(ColorSelector sel)
+	ColorPickerWindow(ColorSelector sel, int r, int g, int b)
 	{
 		x = 50;
 		y = 50;
@@ -18,6 +18,10 @@ class ColorPickerWindow extends FloatingWindow
 		rSlider = new Slider(10, 290, 255, 0, 255);
 		gSlider = new Slider(10, 320, 255, 0, 255);
 		bSlider = new Slider(10, 350, 255, 0, 255);
+
+		rSlider.setValue(r);
+		gSlider.setValue(g);
+		bSlider.setValue(b);
 
 		add(rSlider);
 		add(gSlider);
@@ -70,6 +74,10 @@ class ColorPickerWindow extends FloatingWindow
 			if(selector != null)
 			{
 				selector.selectedColor = color(rSlider.getValue() ,gSlider.getValue() ,bSlider.getValue());
+
+				
+
+				
 			}
 			
 		}

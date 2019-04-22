@@ -23,7 +23,7 @@ class ColorSelector extends Widget
 		super.mouseReleased();
 		if (wasClicked)
 		{
-			PickColor(this);
+			PickColor(this, (int)red(selectedColor), (int)green(selectedColor), (int)blue(selectedColor));
 		}
 
 	}

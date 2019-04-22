@@ -73,6 +73,7 @@ class Slider extends Widget
 
     //Changes the display text
     textInput.setString(Float.toString(value));
+
   }
   
   void resize(int dtW, int dtH)

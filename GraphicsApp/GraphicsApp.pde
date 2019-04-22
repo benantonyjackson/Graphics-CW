@@ -18,8 +18,8 @@ public Canvas canvas;
 public LayerSelector layerSelector;
 //public Label lblLineColor = new Label(10, 100, "Line");
 //public Label lblFillColor = new Label(10, 100, "Fill");
-public ColorSelector lineColor = new ColorSelector(35, 100);
-public ColorSelector fillColor = new ColorSelector(35, 130);
+public ColorSelector lineColorSelector = new ColorSelector(35, 100);
+public ColorSelector fillColorSelector = new ColorSelector(35, 130);
 
 
 
@@ -32,8 +32,8 @@ void setup()
   
   surface.setResizable(true);
   ui = new UIManager(new MenuBar());
-  ui.add(lineColor);
-  ui.add(fillColor);
+  ui.add(lineColorSelector);
+  ui.add(fillColorSelector);
   ui.add(new Label(10, 100, "Line"));
   ui.add(new Label(10, 130, "Fill"));
  // ui.add(lblLineColor);
@@ -71,6 +71,21 @@ void mousePressed()
 void mouseClicked ()
 {
   ui.mouseClicked();
+  if (canvas != null)
+  {
+    if (canvas.layerIndex > -1)
+    {
+      Layer l = canvas.layers.get(canvas.layerIndex);
+
+      if (l.selectedShape != null)
+      {
+        println("Point a");
+        l.selectedShape.lineColor = lineColorSelector.selectedColor;
+        l.selectedShape.fillColor = fillColorSelector.selectedColor;
+        println("Fill color blue: " + blue(fillColorSelector.selectedColor));
+      }
+    }
+  }
 }
 
 void mouseMoved()
@@ -81,6 +96,23 @@ void mouseMoved()
 void mouseReleased()
 {
   ui.mouseReleased();
+
+  if (canvas != null)
+  {
+    if (canvas.layerIndex > -1)
+    {
+      Layer l = canvas.layers.get(canvas.layerIndex);
+
+      if (l.selectedShape != null)
+      {
+        println("Point a");
+        l.selectedShape.lineColor = lineColorSelector.selectedColor;
+        l.selectedShape.fillColor = fillColorSelector.selectedColor;
+        l.selectedShape.scaleAfterReize(l.scalar);
+        println("Fill color blue: " + blue(fillColorSelector.selectedColor));
+      }
+    }
+  }
 }
 
 void mouseDragged()
@@ -157,8 +189,7 @@ void loadProject(File inputDir)
   canvas.loadProject(lines);
 }
 
-void PickColor(ColorSelector sel)
+void PickColor(ColorSelector sel, int r, int g, int b)
 {
-  ui.add(new ColorPickerWindow(sel));
+  ui.add(new ColorPickerWindow(sel,r,g,b));
 }
-

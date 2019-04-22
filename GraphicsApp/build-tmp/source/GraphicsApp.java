@@ -40,8 +40,8 @@ public Canvas canvas;
 public LayerSelector layerSelector;
 //public Label lblLineColor = new Label(10, 100, "Line");
 //public Label lblFillColor = new Label(10, 100, "Fill");
-public ColorSelector lineColor = new ColorSelector(35, 100);
-public ColorSelector fillColor = new ColorSelector(35, 130);
+public ColorSelector lineColorSelector = new ColorSelector(35, 100);
+public ColorSelector fillColorSelector = new ColorSelector(35, 130);
 
 
 
@@ -54,8 +54,8 @@ public void setup()
   
   surface.setResizable(true);
   ui = new UIManager(new MenuBar());
-  ui.add(lineColor);
-  ui.add(fillColor);
+  ui.add(lineColorSelector);
+  ui.add(fillColorSelector);
   ui.add(new Label(10, 100, "Line"));
   ui.add(new Label(10, 130, "Fill"));
  // ui.add(lblLineColor);
@@ -93,6 +93,21 @@ public void mousePressed()
 public void mouseClicked ()
 {
   ui.mouseClicked();
+  if (canvas != null)
+  {
+    if (canvas.layerIndex > -1)
+    {
+      Layer l = canvas.layers.get(canvas.layerIndex);
+
+      if (l.selectedShape != null)
+      {
+        println("Point a");
+        l.selectedShape.lineColor = lineColorSelector.selectedColor;
+        l.selectedShape.fillColor = fillColorSelector.selectedColor;
+        println("Fill color blue: " + blue(fillColorSelector.selectedColor));
+      }
+    }
+  }
 }
 
 public void mouseMoved()
@@ -103,6 +118,23 @@ public void mouseMoved()
 public void mouseReleased()
 {
   ui.mouseReleased();
+
+  if (canvas != null)
+  {
+    if (canvas.layerIndex > -1)
+    {
+      Layer l = canvas.layers.get(canvas.layerIndex);
+
+      if (l.selectedShape != null)
+      {
+        println("Point a");
+        l.selectedShape.lineColor = lineColorSelector.selectedColor;
+        l.selectedShape.fillColor = fillColorSelector.selectedColor;
+        l.selectedShape.scaleAfterReize(l.scalar);
+        println("Fill color blue: " + blue(fillColorSelector.selectedColor));
+      }
+    }
+  }
 }
 
 public void mouseDragged()
@@ -179,11 +211,10 @@ public void loadProject(File inputDir)
   canvas.loadProject(lines);
 }
 
-public void PickColor(ColorSelector sel)
+public void PickColor(ColorSelector sel, int r, int g, int b)
 {
-  ui.add(new ColorPickerWindow(sel));
+  ui.add(new ColorPickerWindow(sel,r,g,b));
 }
-
 class Button extends Widget
 {
   //Text which is displayed inside of the button
@@ -520,7 +551,6 @@ class Canvas extends UIManager
           {
             if (i == layerIndex && cloneCurrentLayer)
             {
-              println("Point b");
               layers.get(i).changed = true;
               undoList.layers.add(layers.get(layerIndex).clone());
             } 
@@ -888,7 +918,7 @@ class ColorPickerWindow extends FloatingWindow
 	private Button confirmButton = null;
 
 	ColorSelector selector = null;
-	ColorPickerWindow(ColorSelector sel)
+	ColorPickerWindow(ColorSelector sel, int r, int g, int b)
 	{
 		x = 50;
 		y = 50;
@@ -898,6 +928,10 @@ class ColorPickerWindow extends FloatingWindow
 		rSlider = new Slider(10, 290, 255, 0, 255);
 		gSlider = new Slider(10, 320, 255, 0, 255);
 		bSlider = new Slider(10, 350, 255, 0, 255);
+
+		rSlider.setValue(r);
+		gSlider.setValue(g);
+		bSlider.setValue(b);
 
 		add(rSlider);
 		add(gSlider);
@@ -950,6 +984,10 @@ class ColorPickerWindow extends FloatingWindow
 			if(selector != null)
 			{
 				selector.selectedColor = color(rSlider.getValue() ,gSlider.getValue() ,bSlider.getValue());
+
+				
+
+				
 			}
 			
 		}
@@ -989,7 +1027,7 @@ class ColorSelector extends Widget
 		super.mouseReleased();
 		if (wasClicked)
 		{
-			PickColor(this);
+			PickColor(this, (int)red(selectedColor), (int)green(selectedColor), (int)blue(selectedColor));
 		}
 
 	}
@@ -1343,6 +1381,8 @@ class Layer extends UIManager
   
   private float rotation = 0; 
 
+  Shape selectedShape = null;
+
   ArrayList<Shape> shapeList = new ArrayList<Shape>();
   
   Layer(File sourceImage)
@@ -1405,19 +1445,27 @@ class Layer extends UIManager
 
   public void mouseReleased()
   {
-    //println("point d");
+
     super.mouseReleased();
     for (Shape s: shapeList)
     {
-      //s.mouseReleased();
-      //println("Point b");
-      //println("Was clicked 2: " + s.wasClicked);
       if (s.wasClicked)
       {
-        //println("Point a");
         wasClicked = true;
         s.wasClicked = false;
+        selectedShape = s;
+        s.selected = true;
+        break;
       }
+    }
+
+    if (selectedShape != null)
+    {
+      //println(selectedShape.type);
+    }
+    else 
+    {
+      //println("Null");
     }
   }
 
@@ -1625,8 +1673,6 @@ public class Shape extends Widget
   public void mouseReleased()
   {
     super.mouseReleased();
-
-    selected = wasClicked;
   }
 
 
@@ -1695,6 +1741,8 @@ public class Polygon extends Shape
   Polygon(float scalar, boolean filled, boolean closedShape, int lineColor, int fillColor)
   {
     type = "Polygon";
+
+    toggleable = true;
 
 
     this.scalar = scalar;
@@ -1822,6 +1870,12 @@ public class Polygon extends Shape
       {
        place();
       } 
+    }
+
+    if (selected)
+    {
+      lineColorSelector.selectedColor = lineColor;
+      fillColorSelector.selectedColor = fillColor;
     }
   }
 
@@ -2328,7 +2382,7 @@ class ImageMenu extends Menu
     {
       if (s == "mnbtnSelectColor")
       {
-        PickColor(null);
+        PickColor(null,255,0,0);
 
       }
     }
@@ -2347,13 +2401,13 @@ class ShapeMenu extends Menu
       if (s == "mnbtnPolyline")
       {
         canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
-          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/fillColor.selectedColor);
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
 
       }
       if (s == "mnbtnPolyshape")
       {
         canvas.addPolygon(/*boolean filled*/true, /*boolean closedShape*/true
-          , /*color lineColor*/lineColor.selectedColor, /*color fillColor*/fillColor.selectedColor);
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }
   }
@@ -2734,6 +2788,7 @@ class Slider extends Widget
 
     //Changes the display text
     textInput.setString(Float.toString(value));
+
   }
   
   public void resize(int dtW, int dtH)
