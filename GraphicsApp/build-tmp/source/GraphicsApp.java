@@ -93,16 +93,6 @@ public void mousePressed()
 public void mouseClicked ()
 {
   ui.mouseClicked();
-}
-
-public void mouseMoved()
-{
-  ui.mouseMoved();
-}
-
-public void mouseReleased()
-{
-  ui.mouseReleased();
 
   if (canvas != null)
   {
@@ -115,9 +105,36 @@ public void mouseReleased()
         l.selectedShape.lineColor = lineColorSelector.selectedColor;
         l.selectedShape.fillColor = fillColorSelector.selectedColor;
         l.selectedShape.scaleAfterReize(l.scalar);
+        println("Point b");
       }
     }
   }
+}
+
+public void mouseMoved()
+{
+  ui.mouseMoved();
+}
+
+public void mouseReleased()
+{
+  ui.mouseReleased();
+
+  /*if (canvas != null)
+  {
+    if (canvas.layerIndex > -1)
+    {
+      Layer l = canvas.layers.get(canvas.layerIndex);
+
+      if (l.selectedShape != null)
+      {
+        l.selectedShape.lineColor = lineColorSelector.selectedColor;
+        l.selectedShape.fillColor = fillColorSelector.selectedColor;
+        l.selectedShape.scaleAfterReize(l.scalar);
+        println("Point b");
+      }
+    }
+  }*/
 }
 
 public void mouseDragged()
@@ -1434,6 +1451,12 @@ class Layer extends UIManager
     {
       if (s.wasClicked)
       {
+        if(selectedShape != null)
+        {
+          selectedShape.selected = false;
+        }
+        
+
         wasClicked = true;
         s.wasClicked = false;
         selectedShape = s;
@@ -1838,10 +1861,12 @@ public class Polygon extends Shape
       } 
     }
 
-    if (selected)
+    if (wasClicked)
     {
       lineColorSelector.selectedColor = lineColor;
       fillColorSelector.selectedColor = fillColor;
+
+      println("blue: " + blue(lineColor));
     }
   }
 
@@ -1947,7 +1972,6 @@ public class Polygon extends Shape
     if (selected && placed)
     {
       rect(x,y,w,h);
-      //println(w);
     }
 
   }
@@ -1957,10 +1981,6 @@ public class Polygon extends Shape
 
 public void drawLine(Point pointA, Point pointB)
 {
-  //bresLine(pointA.x, pointA.y, pointB.x, pointB.y, col);
-  //testDrawLine(pointA.x, pointA.y, pointB.x, pointB.y, col);
-
-
   line(pointA.x, pointA.y, pointB.x, pointB.y);
 }
 

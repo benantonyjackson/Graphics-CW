@@ -90,6 +90,12 @@ class Layer extends UIManager
     {
       if (s.wasClicked)
       {
+        if(selectedShape != null)
+        {
+          selectedShape.selected = false;
+        }
+        
+
         wasClicked = true;
         s.wasClicked = false;
         selectedShape = s;
@@ -494,10 +500,12 @@ public class Polygon extends Shape
       } 
     }
 
-    if (selected)
+    if (wasClicked)
     {
       lineColorSelector.selectedColor = lineColor;
       fillColorSelector.selectedColor = fillColor;
+
+      println("blue: " + blue(lineColor));
     }
   }
 
@@ -603,7 +611,6 @@ public class Polygon extends Shape
     if (selected && placed)
     {
       rect(x,y,w,h);
-      //println(w);
     }
 
   }
@@ -613,10 +620,6 @@ public class Polygon extends Shape
 
 void drawLine(Point pointA, Point pointB)
 {
-  //bresLine(pointA.x, pointA.y, pointB.x, pointB.y, col);
-  //testDrawLine(pointA.x, pointA.y, pointB.x, pointB.y, col);
-
-
   line(pointA.x, pointA.y, pointB.x, pointB.y);
 }
 
