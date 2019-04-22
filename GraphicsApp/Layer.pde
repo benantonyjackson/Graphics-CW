@@ -382,7 +382,8 @@ public class Polygon extends Shape
     type = "Polygon";
 
     toggleable = true;
-
+    w=0;
+    h=0;
 
     this.scalar = scalar;
     this.lineColor = lineColor;
@@ -458,27 +459,7 @@ public class Polygon extends Shape
     Point ap = new Point(round((x-canvas.x) / scalar), round((y-canvas.y) / scalar));
     actPoints.add(ap);
 
-    if (x < this.x || points.size() == 1)
-    {
-      w += abs(this.x-x);
-      this.x=x;
-    }
-
-    if (y < this.y || points.size() == 1)
-    {
-      h += abs(this.y-y);
-      this.y=y;
-    }
-
-    if (x > this.x+this.w)
-    {
-      this.w=x-this.x;
-    }
-
-    if (y > this.y+this.h)
-    {
-      this.h = y-this.y;
-    }
+    
   }
 
   void place()
@@ -492,6 +473,8 @@ public class Polygon extends Shape
      scaleAfterReize(scalar);
 
      wasClicked = true;
+
+     scaleAfterReize(scalar);
 
   }
 
@@ -556,36 +539,43 @@ public class Polygon extends Shape
       shape.endShape();
     }
 
-
+    int count = 0;
+    w=0;
+    h=0;
     for (Point p: points)
     {
 
-      int x = p.x;
-      int y = p.y;
-
-      if (x < this.x || points.size() == 1)
+      if(count == 0)
       {
-        w += abs(this.x-x);
-        this.x=x;
+        this.x=p.x;
+        this.y=p.y;
       }
 
-      if (y < this.y || points.size() == 1)
+
+      if (p.x < this.x)
       {
-        h += abs(this.y-y);
-        this.y=y;
+        w = w + abs(this.x-p.x);
+        this.x=p.x;
       }
 
-      if (x > this.x+this.w)
+      if (p.y < this.y)
       {
-        this.w=x-this.x;
+        h += abs(this.y-p.y);
+        this.y=p.y;
       }
 
-      if (y > this.y+this.h)
+      if (p.x > this.x+this.w)
       {
-        this.h = y-this.y;
+        this.w = p.x-this.x;
       }
+
+      if (p.y > this.y+this.h)
+      {
+        this.h = p.y-this.y;
+      }
+      count++;
     }
-
+    
   }
 
   void draw()
@@ -613,6 +603,7 @@ public class Polygon extends Shape
     if (selected && placed)
     {
       rect(x,y,w,h);
+      //println(w);
     }
 
   }

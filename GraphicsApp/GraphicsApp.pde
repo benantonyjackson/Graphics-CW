@@ -71,21 +71,6 @@ void mousePressed()
 void mouseClicked ()
 {
   ui.mouseClicked();
-  if (canvas != null)
-  {
-    if (canvas.layerIndex > -1)
-    {
-      Layer l = canvas.layers.get(canvas.layerIndex);
-
-      if (l.selectedShape != null)
-      {
-        println("Point a");
-        l.selectedShape.lineColor = lineColorSelector.selectedColor;
-        l.selectedShape.fillColor = fillColorSelector.selectedColor;
-        println("Fill color blue: " + blue(fillColorSelector.selectedColor));
-      }
-    }
-  }
 }
 
 void mouseMoved()
@@ -105,11 +90,9 @@ void mouseReleased()
 
       if (l.selectedShape != null)
       {
-        println("Point a");
         l.selectedShape.lineColor = lineColorSelector.selectedColor;
         l.selectedShape.fillColor = fillColorSelector.selectedColor;
         l.selectedShape.scaleAfterReize(l.scalar);
-        println("Fill color blue: " + blue(fillColorSelector.selectedColor));
       }
     }
   }
