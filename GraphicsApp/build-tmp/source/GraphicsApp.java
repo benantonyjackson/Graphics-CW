@@ -699,12 +699,12 @@ class Canvas extends UIManager
           }
       }
 
+
       for (Shape s: l.shapeList)
       {
+        output.println(s.type);
         if (s.type == "Polygon")
         {
-          output.println("Polygon");
-
           Polygon poly = (Polygon) s;
 
           output.println(poly.scalar);
@@ -719,6 +719,22 @@ class Canvas extends UIManager
             output.println(p.y);
           }
         }
+
+        if(s.type == "Rectangle")
+        {
+          Rectangle rectangle = (Rectangle) s;
+
+          output.println(rectangle.scalar);
+          output.println(rectangle.filled);
+          output.println(rectangle.lineColor);
+          output.println(rectangle.fillColor);
+
+          output.println(rectangle.x);
+          output.println(rectangle.y);
+          output.println(rectangle.w);
+          output.println(rectangle.h);
+        }
+
         //Marks the end of a layers shape data
         output.println("*");
 
@@ -770,6 +786,28 @@ class Canvas extends UIManager
         layers.get(layers.size()-1).addShape(poly);
         //The current line was read by the while loop but the line index was not incremented
         //So the line index must be incremented now for the next itteration of the loop
+        i++;
+        continue;
+      }
+
+      if (line.contentEquals("Rectangle"))
+      {
+        println(Pixels[i]);
+        Rectangle rectangle = new Rectangle(Float.parseFloat(Pixels[i++])
+          , Boolean.parseBoolean(Pixels[i++])
+          , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
+
+          
+        rectangle.x = Integer.parseInt(Pixels[i++]);
+        rectangle.y = Integer.parseInt(Pixels[i++]);
+        rectangle.w = Integer.parseInt(Pixels[i++]);
+        rectangle.h = Integer.parseInt(Pixels[i++]);
+
+        rectangle.placed = true;
+        layers.get(layers.size()-1).addShape(rectangle);
+        //The current line was read by the while loop but the line index was not incremented
+        //So the line index must be incremented now for the next itteration of the loop
+        println(Pixels[i]);
         i++;
         continue;
       }
@@ -1531,10 +1569,8 @@ class Layer extends UIManager
   public void scaleAfterReize(float scalar)
   {
     //Scales display image to the size of the canvas 
-    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar * ((float)newWidth / (float)actImage.width)), (int)((float)actImage.height * scalar * ((float)newHeight / (float)actImage.height)), actImage);
-    
-    //disImage = scaleUp_bilinear(disImage.width * (actImage.width / newWidth), 
-    //  disImage.height * (actImage.height / newHeight), disImage);
+    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar * ((float)newWidth / (float)actImage.width)),
+     (int)((float)actImage.height * scalar * ((float)newHeight / (float)actImage.height)), actImage);
 
     w = disImage.width;
     h = disImage.height;
@@ -2253,9 +2289,12 @@ class LayerResizeWindow extends FloatingWindow
 
 		layer = l;
 
-		WidthSlider = new Slider(10, 290, 255, 1, 2000);
-		HeightSlider = new Slider(10, 320, 255, 1, 2000);
+		WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
+		HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
 		
+		WidthSlider.setValue(l.actImage.width);
+		HeightSlider.setValue(l.actImage.height);
+
 		add(WidthSlider);
 		add(HeightSlider);
 

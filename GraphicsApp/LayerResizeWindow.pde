@@ -17,9 +17,12 @@ class LayerResizeWindow extends FloatingWindow
 
 		layer = l;
 
-		WidthSlider = new Slider(10, 290, 255, 1, 2000);
-		HeightSlider = new Slider(10, 320, 255, 1, 2000);
+		WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
+		HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
 		
+		WidthSlider.setValue(l.actImage.width);
+		HeightSlider.setValue(l.actImage.height);
+
 		add(WidthSlider);
 		add(HeightSlider);
 

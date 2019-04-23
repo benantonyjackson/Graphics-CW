@@ -162,10 +162,8 @@ class Layer extends UIManager
   void scaleAfterReize(float scalar)
   {
     //Scales display image to the size of the canvas 
-    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar * ((float)newWidth / (float)actImage.width)), (int)((float)actImage.height * scalar * ((float)newHeight / (float)actImage.height)), actImage);
-    
-    //disImage = scaleUp_bilinear(disImage.width * (actImage.width / newWidth), 
-    //  disImage.height * (actImage.height / newHeight), disImage);
+    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar * ((float)newWidth / (float)actImage.width)),
+     (int)((float)actImage.height * scalar * ((float)newHeight / (float)actImage.height)), actImage);
 
     w = disImage.width;
     h = disImage.height;
