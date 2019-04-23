@@ -93,6 +93,16 @@ public void mousePressed()
 public void mouseClicked ()
 {
   ui.mouseClicked();
+}
+
+public void mouseMoved()
+{
+  ui.mouseMoved();
+}
+
+public void mouseReleased()
+{
+  ui.mouseReleased();
 
   if (canvas != null)
   {
@@ -105,36 +115,9 @@ public void mouseClicked ()
         l.selectedShape.lineColor = lineColorSelector.selectedColor;
         l.selectedShape.fillColor = fillColorSelector.selectedColor;
         l.selectedShape.scaleAfterReize(l.scalar);
-        println("Point b");
       }
     }
   }
-}
-
-public void mouseMoved()
-{
-  ui.mouseMoved();
-}
-
-public void mouseReleased()
-{
-  ui.mouseReleased();
-
-  /*if (canvas != null)
-  {
-    if (canvas.layerIndex > -1)
-    {
-      Layer l = canvas.layers.get(canvas.layerIndex);
-
-      if (l.selectedShape != null)
-      {
-        l.selectedShape.lineColor = lineColorSelector.selectedColor;
-        l.selectedShape.fillColor = fillColorSelector.selectedColor;
-        l.selectedShape.scaleAfterReize(l.scalar);
-        println("Point b");
-      }
-    }
-  }*/
 }
 
 public void mouseDragged()
@@ -410,6 +393,16 @@ class Canvas extends UIManager
     {
       saveLayersToUndo(true);
       layers.get(layerIndex).addRectangle(filled,lineColor,fillColor);
+    }
+    
+  }
+
+  public void addCircle(boolean filled, int lineColor, int fillColor)
+  {
+    if (layerIndex > -1)
+    {
+      saveLayersToUndo(true);
+      layers.get(layerIndex).addCircle(filled,lineColor,fillColor);
     }
     
   }
@@ -1557,6 +1550,11 @@ class Layer extends UIManager
   {
     addShape(new Rectangle(scalar, filled, lineColor, fillColor));
   }
+
+  public void addCircle(boolean filled, int lineColor, int fillColor)
+  {
+    addShape(new Circle(scalar, filled, lineColor, fillColor));
+  }
  
  //Start of Functions
 public PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
@@ -1753,6 +1751,81 @@ public class Shape extends Widget
   }
 } // End if shape class
 
+public class Circle extends Shape
+{
+  Circle(float scalar, boolean filled, int lineColor, int fillColor)
+  {
+    type = "Rectangle";
+
+    toggleable = true;
+    w=0;
+    h=0;
+
+    this.scalar = scalar;
+    this.lineColor = lineColor;
+    this.filled = filled;
+    this.fillColor = fillColor;
+  }
+
+  public void mousePressed()
+  {
+    if (!placed)
+    {
+      x=mouseX;
+      y=mouseY;
+    }
+  }
+
+  public void mouseReleased()
+  {
+    if (!placed)
+    {
+      placed = true;
+      w = mouseX - x;
+      h = mouseY - y;
+      w=(mouseX - x)*2;
+      h=(mouseY - y)*2;
+
+    }
+    super.mouseReleased();  
+  }
+
+  public void draw()
+  {
+    if (!placed && mousePressed)
+    {
+      ellipse(x, y, (mouseX - x)*2, (mouseY - y)*2);
+    }
+    else 
+    {
+      stroke(lineColor);
+      if (!filled)
+      {
+        noFill();
+      }
+      else
+      {
+        fill(fillColor);
+      }
+      ellipse(x,y,w,h);
+
+      stroke(0);
+
+      if (selected)
+      {
+        noFill();
+        strokeWeight(5);
+
+        rect(x - (w/2),y - (h/2),w,h);
+
+        strokeWeight(1);
+      }
+    }
+  }
+
+
+} // end of Circle class
+
 public class Rectangle extends Shape 
 {
   Rectangle(float scalar, boolean filled, int lineColor, int fillColor)
@@ -1788,10 +1861,7 @@ public class Rectangle extends Shape
       w = mouseX - x;
       h = mouseY - y;
     }
-    super.mouseReleased();
-
-
-    
+    super.mouseReleased();  
   }
 
   public void draw()
@@ -1833,7 +1903,7 @@ public class Rectangle extends Shape
     }
 
   }
-}
+} // End of Rectangle class
 
 public class Polygon extends Shape
 {
@@ -2317,6 +2387,7 @@ class MenuBar extends UIManager
     shapeMenu.add(new Button("Polyline", "mnbtnPolyline"));
     shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
     shapeMenu.add(new Button("Rectangle", "mnbtnRectangle"));
+    shapeMenu.add(new Button("Circle", "mnbtnCircle"));
     shapeMenu.setActive(false);
 
     Menu filterMenu = new FilterMenu();
@@ -2503,6 +2574,13 @@ class ShapeMenu extends Menu
       if (s == "mnbtnRectangle")
       {
         canvas.addRectangle(/*boolean filled*/true
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
+      }
+
+      if (s == "mnbtnCircle")
+      {
+        println("Point a");
+        canvas.addCircle(/*boolean filled*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }

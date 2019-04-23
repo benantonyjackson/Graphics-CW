@@ -71,6 +71,16 @@ void mousePressed()
 void mouseClicked ()
 {
   ui.mouseClicked();
+}
+
+void mouseMoved()
+{
+  ui.mouseMoved();
+}
+
+void mouseReleased()
+{
+  ui.mouseReleased();
 
   if (canvas != null)
   {
@@ -83,36 +93,9 @@ void mouseClicked ()
         l.selectedShape.lineColor = lineColorSelector.selectedColor;
         l.selectedShape.fillColor = fillColorSelector.selectedColor;
         l.selectedShape.scaleAfterReize(l.scalar);
-        println("Point b");
       }
     }
   }
-}
-
-void mouseMoved()
-{
-  ui.mouseMoved();
-}
-
-void mouseReleased()
-{
-  ui.mouseReleased();
-
-  /*if (canvas != null)
-  {
-    if (canvas.layerIndex > -1)
-    {
-      Layer l = canvas.layers.get(canvas.layerIndex);
-
-      if (l.selectedShape != null)
-      {
-        l.selectedShape.lineColor = lineColorSelector.selectedColor;
-        l.selectedShape.fillColor = fillColorSelector.selectedColor;
-        l.selectedShape.scaleAfterReize(l.scalar);
-        println("Point b");
-      }
-    }
-  }*/
 }
 
 void mouseDragged()

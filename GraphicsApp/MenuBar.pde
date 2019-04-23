@@ -32,6 +32,7 @@ class MenuBar extends UIManager
     shapeMenu.add(new Button("Polyline", "mnbtnPolyline"));
     shapeMenu.add(new Button("Polyshape", "mnbtnPolyshape"));
     shapeMenu.add(new Button("Rectangle", "mnbtnRectangle"));
+    shapeMenu.add(new Button("Circle", "mnbtnCircle"));
     shapeMenu.setActive(false);
 
     Menu filterMenu = new FilterMenu();
@@ -218,6 +219,13 @@ class ShapeMenu extends Menu
       if (s == "mnbtnRectangle")
       {
         canvas.addRectangle(/*boolean filled*/true
+          , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
+      }
+
+      if (s == "mnbtnCircle")
+      {
+        println("Point a");
+        canvas.addCircle(/*boolean filled*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }

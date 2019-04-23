@@ -186,6 +186,11 @@ class Layer extends UIManager
   {
     addShape(new Rectangle(scalar, filled, lineColor, fillColor));
   }
+
+  void addCircle(boolean filled, color lineColor, color fillColor)
+  {
+    addShape(new Circle(scalar, filled, lineColor, fillColor));
+  }
  
  //Start of Functions
 PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
@@ -382,6 +387,81 @@ public class Shape extends Widget
   }
 } // End if shape class
 
+public class Circle extends Shape
+{
+  Circle(float scalar, boolean filled, color lineColor, color fillColor)
+  {
+    type = "Rectangle";
+
+    toggleable = true;
+    w=0;
+    h=0;
+
+    this.scalar = scalar;
+    this.lineColor = lineColor;
+    this.filled = filled;
+    this.fillColor = fillColor;
+  }
+
+  void mousePressed()
+  {
+    if (!placed)
+    {
+      x=mouseX;
+      y=mouseY;
+    }
+  }
+
+  void mouseReleased()
+  {
+    if (!placed)
+    {
+      placed = true;
+      w = mouseX - x;
+      h = mouseY - y;
+      w=(mouseX - x)*2;
+      h=(mouseY - y)*2;
+
+    }
+    super.mouseReleased();  
+  }
+
+  void draw()
+  {
+    if (!placed && mousePressed)
+    {
+      ellipse(x, y, (mouseX - x)*2, (mouseY - y)*2);
+    }
+    else 
+    {
+      stroke(lineColor);
+      if (!filled)
+      {
+        noFill();
+      }
+      else
+      {
+        fill(fillColor);
+      }
+      ellipse(x,y,w,h);
+
+      stroke(0);
+
+      if (selected)
+      {
+        noFill();
+        strokeWeight(5);
+
+        rect(x - (w/2),y - (h/2),w,h);
+
+        strokeWeight(1);
+      }
+    }
+  }
+
+
+} // end of Circle class
+
 public class Rectangle extends Shape 
 {
   Rectangle(float scalar, boolean filled, color lineColor, color fillColor)
@@ -417,10 +497,7 @@ public class Rectangle extends Shape
       w = mouseX - x;
       h = mouseY - y;
     }
-    super.mouseReleased();
-
-
-    
+    super.mouseReleased();  
   }
 
   void draw()
@@ -462,7 +539,7 @@ public class Rectangle extends Shape
     }
 
   }
-}
+} // End of Rectangle class
 
 public class Polygon extends Shape
 {

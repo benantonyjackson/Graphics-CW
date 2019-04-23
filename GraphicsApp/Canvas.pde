@@ -68,6 +68,16 @@ class Canvas extends UIManager
     
   }
 
+  void addCircle(boolean filled, color lineColor, color fillColor)
+  {
+    if (layerIndex > -1)
+    {
+      saveLayersToUndo(true);
+      layers.get(layerIndex).addCircle(filled,lineColor,fillColor);
+    }
+    
+  }
+
   void autoSetSize()
   {
     float scalar;
