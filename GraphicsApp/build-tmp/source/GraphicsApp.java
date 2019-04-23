@@ -198,6 +198,11 @@ public void PickColor(ColorSelector sel, int r, int g, int b)
 {
   ui.add(new ColorPickerWindow(sel,r,g,b));
 }
+
+public void ResizeLayer(Layer l)
+{
+  ui.add(new LayerResizeWindow(l));
+}
 class Button extends Widget
 {
   //Text which is displayed inside of the button
@@ -1373,6 +1378,11 @@ class Layer extends UIManager
   //The widget x and y are used for the display image
   int offsetX = 100;
   int offsetY = 100;
+
+  //Width and height of the actual image after resizing
+  //Used to keep origonal image quality after resizing
+  int newWidth;
+  int newHeight;
   
   //Set to true if a change needs to be added to the undo list
   boolean changed = false;
@@ -1399,7 +1409,8 @@ class Layer extends UIManager
     
     draggable = true;
 
-
+    newWidth = actImage.width;
+    newHeight = actImage.height;
   }
   
   Layer(PImage p, int ox, int oy)
@@ -1412,6 +1423,9 @@ class Layer extends UIManager
     
     offsetX = ox;
     offsetY = oy;
+
+    newWidth = actImage.width;
+    newHeight = actImage.height;
   }
   
   public Layer clone()
@@ -1425,6 +1439,14 @@ class Layer extends UIManager
     }
 
     return l;
+  }
+
+  public void ResizeLayer(int w, int h)
+  {
+    newWidth = w;
+    newHeight = h;
+
+    scaleAfterReize(scalar);
   }
 
   public void draw()
@@ -1509,8 +1531,11 @@ class Layer extends UIManager
   public void scaleAfterReize(float scalar)
   {
     //Scales display image to the size of the canvas 
-    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar), (int)((float)actImage.height * scalar), actImage);
+    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar * ((float)newWidth / (float)actImage.width)), (int)((float)actImage.height * scalar * ((float)newHeight / (float)actImage.height)), actImage);
     
+    //disImage = scaleUp_bilinear(disImage.width * (actImage.width / newWidth), 
+    //  disImage.height * (actImage.height / newHeight), disImage);
+
     w = disImage.width;
     h = disImage.height;
     
@@ -2209,13 +2234,40 @@ class LayerButtons extends RadioButtons
     }
   }
 }
-class LayerResizeSelector extends FloatingWindow
+class LayerResizeWindow extends FloatingWindow
 {
-	LayerResizeSelector()
+	Layer layer;
+
+	Slider WidthSlider = null;
+	Slider HeightSlider = null;
+
+	LayerResizeWindow(Layer l)
 	{
-		closeButton = new CloseButton(x+w - 20, y+h - 20, 20, 20);
+		x = 50;
+		y = 50;
+		w = 400;
+		h = 400;
 		
+		closeButton.x = x+w - 20;
+    	closeButton.y =  y;
+
+		layer = l;
+
+		WidthSlider = new Slider(10, 290, 255, 1, 2000);
+		HeightSlider = new Slider(10, 320, 255, 1, 2000);
 		
+		add(WidthSlider);
+		add(HeightSlider);
+
+	}
+
+
+	public void draw()
+	{
+		super.draw();
+
+		if(layer != null)
+		layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
 	}
 }
 class LayerSelector extends UIManager 
@@ -2380,7 +2432,7 @@ class MenuBar extends UIManager
     editMenu.setActive(false);
 
     Menu imageMenu = new ImageMenu();
-    imageMenu.add(new Button("Select color", "mnbtnSelectColor"));
+    imageMenu.add(new Button("Resize", "mnbtnResize"));
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
@@ -2541,9 +2593,12 @@ class ImageMenu extends Menu
     
     for (String s: clickedList)
     {
-      if (s == "mnbtnSelectColor")
+      if (s == "mnbtnResize")
       {
-        PickColor(null,255,0,0);
+        if (canvas.layerIndex > -1)
+        {
+          ResizeLayer(canvas.layers.get(canvas.layerIndex));
+        }
 
       }
     }

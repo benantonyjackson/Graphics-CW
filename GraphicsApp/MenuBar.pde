@@ -25,7 +25,7 @@ class MenuBar extends UIManager
     editMenu.setActive(false);
 
     Menu imageMenu = new ImageMenu();
-    imageMenu.add(new Button("Select color", "mnbtnSelectColor"));
+    imageMenu.add(new Button("Resize", "mnbtnResize"));
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
@@ -186,9 +186,12 @@ class ImageMenu extends Menu
     
     for (String s: clickedList)
     {
-      if (s == "mnbtnSelectColor")
+      if (s == "mnbtnResize")
       {
-        PickColor(null,255,0,0);
+        if (canvas.layerIndex > -1)
+        {
+          ResizeLayer(canvas.layers.get(canvas.layerIndex));
+        }
 
       }
     }

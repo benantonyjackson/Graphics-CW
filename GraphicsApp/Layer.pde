@@ -9,6 +9,11 @@ class Layer extends UIManager
   //The widget x and y are used for the display image
   int offsetX = 100;
   int offsetY = 100;
+
+  //Width and height of the actual image after resizing
+  //Used to keep origonal image quality after resizing
+  int newWidth;
+  int newHeight;
   
   //Set to true if a change needs to be added to the undo list
   boolean changed = false;
@@ -35,7 +40,8 @@ class Layer extends UIManager
     
     draggable = true;
 
-
+    newWidth = actImage.width;
+    newHeight = actImage.height;
   }
   
   Layer(PImage p, int ox, int oy)
@@ -48,6 +54,9 @@ class Layer extends UIManager
     
     offsetX = ox;
     offsetY = oy;
+
+    newWidth = actImage.width;
+    newHeight = actImage.height;
   }
   
   Layer clone()
@@ -61,6 +70,14 @@ class Layer extends UIManager
     }
 
     return l;
+  }
+
+  void ResizeLayer(int w, int h)
+  {
+    newWidth = w;
+    newHeight = h;
+
+    scaleAfterReize(scalar);
   }
 
   void draw()
@@ -145,8 +162,11 @@ class Layer extends UIManager
   void scaleAfterReize(float scalar)
   {
     //Scales display image to the size of the canvas 
-    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar), (int)((float)actImage.height * scalar), actImage);
+    disImage = scaleUp_bilinear((int)((float)actImage.width * scalar * ((float)newWidth / (float)actImage.width)), (int)((float)actImage.height * scalar * ((float)newHeight / (float)actImage.height)), actImage);
     
+    //disImage = scaleUp_bilinear(disImage.width * (actImage.width / newWidth), 
+    //  disImage.height * (actImage.height / newHeight), disImage);
+
     w = disImage.width;
     h = disImage.height;
     
