@@ -1850,6 +1850,8 @@ public class Circle extends Shape
       x=mouseX;
       y=mouseY;
     }
+
+    super.mousePressed();
   }
 
   public void mouseReleased()
@@ -1857,10 +1859,6 @@ public class Circle extends Shape
     if (!placed)
     {
       placed = true;
-      //w = round((float)(mouseX - x) / scalar);
-      //h = round((float)(mouseY - y) / scalar);
-      //w= round((float)((mouseX - x)*2) /*/ scalar*/);
-      //h= round((float)((mouseY - y)*2) /*/ scalar*/);
 
       w=mouseX - x;
       h=mouseY - y;
@@ -1877,26 +1875,10 @@ public class Circle extends Shape
         h = -h;
       }
 
-      //x = x - (w/2);
-      //y = y - (h/2);
-
-      //x = round((float)(x - canvas.x) /*/ scalar*/);
-      //y = round((float)(y - canvas.y) /*/ scalar*/);
-
     }
-    
-    /*x = round(((float)x * scalar) + canvas.x);
-    y =  round(((float)y * scalar) + canvas.y);
-    w = round((float)w * scalar);
-    h = round((float)h * scalar);*/
 
 
     super.mouseReleased();
-
-    /*x = round((float)(x - canvas.x) / scalar);
-    y = round((float)(y - canvas.y) / scalar);
-    w = round((float)w / scalar);
-    h = round((float)h / scalar);*/
 
   }
 
@@ -1922,8 +1904,6 @@ public class Circle extends Shape
       {
         fill(fillColor);
       }
-      //ellipse(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
-      // , w * scalar,h * scalar);
 
       ellipse(x + (w / 2), y + (h/2), w, h);
 
@@ -1934,10 +1914,7 @@ public class Circle extends Shape
         noFill();
         strokeWeight(5);
 
-        //rect(((float)(x - (w/2)) * scalar) + canvas.x,
-        //  ((float)(y - (h/2)) * scalar) + canvas.y, w * scalar, h * scalar);
-
-        rect(x, y /*- (h/2)*/, w, h);
+        rect(x, y, w, h);
 
         strokeWeight(1);
       }
@@ -1960,7 +1937,6 @@ public class Circle extends Shape
 
   public void scaleAfterReize(float scalar)
   {
-     //x = round((float)(x) / this.scalar);
      x = round((float)(x - oldCanvasX) / this.scalar);
      y = round((float)(y - oldCanvasY) / this.scalar);
      w = round((float)w / this.scalar);
@@ -2030,11 +2006,7 @@ public class Rectangle extends Shape
     if (!placed)
     {
       placed = true;
-      //w = round((float)(mouseX - x) /*/ scalar*/);
-      //h = round((float)(mouseY - y) /*/ scalar*/);
 
-      //x = round((float)(x - canvas.x) /*/ scalar*/);
-      //y = round((float)(y - canvas.y) /*/ scalar*/);
 
       w=(mouseX - x);
       h=(mouseY - y);
@@ -2050,23 +2022,9 @@ public class Rectangle extends Shape
         y += h;
         h = -h;
       }
-
-
-
     }
 
-     /*x = round(((float)x * scalar) + canvas.x);
-     y =  round(((float)y * scalar) + canvas.y);
-     w = round((float)w * scalar);
-     h = round((float)h * scalar);*/
-
-
     super.mouseReleased();
-
-    /*x = round((float)(x - canvas.x) / scalar);
-    y = round((float)(y - canvas.y) / scalar);
-    w = round((float)w / scalar);
-    h = round((float)h / scalar);*/
   }
 
   public void draw()
@@ -2092,8 +2050,7 @@ public class Rectangle extends Shape
       {
         fill(fillColor);
       }
-      /*rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
-       , w * scalar,h * scalar);*/
+
        rect(x,y,w,h);
 
       stroke(0);
@@ -2103,8 +2060,6 @@ public class Rectangle extends Shape
         noFill();
         strokeWeight(5);
 
-        /*rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
-        , w * scalar,h * scalar);*/
         rect(x,y,w,h);
 
         strokeWeight(1);
@@ -2134,7 +2089,6 @@ public class Rectangle extends Shape
 
   public void scaleAfterReize(float scalar)
   {
-     //x = round((float)(x) / this.scalar);
      x = round((float)(x - oldCanvasX) / this.scalar);
      y = round((float)(y - oldCanvasY) / this.scalar);
      w = round((float)w / this.scalar);
