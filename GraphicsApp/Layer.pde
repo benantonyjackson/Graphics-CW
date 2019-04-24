@@ -449,6 +449,18 @@ public class Circle extends Shape
       w=mouseX - x;
       h=mouseY - y;
 
+      if (w < 0)
+      {
+        x += w;
+        w = -w;
+      }
+
+      if (h < 0)
+      {
+        y += h;
+        h = -h;
+      }
+
       //x = x - (w/2);
       //y = y - (h/2);
 
@@ -610,6 +622,19 @@ public class Rectangle extends Shape
 
       w=(mouseX - x);
       h=(mouseY - y);
+
+      if (w < 0)
+      {
+        x += w;
+        w = -w;
+      }
+
+      if (h < 0)
+      {
+        y += h;
+        h = -h;
+      }
+
 
 
     }
