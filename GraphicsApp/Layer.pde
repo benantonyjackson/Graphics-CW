@@ -435,13 +435,29 @@ public class Circle extends Shape
     if (!placed)
     {
       placed = true;
-      w = mouseX - x;
-      h = mouseY - y;
-      w=(mouseX - x)*2;
-      h=(mouseY - y)*2;
+      //w = round((float)(mouseX - x) / scalar);
+      //h = round((float)(mouseY - y) / scalar);
+      w= round((float)((mouseX - x)*2) / scalar);
+      h= round((float)((mouseY - y)*2) / scalar);
+
+      x = round((float)(x - canvas.x) / scalar);
+      y = round((float)(y - canvas.y) / scalar);
 
     }
-    super.mouseReleased();  
+    
+    x = round(((float)x * scalar) + canvas.x);
+    y =  round(((float)y * scalar) + canvas.y);
+    w = round((float)w * scalar);
+    h = round((float)h * scalar);
+
+
+    super.mouseReleased();
+
+    x = round((float)(x - canvas.x) / scalar);
+    y = round((float)(y - canvas.y) / scalar);
+    w = round((float)w / scalar);
+    h = round((float)h / scalar);
+
   }
 
   void draw()
@@ -461,7 +477,8 @@ public class Circle extends Shape
       {
         fill(fillColor);
       }
-      ellipse(x,y,w,h);
+      ellipse(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
+       , w * scalar,h * scalar);
 
       stroke(0);
 
@@ -470,11 +487,31 @@ public class Circle extends Shape
         noFill();
         strokeWeight(5);
 
-        rect(x - (w/2),y - (h/2),w,h);
+        rect(((float)(x - (w/2)) * scalar) + canvas.x,
+          ((float)(y - (h/2)) * scalar) + canvas.y, w * scalar, h * scalar);
 
         strokeWeight(1);
       }
     }
+  }
+
+  void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+     pg.stroke(lineColor);
+      if (!filled)
+      {
+        pg.noFill();
+      }
+      else
+      {
+        pg.fill(fillColor);
+      }
+      pg.ellipse(x,y,w,h);
+  }
+
+  void scaleAfterReize(float scalar)
+  {
+    this.scalar = scalar;
   }
 
 
