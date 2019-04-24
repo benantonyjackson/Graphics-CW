@@ -519,7 +519,19 @@ public class Rectangle extends Shape
       y = round((float)(y - canvas.y) / scalar);
 
     }
-    super.mouseReleased();  
+
+     x = round(((float)x * scalar) + canvas.x);
+     y =  round(((float)y * scalar) + canvas.y);
+     w = round((float)w * scalar);
+     h = round((float)h * scalar);
+
+
+    super.mouseReleased();
+
+    x = round((float)(x - canvas.x) / scalar);
+    y = round((float)(y - canvas.y) / scalar);
+    w = round((float)w / scalar);
+    h = round((float)h / scalar);
   }
 
   void draw()
@@ -555,7 +567,8 @@ public class Rectangle extends Shape
         noFill();
         strokeWeight(5);
 
-        rect(round(((float)x * scalar) + canvas.x),y,w * scalar,h * scalar);
+        rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
+        , w * scalar,h * scalar);
 
         strokeWeight(1);
       }
