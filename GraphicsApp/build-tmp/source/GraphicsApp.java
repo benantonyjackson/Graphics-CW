@@ -1919,8 +1919,12 @@ public class Rectangle extends Shape
     if (!placed)
     {
       placed = true;
-      w = mouseX - x;
-      h = mouseY - y;
+      w = round((float)(mouseX - x) / scalar);
+      h = round((float)(mouseY - y) / scalar);
+
+      x = round((float)(x - canvas.x) / scalar);
+      y = round((float)(y - canvas.y) / scalar);
+
     }
     super.mouseReleased();  
   }
@@ -1932,7 +1936,7 @@ public class Rectangle extends Shape
 
       if (mousePressed)
       {
-        rect(x,y, (mouseX - x), (mouseY - y));
+        rect(x, y, (mouseX - x), (mouseY - y));
       }
 
       
@@ -1948,7 +1952,8 @@ public class Rectangle extends Shape
       {
         fill(fillColor);
       }
-      rect(x,y,w,h);
+      rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
+       , w * scalar,h * scalar);
 
       stroke(0);
 
@@ -1957,13 +1962,35 @@ public class Rectangle extends Shape
         noFill();
         strokeWeight(5);
 
-        rect(x,y,w,h);
+        rect(round(((float)x * scalar) + canvas.x),y,w * scalar,h * scalar);
 
         strokeWeight(1);
       }
     }
 
   }
+
+  public void flatten(PGraphics pg, int offsetX, int offsetY)
+  {
+    pg.stroke(lineColor);
+    if (!filled)
+    {
+      pg.noFill();
+    }
+    else
+    {
+      pg.fill(fillColor);
+    }
+    pg.rect(x,y,w,h);
+
+    pg.stroke(0);
+  }
+
+  public void scaleAfterReize(float scalar)
+  {
+    this.scalar = scalar;
+  }
+
 } // End of Rectangle class
 
 public class Polygon extends Shape
