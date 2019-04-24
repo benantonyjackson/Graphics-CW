@@ -521,6 +521,8 @@ public class Rectangle extends Shape
 {
   Rectangle(float scalar, boolean filled, color lineColor, color fillColor)
   {
+    draggable = true;
+
     type = "Rectangle";
 
     toggleable = true;
@@ -536,11 +538,46 @@ public class Rectangle extends Shape
 
   void mousePressed()
   {
+    
     if (!placed)
     {
       x=mouseX;
       y=mouseY;
     }
+    else
+    {
+      x = round(((float)x * scalar) + canvas.x);
+      y =  round(((float)y * scalar) + canvas.y);
+      w = round((float)w * scalar);
+      h = round((float)h * scalar);
+
+
+      super.mousePressed();
+
+      x = round((float)(x - canvas.x) / scalar);
+      y = round((float)(y - canvas.y) / scalar);
+      w = round((float)w / scalar);
+      h = round((float)h / scalar);
+    }
+  }
+
+  void mouseDragged()
+  {
+    //println("Point a");
+
+    x = round(((float)x * scalar) + canvas.x);
+    y =  round(((float)y * scalar) + canvas.y);
+    w = round((float)w * scalar);
+    h = round((float)h * scalar);
+
+
+    super.mouseDragged();
+    println("Mouse offset x: " + clicked);
+
+    x = round((float)(x - canvas.x) / scalar);
+    y = round((float)(y - canvas.y) / scalar);
+    w = round((float)w / scalar);
+    h = round((float)h / scalar);
   }
 
   void mouseReleased()

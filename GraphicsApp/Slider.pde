@@ -34,7 +34,7 @@ class Slider extends Widget
       getValue();
       
       //Displays current value of the slider
-      textInput.setString(Float.toString(value));
+      textInput.setString(Float.toString(value)); 
     }
 
     rectX += x - oldX;

@@ -28,12 +28,30 @@ class LayerResizeWindow extends FloatingWindow
 
 	}
 
+	void mouseReleased()
+	{
+		super.mouseReleased();
+
+		if(layer != null)
+			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+
+	}
+
+	void mouseDragged()
+	{
+		int oldX = x;
+		int oldY = y;
+		super.mouseDragged();
+		if (oldX == x && oldY == y)
+		{
+			if(layer != null)
+			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+		}
+	}
+
 
 	void draw()
 	{
 		super.draw();
-
-		if(layer != null)
-		layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
 	}
 }

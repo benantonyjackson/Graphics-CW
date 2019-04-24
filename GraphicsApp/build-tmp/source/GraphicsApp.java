@@ -1928,6 +1928,8 @@ public class Rectangle extends Shape
 {
   Rectangle(float scalar, boolean filled, int lineColor, int fillColor)
   {
+    draggable = true;
+
     type = "Rectangle";
 
     toggleable = true;
@@ -1943,11 +1945,46 @@ public class Rectangle extends Shape
 
   public void mousePressed()
   {
+    
     if (!placed)
     {
       x=mouseX;
       y=mouseY;
     }
+    else
+    {
+      x = round(((float)x * scalar) + canvas.x);
+      y =  round(((float)y * scalar) + canvas.y);
+      w = round((float)w * scalar);
+      h = round((float)h * scalar);
+
+
+      super.mousePressed();
+
+      x = round((float)(x - canvas.x) / scalar);
+      y = round((float)(y - canvas.y) / scalar);
+      w = round((float)w / scalar);
+      h = round((float)h / scalar);
+    }
+  }
+
+  public void mouseDragged()
+  {
+    //println("Point a");
+
+    x = round(((float)x * scalar) + canvas.x);
+    y =  round(((float)y * scalar) + canvas.y);
+    w = round((float)w * scalar);
+    h = round((float)h * scalar);
+
+
+    super.mouseDragged();
+    println("Mouse offset x: " + clicked);
+
+    x = round((float)(x - canvas.x) / scalar);
+    y = round((float)(y - canvas.y) / scalar);
+    w = round((float)w / scalar);
+    h = round((float)h / scalar);
   }
 
   public void mouseReleased()
@@ -2377,13 +2414,31 @@ class LayerResizeWindow extends FloatingWindow
 
 	}
 
+	public void mouseReleased()
+	{
+		super.mouseReleased();
+
+		if(layer != null)
+			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+
+	}
+
+	public void mouseDragged()
+	{
+		int oldX = x;
+		int oldY = y;
+		super.mouseDragged();
+		if (oldX == x && oldY == y)
+		{
+			if(layer != null)
+			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+		}
+	}
+
 
 	public void draw()
 	{
 		super.draw();
-
-		if(layer != null)
-		layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
 	}
 }
 class LayerSelector extends UIManager 
@@ -2750,7 +2805,6 @@ class ShapeMenu extends Menu
 
       if (s == "mnbtnCircle")
       {
-        println("Point a");
         canvas.addCircle(/*boolean filled*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
@@ -3094,7 +3148,7 @@ class Slider extends Widget
       getValue();
       
       //Displays current value of the slider
-      textInput.setString(Float.toString(value));
+      textInput.setString(Float.toString(value)); 
     }
 
     rectX += x - oldX;
@@ -3546,11 +3600,13 @@ class Widget implements Serializable
     if (!clicked)
     {
       mouseIsIn = checkMouseIsIn();
+      
     }
     else
     {
       if (draggable)
       {
+        println("Point b");
         x = mouseX - mouseOffsetX;
         y = mouseY - mouseOffsetY;
       }

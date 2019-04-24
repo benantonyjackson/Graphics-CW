@@ -227,7 +227,6 @@ class ShapeMenu extends Menu
 
       if (s == "mnbtnCircle")
       {
-        println("Point a");
         canvas.addCircle(/*boolean filled*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
