@@ -19,6 +19,8 @@ class Canvas extends UIManager
   undoListNode undoList = new undoListNode();
   undoListNode head = undoList;
   
+  float scalar;
+
   Slider rotation;
 
   //Layer oldLayer;
@@ -97,6 +99,8 @@ class Canvas extends UIManager
       {
         l.scaleAfterReize(scalar);
       }
+
+      this.scalar = scalar; 
       
       tbxZoom.setString(scalar * 100 + "%");
     }
@@ -118,6 +122,8 @@ class Canvas extends UIManager
       {
         l.scaleAfterReize(scalar);
       }
+
+      this.scalar = scalar;
       
       tbxZoom.setString((scalar * 100) + "%");
     }
@@ -369,6 +375,7 @@ class Canvas extends UIManager
       for (Shape s: l.shapeList)
       {
         output.println(s.type);
+
         if (s.type == "Polygon")
         {
           Polygon poly = (Polygon) s;
@@ -390,6 +397,8 @@ class Canvas extends UIManager
         {
           Rectangle rectangle = (Rectangle) s;
 
+          s.scaleAfterReize(1);
+
           output.println(rectangle.scalar);
           output.println(rectangle.filled);
           output.println(rectangle.lineColor);
@@ -399,6 +408,8 @@ class Canvas extends UIManager
           output.println(rectangle.y);
           output.println(rectangle.w);
           output.println(rectangle.h);
+
+          s.scaleAfterReize(scalar);
         }
 
         //Marks the end of a layers shape data
@@ -458,7 +469,6 @@ class Canvas extends UIManager
 
       if (line.contentEquals("Rectangle"))
       {
-        println(Pixels[i]);
         Rectangle rectangle = new Rectangle(Float.parseFloat(Pixels[i++])
           , Boolean.parseBoolean(Pixels[i++])
           , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
@@ -473,7 +483,6 @@ class Canvas extends UIManager
         layers.get(layers.size()-1).addShape(rectangle);
         //The current line was read by the while loop but the line index was not incremented
         //So the line index must be incremented now for the next itteration of the loop
-        println(Pixels[i]);
         i++;
         continue;
       }

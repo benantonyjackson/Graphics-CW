@@ -130,7 +130,6 @@ class Widget implements Serializable
     {
       if (draggable)
       {
-        println("Point b");
         x = mouseX - mouseOffsetX;
         y = mouseY - mouseOffsetY;
       }

@@ -519,6 +519,9 @@ public class Circle extends Shape
 
 public class Rectangle extends Shape 
 {
+
+  int oldCanvasX;
+  int oldCanvasY;
   Rectangle(float scalar, boolean filled, color lineColor, color fillColor)
   {
     draggable = true;
@@ -534,6 +537,9 @@ public class Rectangle extends Shape
     this.filled = filled;
     this.fillColor = fillColor;
 
+    oldCanvasX=canvas.x;
+    oldCanvasY=canvas.y;
+
   }
 
   void mousePressed()
@@ -546,38 +552,13 @@ public class Rectangle extends Shape
     }
     else
     {
-      x = round(((float)x * scalar) + canvas.x);
-      y =  round(((float)y * scalar) + canvas.y);
-      w = round((float)w * scalar);
-      h = round((float)h * scalar);
-
-
       super.mousePressed();
-
-      x = round((float)(x - canvas.x) / scalar);
-      y = round((float)(y - canvas.y) / scalar);
-      w = round((float)w / scalar);
-      h = round((float)h / scalar);
     }
   }
 
   void mouseDragged()
   {
-    //println("Point a");
-
-    x = round(((float)x * scalar) + canvas.x);
-    y =  round(((float)y * scalar) + canvas.y);
-    w = round((float)w * scalar);
-    h = round((float)h * scalar);
-
-
     super.mouseDragged();
-    println("Mouse offset x: " + clicked);
-
-    x = round((float)(x - canvas.x) / scalar);
-    y = round((float)(y - canvas.y) / scalar);
-    w = round((float)w / scalar);
-    h = round((float)h / scalar);
   }
 
   void mouseReleased()
@@ -586,26 +567,30 @@ public class Rectangle extends Shape
     if (!placed)
     {
       placed = true;
-      w = round((float)(mouseX - x) / scalar);
-      h = round((float)(mouseY - y) / scalar);
+      //w = round((float)(mouseX - x) /*/ scalar*/);
+      //h = round((float)(mouseY - y) /*/ scalar*/);
 
-      x = round((float)(x - canvas.x) / scalar);
-      y = round((float)(y - canvas.y) / scalar);
+      //x = round((float)(x - canvas.x) /*/ scalar*/);
+      //y = round((float)(y - canvas.y) /*/ scalar*/);
+
+      w=(mouseX - x);
+      h=(mouseY - y);
+
 
     }
 
-     x = round(((float)x * scalar) + canvas.x);
+     /*x = round(((float)x * scalar) + canvas.x);
      y =  round(((float)y * scalar) + canvas.y);
      w = round((float)w * scalar);
-     h = round((float)h * scalar);
+     h = round((float)h * scalar);*/
 
 
     super.mouseReleased();
 
-    x = round((float)(x - canvas.x) / scalar);
+    /*x = round((float)(x - canvas.x) / scalar);
     y = round((float)(y - canvas.y) / scalar);
     w = round((float)w / scalar);
-    h = round((float)h / scalar);
+    h = round((float)h / scalar);*/
   }
 
   void draw()
@@ -631,8 +616,9 @@ public class Rectangle extends Shape
       {
         fill(fillColor);
       }
-      rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
-       , w * scalar,h * scalar);
+      /*rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
+       , w * scalar,h * scalar);*/
+       rect(x,y,w,h);
 
       stroke(0);
 
@@ -641,8 +627,9 @@ public class Rectangle extends Shape
         noFill();
         strokeWeight(5);
 
-        rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
-        , w * scalar,h * scalar);
+        /*rect(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
+        , w * scalar,h * scalar);*/
+        rect(x,y,w,h);
 
         strokeWeight(1);
       }
@@ -661,14 +648,31 @@ public class Rectangle extends Shape
     {
       pg.fill(fillColor);
     }
-    pg.rect(x,y,w,h);
+    pg.rect(round((float)(x - oldCanvasX) / this.scalar),round((float)(y - oldCanvasY) / this.scalar)
+      ,round((float)w / this.scalar),round((float)h / this.scalar));
 
     pg.stroke(0);
   }
 
+
+
   void scaleAfterReize(float scalar)
   {
-    this.scalar = scalar;
+     //x = round((float)(x) / this.scalar);
+     x = round((float)(x - oldCanvasX) / this.scalar);
+     y = round((float)(y - oldCanvasY) / this.scalar);
+     w = round((float)w / this.scalar);
+     h = round((float)h / this.scalar);
+
+
+     this.scalar = scalar;
+     oldCanvasX = canvas.x;
+     oldCanvasY = canvas.y;
+     x = round(((float)x * scalar) + canvas.x);
+     y = round(((float)y * scalar) + canvas.y);
+     w = round((float)w * this.scalar);
+     h = round((float)h * this.scalar);
+    
   }
 
 } // End of Rectangle class
