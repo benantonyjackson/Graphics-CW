@@ -516,7 +516,8 @@ public class Circle extends Shape
       {
         pg.fill(fillColor);
       }
-      pg.ellipse(x,y,w,h);
+      pg.ellipse(round((float)((x + (w / 2)) - oldCanvasX) / this.scalar),round((float)((y + (h / 2)) - oldCanvasY) / this.scalar)
+      ,round((float)w / this.scalar),round((float)h / this.scalar));
   }
 
   void scaleAfterReize(float scalar)
