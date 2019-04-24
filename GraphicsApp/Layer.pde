@@ -407,9 +407,12 @@ public class Shape extends Widget
 
 public class Circle extends Shape
 {
+  int oldCanvasX;
+  int oldCanvasY;
   Circle(float scalar, boolean filled, color lineColor, color fillColor)
   {
     type = "Rectangle";
+    draggable=true;
 
     toggleable = true;
     w=0;
@@ -419,6 +422,9 @@ public class Circle extends Shape
     this.lineColor = lineColor;
     this.filled = filled;
     this.fillColor = fillColor;
+
+    oldCanvasX=canvas.x;
+    oldCanvasY=canvas.y;
   }
 
   void mousePressed()
@@ -437,34 +443,45 @@ public class Circle extends Shape
       placed = true;
       //w = round((float)(mouseX - x) / scalar);
       //h = round((float)(mouseY - y) / scalar);
-      w= round((float)((mouseX - x)*2) / scalar);
-      h= round((float)((mouseY - y)*2) / scalar);
+      //w= round((float)((mouseX - x)*2) /*/ scalar*/);
+      //h= round((float)((mouseY - y)*2) /*/ scalar*/);
 
-      x = round((float)(x - canvas.x) / scalar);
-      y = round((float)(y - canvas.y) / scalar);
+      w=mouseX - x;
+      h=mouseY - y;
+
+      //x = x - (w/2);
+      //y = y - (h/2);
+
+      //x = round((float)(x - canvas.x) /*/ scalar*/);
+      //y = round((float)(y - canvas.y) /*/ scalar*/);
 
     }
     
-    x = round(((float)x * scalar) + canvas.x);
+    /*x = round(((float)x * scalar) + canvas.x);
     y =  round(((float)y * scalar) + canvas.y);
     w = round((float)w * scalar);
-    h = round((float)h * scalar);
+    h = round((float)h * scalar);*/
 
 
     super.mouseReleased();
 
-    x = round((float)(x - canvas.x) / scalar);
+    /*x = round((float)(x - canvas.x) / scalar);
     y = round((float)(y - canvas.y) / scalar);
     w = round((float)w / scalar);
-    h = round((float)h / scalar);
+    h = round((float)h / scalar);*/
 
+  }
+
+  void mouseDragged()
+  {
+    super.mouseDragged();
   }
 
   void draw()
   {
     if (!placed && mousePressed)
     {
-      ellipse(x, y, (mouseX - x)*2, (mouseY - y)*2);
+      ellipse(x + ((mouseX - x) / 2), y + ((mouseY - y)/ 2), (mouseX - x), (mouseY - y));
     }
     else 
     {
@@ -477,8 +494,10 @@ public class Circle extends Shape
       {
         fill(fillColor);
       }
-      ellipse(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
-       , w * scalar,h * scalar);
+      //ellipse(round(((float)x * scalar) + canvas.x), round(((float)y * scalar) + canvas.y)
+      // , w * scalar,h * scalar);
+
+      ellipse(x + (w / 2), y + (h/2), w, h);
 
       stroke(0);
 
@@ -487,8 +506,10 @@ public class Circle extends Shape
         noFill();
         strokeWeight(5);
 
-        rect(((float)(x - (w/2)) * scalar) + canvas.x,
-          ((float)(y - (h/2)) * scalar) + canvas.y, w * scalar, h * scalar);
+        //rect(((float)(x - (w/2)) * scalar) + canvas.x,
+        //  ((float)(y - (h/2)) * scalar) + canvas.y, w * scalar, h * scalar);
+
+        rect(x, y /*- (h/2)*/, w, h);
 
         strokeWeight(1);
       }
@@ -511,7 +532,21 @@ public class Circle extends Shape
 
   void scaleAfterReize(float scalar)
   {
-    this.scalar = scalar;
+     //x = round((float)(x) / this.scalar);
+     x = round((float)(x - oldCanvasX) / this.scalar);
+     y = round((float)(y - oldCanvasY) / this.scalar);
+     w = round((float)w / this.scalar);
+     h = round((float)h / this.scalar);
+
+
+     this.scalar = scalar;
+     oldCanvasX = canvas.x;
+     oldCanvasY = canvas.y;
+     x = round(((float)x * scalar) + canvas.x);
+     y = round(((float)y * scalar) + canvas.y);
+     w = round((float)w * this.scalar);
+     h = round((float)h * this.scalar);
+    
   }
 
 
