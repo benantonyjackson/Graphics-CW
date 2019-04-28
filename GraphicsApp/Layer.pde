@@ -727,7 +727,7 @@ public class Polygon extends Shape
     Polygon temp = new Polygon( scalar,  filled,  closedShape,  lineColor,  fillColor);
     
     type = "Polygon";
-
+    draggable = true;
     temp.placed=true;
     temp.x=x;
     temp.y=y;
@@ -820,6 +820,28 @@ public class Polygon extends Shape
        place();
       } 
     }
+  }
+
+  void mouseDragged()
+  {
+    int oldX = x;
+    int oldY = y;
+
+    super.mouseDragged();
+    println(clicked);
+    oldX = x - oldX;
+    oldY = y - oldY;
+
+    ArrayList<Point> temp = new ArrayList<Point>();
+
+    for (int i = 0; i < actPoints.size(); i++)
+    {
+      temp.add(new Point(actPoints.get(i).x + oldX, actPoints.get(i).y + oldY));
+    }
+
+    actPoints = temp;
+
+    scaleAfterReize(scalar);
   }
 
   void scaleAfterReize(float scalar)
