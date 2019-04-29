@@ -25,6 +25,7 @@ class Slider extends Widget
   
   void mouseDragged()
   {
+    super.mouseDragged();
     //Keeps the bar within bounds of the slider
     if (clicked)
     {
@@ -37,13 +38,14 @@ class Slider extends Widget
       textInput.setString(Float.toString(value)); 
     }
 
-    rectX += x - oldX;
+    //rectX += x - oldX;
 
-    oldX = x;
+    //oldX = x;
   }
   
   void mouseReleased()
   {
+    super.mouseReleased();
     //Keeps the bar within bounds of the slider
     if (clicked)
     {
@@ -69,10 +71,12 @@ class Slider extends Widget
     value = clamp(val, min, max);
 
     //Sets the position of the rotation
-    rectX = (int) map(value, min, max, x, w);
+    rectX = (int) map(value, min, max, x, x+w);
 
     //Changes the display text
     textInput.setString(Float.toString(value));
+
+    mouseDragged();
 
   }
   
@@ -99,5 +103,15 @@ class Slider extends Widget
     rect(rectX, y, 7, 10);
     
     textInput.draw();
+  }
+
+  void setPosition(int x, int y)
+  {
+    //println("Old x: " + this.x + "new x: " + x);
+
+    //rectX = this.x - rectX;
+    //rectX = rectX + x;
+    rectX += (x - this.x);
+    super.setPosition(x,y);
   }
 }

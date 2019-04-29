@@ -64,15 +64,13 @@ class FloatingWindow extends UIManager
     
     for (Widget w: widgetList)
     {
-      w.x += dx;
-      w.y += dy;
+      w.setPosition(w.x + dx, w.y + dy);
     }
   }
   
   void add(Widget w)
   {
-    w.x += x;
-    w.y += y + titleBarSize;
+    w.setPosition(w.x + x, w.y + y + titleBarSize);
     
     super.add(w);
   }

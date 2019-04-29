@@ -1060,7 +1060,7 @@ class ColorPickerWindow extends FloatingWindow
 class ColorSelector extends Widget
 {
 
-	int selectedColor = color(255,0,0);
+	int selectedColor = color(255,2,2);
 	ColorSelector(int x, int y)
 	{
 		w = 20;
@@ -1280,15 +1280,13 @@ class FloatingWindow extends UIManager
     
     for (Widget w: widgetList)
     {
-      w.x += dx;
-      w.y += dy;
+      w.setPosition(w.x + dx, w.y + dy);
     }
   }
   
   public void add(Widget w)
   {
-    w.x += x;
-    w.y += y + titleBarSize;
+    w.setPosition(w.x + x, w.y + y + titleBarSize);
     
     super.add(w);
   }
@@ -2534,10 +2532,7 @@ class LayerResizeWindow extends FloatingWindow
 			HeightSlider.setValue(s.h);
 
 		}
-		else
-		{
-			println("Big null");
-		}
+		
 		if (WidthSlider != null)
 		add(WidthSlider);
 		if (WidthSlider != null)
@@ -3283,6 +3278,7 @@ class Slider extends Widget
   
   public void mouseDragged()
   {
+    super.mouseDragged();
     //Keeps the bar within bounds of the slider
     if (clicked)
     {
@@ -3295,13 +3291,14 @@ class Slider extends Widget
       textInput.setString(Float.toString(value)); 
     }
 
-    rectX += x - oldX;
+    //rectX += x - oldX;
 
-    oldX = x;
+    //oldX = x;
   }
   
   public void mouseReleased()
   {
+    super.mouseReleased();
     //Keeps the bar within bounds of the slider
     if (clicked)
     {
@@ -3327,10 +3324,12 @@ class Slider extends Widget
     value = clamp(val, min, max);
 
     //Sets the position of the rotation
-    rectX = (int) map(value, min, max, x, w);
+    rectX = (int) map(value, min, max, x, x+w);
 
     //Changes the display text
     textInput.setString(Float.toString(value));
+
+    mouseDragged();
 
   }
   
@@ -3357,6 +3356,16 @@ class Slider extends Widget
     rect(rectX, y, 7, 10);
     
     textInput.draw();
+  }
+
+  public void setPosition(int x, int y)
+  {
+    //println("Old x: " + this.x + "new x: " + x);
+
+    //rectX = this.x - rectX;
+    //rectX = rectX + x;
+    rectX += (x - this.x);
+    super.setPosition(x,y);
   }
 }
 class TextInput extends Label
@@ -3830,6 +3839,12 @@ class Widget implements Serializable
       x = (width / 2) - (w / 2);
     }
     
+  }
+
+  public void setPosition(int x, int y)
+  {
+    this.x=x;
+    this.y=y;
   }
   
   int x;

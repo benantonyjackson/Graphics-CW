@@ -41,10 +41,7 @@ class LayerResizeWindow extends FloatingWindow
 			HeightSlider.setValue(s.h);
 
 		}
-		else
-		{
-			println("Big null");
-		}
+		
 		if (WidthSlider != null)
 		add(WidthSlider);
 		if (WidthSlider != null)

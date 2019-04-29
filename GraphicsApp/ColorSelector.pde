@@ -1,7 +1,7 @@
 class ColorSelector extends Widget
 {
 
-	color selectedColor = color(255,0,0);
+	color selectedColor = color(255,2,2);
 	ColorSelector(int x, int y)
 	{
 		w = 20;
