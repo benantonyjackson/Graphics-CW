@@ -1776,6 +1776,8 @@ public class Shape extends Widget
     filled = f;
   }
 
+
+
   public void setFilled(boolean f, int c)
   {
     setFilled(f);
@@ -2176,6 +2178,23 @@ public class Polygon extends Shape
     scaleAfterReize(scalar);
   }
 
+  public void setSize(int w, int h)
+  {
+    println("w: " + this.w + " h:" + this.h);
+    float scalarW = w / (float)this.w;
+    float scalarH = h / (float)this.h;
+
+    for (int i = 0; i < actPoints.size(); i++)
+    {
+      actPoints.set(i, new Point(round((float)actPoints.get(i).x * scalarW),round((float)actPoints.get(i).y * scalarH)));
+    }
+
+    scaleAfterReize(scalar);
+
+    this.w=w;
+    this.h=h;
+  }
+
   Polygon(){}
 
   public Shape clone()
@@ -2484,8 +2503,8 @@ class LayerResizeWindow extends FloatingWindow
 	{
 		x = 50;
 		y = 50;
-		w = 400;
-		h = 400;
+		w = 500;
+		h = 100;
 		
 		closeButton.x = x+w - 20;
     	closeButton.y =  y;
@@ -2495,8 +2514,8 @@ class LayerResizeWindow extends FloatingWindow
 
 		if (l != null)
 		{
-			WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
-			HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
+			WidthSlider = new Slider(10, 10, 255, 1, l.actImage.width * 4);
+			HeightSlider = new Slider(10, 40, 255, 1, l.actImage.height * 4);
 
 			WidthSlider.setValue(l.actImage.width);
 			HeightSlider.setValue(l.actImage.height);
@@ -2508,8 +2527,8 @@ class LayerResizeWindow extends FloatingWindow
 
 		if (s != null)
 		{
-			WidthSlider = new Slider(10, 290, 255, 1, s.w * 4);
-			HeightSlider = new Slider(10, 320, 255, 1, s.h * 4);
+			WidthSlider = new Slider(10, 10, 255, 1, s.w * 4);
+			HeightSlider = new Slider(10, 40, 255, 1, s.h * 4);
 
 			WidthSlider.setValue(s.w);
 			HeightSlider.setValue(s.h);

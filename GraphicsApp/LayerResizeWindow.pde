@@ -10,8 +10,8 @@ class LayerResizeWindow extends FloatingWindow
 	{
 		x = 50;
 		y = 50;
-		w = 400;
-		h = 400;
+		w = 500;
+		h = 100;
 		
 		closeButton.x = x+w - 20;
     	closeButton.y =  y;
@@ -21,8 +21,8 @@ class LayerResizeWindow extends FloatingWindow
 
 		if (l != null)
 		{
-			WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
-			HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
+			WidthSlider = new Slider(10, 10, 255, 1, l.actImage.width * 4);
+			HeightSlider = new Slider(10, 40, 255, 1, l.actImage.height * 4);
 
 			WidthSlider.setValue(l.actImage.width);
 			HeightSlider.setValue(l.actImage.height);
@@ -34,8 +34,8 @@ class LayerResizeWindow extends FloatingWindow
 
 		if (s != null)
 		{
-			WidthSlider = new Slider(10, 290, 255, 1, s.w * 4);
-			HeightSlider = new Slider(10, 320, 255, 1, s.h * 4);
+			WidthSlider = new Slider(10, 10, 255, 1, s.w * 4);
+			HeightSlider = new Slider(10, 40, 255, 1, s.h * 4);
 
 			WidthSlider.setValue(s.w);
 			HeightSlider.setValue(s.h);

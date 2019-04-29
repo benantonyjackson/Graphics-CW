@@ -330,6 +330,8 @@ public class Shape extends Widget
     filled = f;
   }
 
+
+
   void setFilled(boolean f, color c)
   {
     setFilled(f);
@@ -728,6 +730,23 @@ public class Polygon extends Shape
   {
     filled = f;
     scaleAfterReize(scalar);
+  }
+
+  void setSize(int w, int h)
+  {
+    println("w: " + this.w + " h:" + this.h);
+    float scalarW = w / (float)this.w;
+    float scalarH = h / (float)this.h;
+
+    for (int i = 0; i < actPoints.size(); i++)
+    {
+      actPoints.set(i, new Point(round((float)actPoints.get(i).x * scalarW),round((float)actPoints.get(i).y * scalarH)));
+    }
+
+    scaleAfterReize(scalar);
+
+    this.w=w;
+    this.h=h;
   }
 
   Polygon(){}
