@@ -177,7 +177,7 @@ void PickColor(ColorSelector sel, int r, int g, int b)
   ui.add(new ColorPickerWindow(sel,r,g,b));
 }
 
-void ResizeLayer(Layer l)
+void ResizeLayer(Layer l, Shape s)
 {
-  ui.add(new LayerResizeWindow(l));
+  ui.add(new LayerResizeWindow(l,s));
 }

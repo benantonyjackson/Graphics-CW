@@ -403,6 +403,13 @@ public class Shape extends Widget
 
     return temp;
   }
+
+  void setSize(int w, int h)
+  {
+    this.w=w;
+    this.h=h;
+  }
+
 } // End if shape class
 
 public class Circle extends Shape
@@ -828,7 +835,6 @@ public class Polygon extends Shape
     int oldY = y;
 
     super.mouseDragged();
-    println(clicked);
     oldX = x - oldX;
     oldY = y - oldY;
 

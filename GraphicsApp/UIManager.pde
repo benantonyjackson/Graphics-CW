@@ -105,13 +105,24 @@ class UIManager extends Widget
       {
         clickedList.add(widgetList.get(i).name);
         //widgetList.get(i).wasClicked = false;
+        break;
       }
       
+      /*if (widgetList.get(i).closed)
+      {
+        widgetList.remove(i);
+        i--;
+      }*/
+    }
+
+    for (int i = 0; i < widgetList.size(); i++)
+    {
       if (widgetList.get(i).closed)
       {
         widgetList.remove(i);
         i--;
       }
+
     }
     
     super.mouseReleased();
@@ -124,6 +135,8 @@ class UIManager extends Widget
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseDragged();
+      if (widgetList.get(i).clicked)
+        return;
     }
     
     super.mouseDragged();

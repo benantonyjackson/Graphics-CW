@@ -26,6 +26,7 @@ class MenuBar extends UIManager
 
     Menu imageMenu = new ImageMenu();
     imageMenu.add(new Button("Resize", "mnbtnResize"));
+    imageMenu.add(new Button("Resize shape", "mnbtnResizeShape"));
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
@@ -182,18 +183,30 @@ class ImageMenu extends Menu
 {
   void mouseReleased()
   {
+    println("Point b");
+
     super.mouseReleased();
     
     for (String s: clickedList)
     {
+      println(s);
       if (s == "mnbtnResize")
       {
         if (canvas.layerIndex > -1)
         {
-          ResizeLayer(canvas.layers.get(canvas.layerIndex));
+          ResizeLayer(canvas.layers.get(canvas.layerIndex), null);
         }
 
       }
+      if (s == "mnbtnResizeShape")
+        {
+          if (canvas.layerIndex > -1)
+          {
+            ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
+          }
+          
+          //println("Point a");
+        }
     }
   }
 

@@ -199,9 +199,9 @@ public void PickColor(ColorSelector sel, int r, int g, int b)
   ui.add(new ColorPickerWindow(sel,r,g,b));
 }
 
-public void ResizeLayer(Layer l)
+public void ResizeLayer(Layer l, Shape s)
 {
-  ui.add(new LayerResizeWindow(l));
+  ui.add(new LayerResizeWindow(l,s));
 }
 class Button extends Widget
 {
@@ -1819,6 +1819,13 @@ public class Shape extends Widget
 
     return temp;
   }
+
+  public void setSize(int w, int h)
+  {
+    this.w=w;
+    this.h=h;
+  }
+
 } // End if shape class
 
 public class Circle extends Shape
@@ -2244,7 +2251,6 @@ public class Polygon extends Shape
     int oldY = y;
 
     super.mouseDragged();
-    println(clicked);
     oldX = x - oldX;
     oldY = y - oldY;
 
@@ -2437,11 +2443,12 @@ class LayerButtons extends RadioButtons
 class LayerResizeWindow extends FloatingWindow
 {
 	Layer layer;
+	Shape shape;
 
 	Slider WidthSlider = null;
 	Slider HeightSlider = null;
 
-	LayerResizeWindow(Layer l)
+	LayerResizeWindow(Layer l, Shape s)
 	{
 		x = 50;
 		y = 50;
@@ -2452,14 +2459,37 @@ class LayerResizeWindow extends FloatingWindow
     	closeButton.y =  y;
 
 		layer = l;
+		shape = s;
 
-		WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
-		HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
+		if (l != null)
+		{
+			WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
+			HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
+
+			WidthSlider.setValue(l.actImage.width);
+			HeightSlider.setValue(l.actImage.height);
+		} 
 		
-		WidthSlider.setValue(l.actImage.width);
-		HeightSlider.setValue(l.actImage.height);
+		
+		//WidthSlider.setValue(l.actImage.width);
+		//HeightSlider.setValue(l.actImage.height);
 
+		if (s != null)
+		{
+			WidthSlider = new Slider(10, 290, 255, 1, s.w * 4);
+			HeightSlider = new Slider(10, 320, 255, 1, s.h * 4);
+
+			WidthSlider.setValue(s.w);
+			HeightSlider.setValue(s.h);
+
+		}
+		else
+		{
+			println("Big null");
+		}
+		if (WidthSlider != null)
 		add(WidthSlider);
+		if (WidthSlider != null)
 		add(HeightSlider);
 
 	}
@@ -2470,6 +2500,8 @@ class LayerResizeWindow extends FloatingWindow
 
 		if(layer != null)
 			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+		if(shape != null)
+			shape.setSize((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
 
 	}
 
@@ -2482,6 +2514,8 @@ class LayerResizeWindow extends FloatingWindow
 		{
 			if(layer != null)
 			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+			if(shape != null)
+			shape.setSize((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
 		}
 	}
 
@@ -2654,6 +2688,7 @@ class MenuBar extends UIManager
 
     Menu imageMenu = new ImageMenu();
     imageMenu.add(new Button("Resize", "mnbtnResize"));
+    imageMenu.add(new Button("Resize shape", "mnbtnResizeShape"));
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
@@ -2810,18 +2845,30 @@ class ImageMenu extends Menu
 {
   public void mouseReleased()
   {
+    println("Point b");
+
     super.mouseReleased();
     
     for (String s: clickedList)
     {
+      println(s);
       if (s == "mnbtnResize")
       {
         if (canvas.layerIndex > -1)
         {
-          ResizeLayer(canvas.layers.get(canvas.layerIndex));
+          ResizeLayer(canvas.layers.get(canvas.layerIndex), null);
         }
 
       }
+      if (s == "mnbtnResizeShape")
+        {
+          if (canvas.layerIndex > -1)
+          {
+            ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
+          }
+          
+          //println("Point a");
+        }
     }
   }
 
@@ -3428,13 +3475,24 @@ class UIManager extends Widget
       {
         clickedList.add(widgetList.get(i).name);
         //widgetList.get(i).wasClicked = false;
+        break;
       }
       
+      /*if (widgetList.get(i).closed)
+      {
+        widgetList.remove(i);
+        i--;
+      }*/
+    }
+
+    for (int i = 0; i < widgetList.size(); i++)
+    {
       if (widgetList.get(i).closed)
       {
         widgetList.remove(i);
         i--;
       }
+
     }
     
     super.mouseReleased();
@@ -3447,6 +3505,8 @@ class UIManager extends Widget
     for (int i = 0; i < widgetList.size(); i++)
     {
       widgetList.get(i).mouseDragged();
+      if (widgetList.get(i).clicked)
+        return;
     }
     
     super.mouseDragged();

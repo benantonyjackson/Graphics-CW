@@ -1,11 +1,12 @@
 class LayerResizeWindow extends FloatingWindow
 {
 	Layer layer;
+	Shape shape;
 
 	Slider WidthSlider = null;
 	Slider HeightSlider = null;
 
-	LayerResizeWindow(Layer l)
+	LayerResizeWindow(Layer l, Shape s)
 	{
 		x = 50;
 		y = 50;
@@ -16,14 +17,37 @@ class LayerResizeWindow extends FloatingWindow
     	closeButton.y =  y;
 
 		layer = l;
+		shape = s;
 
-		WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
-		HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
+		if (l != null)
+		{
+			WidthSlider = new Slider(10, 290, 255, 1, l.actImage.width * 4);
+			HeightSlider = new Slider(10, 320, 255, 1, l.actImage.height * 4);
+
+			WidthSlider.setValue(l.actImage.width);
+			HeightSlider.setValue(l.actImage.height);
+		} 
 		
-		WidthSlider.setValue(l.actImage.width);
-		HeightSlider.setValue(l.actImage.height);
+		
+		//WidthSlider.setValue(l.actImage.width);
+		//HeightSlider.setValue(l.actImage.height);
 
+		if (s != null)
+		{
+			WidthSlider = new Slider(10, 290, 255, 1, s.w * 4);
+			HeightSlider = new Slider(10, 320, 255, 1, s.h * 4);
+
+			WidthSlider.setValue(s.w);
+			HeightSlider.setValue(s.h);
+
+		}
+		else
+		{
+			println("Big null");
+		}
+		if (WidthSlider != null)
 		add(WidthSlider);
+		if (WidthSlider != null)
 		add(HeightSlider);
 
 	}
@@ -34,6 +58,8 @@ class LayerResizeWindow extends FloatingWindow
 
 		if(layer != null)
 			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+		if(shape != null)
+			shape.setSize((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
 
 	}
 
@@ -46,6 +72,8 @@ class LayerResizeWindow extends FloatingWindow
 		{
 			if(layer != null)
 			layer.ResizeLayer((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
+			if(shape != null)
+			shape.setSize((int)WidthSlider.getValue(), (int)HeightSlider.getValue());
 		}
 	}
 
