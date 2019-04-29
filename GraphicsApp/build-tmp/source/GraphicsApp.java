@@ -1104,8 +1104,6 @@ class FilledButton extends Button
 
 	public void WidgetClickEvent()
 	{
-		println("Point a");
-
 		if (canvas != null)
 		{
 			if (canvas.layerIndex > -1)
@@ -1565,22 +1563,10 @@ class Layer extends UIManager
         s.wasClicked = false;
         selectedShape = s;
         s.selected = true;
-        //println(selectedShape.filled);
+        println(selectedShape.filled);
         filledButton.toggled = selectedShape.filled;
         break;
       }
-    }
-
-    if (selectedShape != null)
-    {
-      //println(selectedShape.type);
-      //println(filledButton.toggled);
-      //selectedShape.filled = filledButton.toggled;
-      //selectedShape.scaleAfterReize(scalar);
-    }
-    else 
-    {
-      //println("Null");
     }
   }
 
@@ -2163,7 +2149,7 @@ public class Polygon extends Shape
   //Stores points before the scalar is applied
   ArrayList<Point> actPoints = new ArrayList<Point>();
 
-  boolean filled=false;
+  //boolean filled=false;
   boolean closedShape=false;
 
   PShape shape = createShape();
@@ -2183,6 +2169,12 @@ public class Polygon extends Shape
     this.fillColor = fillColor;
 
   } 
+
+  public void setFilled(boolean f)
+  {
+    filled = f;
+    scaleAfterReize(scalar);
+  }
 
   Polygon(){}
 

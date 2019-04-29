@@ -14,8 +14,6 @@ class FilledButton extends Button
 
 	void WidgetClickEvent()
 	{
-		println("Point a");
-
 		if (canvas != null)
 		{
 			if (canvas.layerIndex > -1)
