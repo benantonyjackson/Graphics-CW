@@ -40,7 +40,7 @@ public Canvas canvas;
 public LayerSelector layerSelector;
 public ColorSelector lineColorSelector = new ColorSelector(35, 100);
 public ColorSelector fillColorSelector = new ColorSelector(35, 130);
-public Button filledButton = new Button("Filled " , 10, 155, 70, 35);
+public FilledButton filledButton = new FilledButton("Filled " , 10, 155, 70, 35);
 
 
 
@@ -1088,6 +1088,38 @@ class ColorSelector extends Widget
 	}
 
 }
+class FilledButton extends Button
+{
+	FilledButton(String s, int x, int y, int w, int h)
+  	{
+    	text = s;
+    
+	    this.x = x;
+	    this.y = y;
+	    this.w = w;
+	    this.h = h;
+    
+  	}
+
+
+	public void WidgetClickEvent()
+	{
+		println("Point a");
+
+		if (canvas != null)
+		{
+			if (canvas.layerIndex > -1)
+			{
+				Layer l = canvas.layers.get(canvas.layerIndex);
+
+				if (l.selectedShape != null)
+				{
+					l.selectedShape.setFilled(toggled);
+				}
+			}
+		}
+	}
+}
 public PImage BlackAndWhite(PImage img)
 {
 	PImage res = new PImage(img.width, img.height);
@@ -1533,7 +1565,7 @@ class Layer extends UIManager
         s.wasClicked = false;
         selectedShape = s;
         s.selected = true;
-        println(selectedShape.filled);
+        //println(selectedShape.filled);
         filledButton.toggled = selectedShape.filled;
         break;
       }

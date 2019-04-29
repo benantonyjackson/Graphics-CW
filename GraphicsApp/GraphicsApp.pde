@@ -18,7 +18,7 @@ public Canvas canvas;
 public LayerSelector layerSelector;
 public ColorSelector lineColorSelector = new ColorSelector(35, 100);
 public ColorSelector fillColorSelector = new ColorSelector(35, 130);
-public Button filledButton = new Button("Filled " , 10, 155, 70, 35);
+public FilledButton filledButton = new FilledButton("Filled " , 10, 155, 70, 35);
 
 
 

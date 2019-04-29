@@ -117,7 +117,7 @@ class Layer extends UIManager
         s.wasClicked = false;
         selectedShape = s;
         s.selected = true;
-        println(selectedShape.filled);
+        //println(selectedShape.filled);
         filledButton.toggled = selectedShape.filled;
         break;
       }
