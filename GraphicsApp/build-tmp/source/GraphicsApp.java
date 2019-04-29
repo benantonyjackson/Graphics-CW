@@ -38,10 +38,9 @@ int windowColor = color(25,25,25);
 
 public Canvas canvas;
 public LayerSelector layerSelector;
-//public Label lblLineColor = new Label(10, 100, "Line");
-//public Label lblFillColor = new Label(10, 100, "Fill");
 public ColorSelector lineColorSelector = new ColorSelector(35, 100);
 public ColorSelector fillColorSelector = new ColorSelector(35, 130);
+public Button filledButton = new Button("Filled " , 10, 155, 70, 35);
 
 
 
@@ -58,8 +57,9 @@ public void setup()
   ui.add(fillColorSelector);
   ui.add(new Label(10, 100, "Line"));
   ui.add(new Label(10, 130, "Fill"));
- // ui.add(lblLineColor);
-  //ui.add(lblFillColor);
+  filledButton.toggleable = true;
+  filledButton.untoggleAfterClick = false;
+  ui.add(filledButton);
   ui.name="ui";
   
   
@@ -1533,6 +1533,8 @@ class Layer extends UIManager
         s.wasClicked = false;
         selectedShape = s;
         s.selected = true;
+        println(selectedShape.filled);
+        filledButton.toggled = selectedShape.filled;
         break;
       }
     }
@@ -1540,6 +1542,9 @@ class Layer extends UIManager
     if (selectedShape != null)
     {
       //println(selectedShape.type);
+      //println(filledButton.toggled);
+      //selectedShape.filled = filledButton.toggled;
+      //selectedShape.scaleAfterReize(scalar);
     }
     else 
     {
@@ -1925,6 +1930,8 @@ public class Circle extends Shape
 
         strokeWeight(1);
       }
+
+      noFill();
     }
   }
 
@@ -2072,6 +2079,8 @@ public class Rectangle extends Shape
 
         strokeWeight(1);
       }
+
+      noFill();
     }
 
   }
@@ -2379,7 +2388,6 @@ public void drawLine(Point pointA, Point pointB)
 {
   line(pointA.x, pointA.y, pointB.x, pointB.y);
 }
-
 class LayerButton extends Button
 {
   PImage layerIMG;
@@ -2845,13 +2853,11 @@ class ImageMenu extends Menu
 {
   public void mouseReleased()
   {
-    println("Point b");
 
     super.mouseReleased();
     
     for (String s: clickedList)
     {
-      println(s);
       if (s == "mnbtnResize")
       {
         if (canvas.layerIndex > -1)
@@ -2866,8 +2872,6 @@ class ImageMenu extends Menu
           {
             ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
           }
-          
-          //println("Point a");
         }
     }
   }
@@ -2884,25 +2888,25 @@ class ShapeMenu extends Menu
     {
       if (s == "mnbtnPolyline")
       {
-        canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
+        canvas.addPolygon(/*boolean filled*/filledButton.toggled, /*boolean closedShape*/false
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
 
       }
       if (s == "mnbtnPolyshape")
       {
-        canvas.addPolygon(/*boolean filled*/true, /*boolean closedShape*/true
+        canvas.addPolygon(/*boolean filled*/filledButton.toggled, /*boolean closedShape*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
 
       if (s == "mnbtnRectangle")
       {
-        canvas.addRectangle(/*boolean filled*/true
+        canvas.addRectangle(/*boolean filled*/filledButton.toggled
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
 
       if (s == "mnbtnCircle")
       {
-        canvas.addCircle(/*boolean filled*/true
+        canvas.addCircle(/*boolean filled*/filledButton.toggled
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }

@@ -514,6 +514,8 @@ public class Circle extends Shape
 
         strokeWeight(1);
       }
+
+      noFill();
     }
   }
 
@@ -661,6 +663,8 @@ public class Rectangle extends Shape
 
         strokeWeight(1);
       }
+
+      noFill();
     }
 
   }

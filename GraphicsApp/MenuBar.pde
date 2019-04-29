@@ -218,25 +218,25 @@ class ShapeMenu extends Menu
     {
       if (s == "mnbtnPolyline")
       {
-        canvas.addPolygon(/*boolean filled*/false, /*boolean closedShape*/false
+        canvas.addPolygon(/*boolean filled*/filledButton.toggled, /*boolean closedShape*/false
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
 
       }
       if (s == "mnbtnPolyshape")
       {
-        canvas.addPolygon(/*boolean filled*/true, /*boolean closedShape*/true
+        canvas.addPolygon(/*boolean filled*/filledButton.toggled, /*boolean closedShape*/true
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
 
       if (s == "mnbtnRectangle")
       {
-        canvas.addRectangle(/*boolean filled*/true
+        canvas.addRectangle(/*boolean filled*/filledButton.toggled
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
 
       if (s == "mnbtnCircle")
       {
-        canvas.addCircle(/*boolean filled*/true
+        canvas.addCircle(/*boolean filled*/filledButton.toggled
           , /*color lineColor*/lineColorSelector.selectedColor, /*color fillColor*/fillColorSelector.selectedColor);
       }
     }
