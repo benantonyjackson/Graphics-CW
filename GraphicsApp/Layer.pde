@@ -117,6 +117,8 @@ class Layer extends UIManager
         s.wasClicked = false;
         selectedShape = s;
         s.selected = true;
+        println(selectedShape.filled);
+        filledButton.toggled = selectedShape.filled;
         break;
       }
     }
@@ -124,6 +126,9 @@ class Layer extends UIManager
     if (selectedShape != null)
     {
       //println(selectedShape.type);
+      //println(filledButton.toggled);
+      //selectedShape.filled = filledButton.toggled;
+      //selectedShape.scaleAfterReize(scalar);
     }
     else 
     {
@@ -963,4 +968,3 @@ void drawLine(Point pointA, Point pointB)
 {
   line(pointA.x, pointA.y, pointB.x, pointB.y);
 }
-

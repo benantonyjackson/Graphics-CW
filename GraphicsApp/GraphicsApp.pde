@@ -16,10 +16,9 @@ color windowColor = color(25,25,25);
 
 public Canvas canvas;
 public LayerSelector layerSelector;
-//public Label lblLineColor = new Label(10, 100, "Line");
-//public Label lblFillColor = new Label(10, 100, "Fill");
 public ColorSelector lineColorSelector = new ColorSelector(35, 100);
 public ColorSelector fillColorSelector = new ColorSelector(35, 130);
+public Button filledButton = new Button("Filled " , 10, 155, 70, 35);
 
 
 
@@ -36,8 +35,9 @@ void setup()
   ui.add(fillColorSelector);
   ui.add(new Label(10, 100, "Line"));
   ui.add(new Label(10, 130, "Fill"));
- // ui.add(lblLineColor);
-  //ui.add(lblFillColor);
+  filledButton.toggleable = true;
+  filledButton.untoggleAfterClick = false;
+  ui.add(filledButton);
   ui.name="ui";
   
   

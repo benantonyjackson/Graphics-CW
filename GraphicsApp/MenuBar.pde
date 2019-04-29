@@ -183,13 +183,11 @@ class ImageMenu extends Menu
 {
   void mouseReleased()
   {
-    println("Point b");
 
     super.mouseReleased();
     
     for (String s: clickedList)
     {
-      println(s);
       if (s == "mnbtnResize")
       {
         if (canvas.layerIndex > -1)
@@ -204,8 +202,6 @@ class ImageMenu extends Menu
           {
             ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
           }
-          
-          //println("Point a");
         }
     }
   }
