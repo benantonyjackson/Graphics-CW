@@ -2,8 +2,8 @@ class Slider extends Widget
 {
   int rectX;
   int min, max;
-  private float value;
-  private int oldX;
+  protected float value;
+  protected int oldX;
   TextInput textInput;
   
   Slider(int x, int y, int w, int min, int max)
@@ -21,7 +21,8 @@ class Slider extends Widget
     textInput = new TextInput(x+w+10, y, Float.toString(value), 12);
     
   }
-  
+  Slider()
+  {}
   
   void mouseDragged()
   {
