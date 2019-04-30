@@ -780,7 +780,7 @@ public class Polygon extends Shape
 
     for (Point p: actPoints)
     {
-      shape.vertex(p.x, p.y);
+      shape.vertex(p.x - round((float)(x - canvas.x) /scalar), p.y - round((float)(y - canvas.y)/scalar));
     }
     if (closedShape)
     {
@@ -791,7 +791,12 @@ public class Polygon extends Shape
       shape.endShape();
     }
 
-    pg.shape(shape, 0, 0);
+    pg.pushMatrix();
+    //FlattenTranslate(pg, canvas.x,canvas.y);
+    pg.translate(((x-canvas.x) / scalar) + ((w/scalar)/2), ((y-canvas.y) / scalar) + ((h/scalar)/2));
+    pg.rotate(radians(rotation));
+    pg.shape(shape, -((w/scalar)/2), -((h/scalar)/2) );
+    pg.popMatrix();
   }
 
   void addPointAtMouseCursor()
