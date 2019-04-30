@@ -496,12 +496,12 @@ public class Circle extends Shape
       {
         pg.fill(fillColor);
       }
-      pg.ellipse(round((float)((x + (w / 2)) - oldCanvasX) / this.scalar),round((float)((y + (h / 2)) - oldCanvasY) / this.scalar)
-      ,round((float)w / this.scalar),round((float)h / this.scalar));
 
-      //pg.pushMatrix();
-      //FlattenTranslate();
-      //pg.ellips
+      pg.pushMatrix();
+      FlattenTranslate(pg, oldCanvasX, oldCanvasY);
+      pg.rotate(radians(rotation));
+      pg.ellipse(0,0,round((float)w / this.scalar), round((float)h / this.scalar));
+      pg.popMatrix();
   }
 
   void scaleAfterReize(float scalar)
