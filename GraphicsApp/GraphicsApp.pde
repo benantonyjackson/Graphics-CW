@@ -181,3 +181,8 @@ void ResizeLayer(Layer l, Shape s)
 {
   ui.add(new LayerResizeWindow(l,s));
 }
+
+void RotateLayer(Layer l, Shape s)
+{
+  ui.add(new RotateWindow(l, s));
+}

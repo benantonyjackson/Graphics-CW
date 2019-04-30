@@ -330,6 +330,25 @@ public class Shape extends Widget
 
   }
 
+  void Translate()
+  {
+    //translate(-(x + (w/2)), -(y + (h / 2)));
+    //translate(x + (w/2), y + (h / 2));
+
+    //translate(-(w/2), (-h/2));
+
+    //translate(w/2, h/2);
+    //translate(-x, -y);
+    translate(x + (w/2), y + (h / 2));
+  }
+
+  void invTranslate()
+  {
+    //translate(-(x + (w/2)), -(y + (h / 2)));
+
+    translate(x + (w/2), y + (h / 2));
+  }
+
   Shape clone()
   {
     Shape temp = new Shape();
@@ -436,8 +455,14 @@ public class Circle extends Shape
         fill(fillColor);
       }
 
+      pushMatrix();
+      Translate();
+      rotate(radians(rotation));
+      invTranslate();
       ellipse(x + (w / 2), y + (h/2), w, h);
-
+      rotate(radians(-rotation));
+      popMatrix();
+      
       stroke(0);
 
       if (selected)
@@ -585,7 +610,13 @@ public class Rectangle extends Shape
         fill(fillColor);
       }
 
-       rect(x,y,w,h);
+      pushMatrix();
+      Translate();
+      rotate(radians(rotation));
+      //invTranslate();
+
+      rect(-(w/2),-(h/2),w,h);
+      popMatrix();
 
       stroke(0);
 

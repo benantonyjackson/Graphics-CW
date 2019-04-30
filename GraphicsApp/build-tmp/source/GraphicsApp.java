@@ -203,6 +203,11 @@ public void ResizeLayer(Layer l, Shape s)
 {
   ui.add(new LayerResizeWindow(l,s));
 }
+
+public void RotateLayer(Layer l, Shape s)
+{
+  ui.add(new RotateWindow(l, s));
+}
 class Button extends Widget
 {
   //Text which is displayed inside of the button
@@ -667,8 +672,9 @@ class Canvas extends UIManager
     {
       PImage img = l.actImage;
      // println("Point b");
+     img =  scaleUp_bilinear(l.newWidth,l.newHeight, img);
       l.actImage.loadPixels();
-     // println("Point c");
+     // println("Point c");scaleUp
 
       data += img.width;
       data += ".";
@@ -727,7 +733,7 @@ class Canvas extends UIManager
           }
         }
 
-        if(s.type == "Rectangle")
+        else if (s.type == "Rectangle")
         {
           Rectangle rectangle = (Rectangle) s;
 
@@ -742,6 +748,25 @@ class Canvas extends UIManager
           output.println(rectangle.y);
           output.println(rectangle.w);
           output.println(rectangle.h);
+
+          s.scaleAfterReize(scalar);
+        }
+        
+        else if (s.type == "Circle")
+        {
+          Circle circle = (Circle) s;
+
+          s.scaleAfterReize(1);
+
+          output.println(circle.scalar);
+          output.println(circle.filled);
+          output.println(circle.lineColor);
+          output.println(circle.fillColor);
+
+          output.println(circle.x);
+          output.println(circle.y);
+          output.println(circle.w);
+          output.println(circle.h);
 
           s.scaleAfterReize(scalar);
         }
@@ -765,7 +790,7 @@ class Canvas extends UIManager
   {
     String line;
     int i = 2;
-    
+    noLoop();
     while (true)
     {
       line = Pixels[i++];
@@ -821,6 +846,26 @@ class Canvas extends UIManager
         continue;
       }
       
+      if (line.contentEquals("Circle"))
+      {
+        Circle circle = new Circle(Float.parseFloat(Pixels[i++])
+          , Boolean.parseBoolean(Pixels[i++])
+          , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
+
+          
+        circle.x = Integer.parseInt(Pixels[i++]);
+        circle.y = Integer.parseInt(Pixels[i++]);
+        circle.w = Integer.parseInt(Pixels[i++]);
+        circle.h = Integer.parseInt(Pixels[i++]);
+
+        circle.placed = true;
+        layers.get(layers.size()-1).addShape(circle);
+        //The current line was read by the while loop but the line index was not incremented
+        //So the line index must be incremented now for the next itteration of the loop
+        i++;
+        continue;
+      }
+      
       int tempW = Integer.parseInt(split(line, ".")[0]);
       int tempH = Integer.parseInt(split(line, ".")[1]);
       int tempX = Integer.parseInt(split(line, ".")[2]);
@@ -852,7 +897,7 @@ class Canvas extends UIManager
     }
     
    autoSetSize();
-   
+   loop();
   }
 
   public void undo()
@@ -1524,6 +1569,19 @@ class Layer extends UIManager
     scaleAfterReize(scalar);
   }
 
+  public void changeContrast(int offset)
+  {
+    actImage = ChangeContrast(actImage, offset);
+    disImage = ChangeContrast(disImage, offset);
+  }
+  
+  public void changeBrightness(int offset)
+  {
+    actImage = ChangeBrightness(actImage, offset);
+    disImage = ChangeBrightness(disImage, offset);
+    
+  }
+
   public void draw()
   {
     image(disImage, x, y);
@@ -1647,78 +1705,10 @@ class Layer extends UIManager
     addShape(new Circle(scalar, filled, lineColor, fillColor));
   }
  
- //Start of Functions
-public PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
-  //Create a blank image for the destination imgage
-  PImage destinationImage = new PImage(destinationImageWidth, destinationImageHeight);
-  //Loops through each pixel in the destination image
-  for (int y = 0; y < destinationImageHeight; y++) {
-    for (int x = 0; x < destinationImageWidth; x++){
-      //Scales coordinates to origonal image pixel coordinates
-      float parametricX = (x/(float)destinationImageWidth);
-      float parametricY = (y/(float)destinationImageHeight); 
-      
-      //Gets the pixel color of the current pixel
-      int thisPix = getPixelBilinear(parametricX,parametricY, img);
-      destinationImage.set(x,y, thisPix);
-    }
-  
-  }
-  return destinationImage;
-} 
+
  
  
-public float getMantisa(float n)
-{
-  return n - ((int) n);
-}
 
-
-public int getPixelBilinear(float x, float y, PImage img){
-  
-  // scale up the paramteric coordinates to match this image's pixel coordinates
-  // but keep it floating point
-  float scaledX = img.width * x;
-  float scaledY = img.height * y;
-  
-  // regarding the 4 pixels we are concerned with
-  // A B
-  // C D
-  // (0,0) is the coordinate at the top left of A
-  // B,C and D are ventured into as X and Y move between 0...1
-  // This algorithm works out the average colour of them based on the degree of overlap of each pixel
-  
- 
-  // get the four pixels
-  int pA = img.get((int)scaledX,(int)scaledY);
-  int pB = img.get((int)scaledX + 1, (int)scaledY);
-  int pC = img.get((int)scaledX,(int)scaledY + 1);
-  int pD = img.get((int)scaledX + 1,(int)scaledY + 1);
-  
-  // work out the foating point bit of the pixel location
-  
-  float mx = getMantisa(scaledX);
-  
-  float my = getMantisa(scaledY);
-
-  
-  // use this work out the overlap for each pixel
-  float areaA = ((1.0f - mx) * (1.0f-my));
-  
-  float areaB = (mx * (1.0f-my));
-  
-  float areaC = ((1.0f - mx) * my);
-  
-  float areaD = (mx*my);
-  
-  // now average all the red colours based on their relative amounts in A,B,C & D
-  int aRed = PApplet.parseInt(areaA * red(pA) + areaB * red(pB) + areaC * red(pC) + areaD * red(pD) );
-  int aGreen = PApplet.parseInt(areaA * green(pA) + areaB * green(pB) + areaC * green(pC) + areaD * green(pD) );
-  int aBlue = PApplet.parseInt(areaA * blue(pA) + areaB * blue(pB) + areaC * blue(pC) + areaD * blue(pD) );
-
-  
-  return color(aRed, aGreen,aBlue);
-}
 
 public void blackAndWhite()
 {
@@ -1829,6 +1819,25 @@ public class Shape extends Widget
 
   }
 
+  public void Translate()
+  {
+    //translate(-(x + (w/2)), -(y + (h / 2)));
+    //translate(x + (w/2), y + (h / 2));
+
+    //translate(-(w/2), (-h/2));
+
+    //translate(w/2, h/2);
+    //translate(-x, -y);
+    translate(x + (w/2), y + (h / 2));
+  }
+
+  public void invTranslate()
+  {
+    //translate(-(x + (w/2)), -(y + (h / 2)));
+
+    translate(x + (w/2), y + (h / 2));
+  }
+
   public Shape clone()
   {
     Shape temp = new Shape();
@@ -1857,7 +1866,7 @@ public class Circle extends Shape
   int oldCanvasY;
   Circle(float scalar, boolean filled, int lineColor, int fillColor)
   {
-    type = "Rectangle";
+    type = "Circle";
     draggable=true;
 
     toggleable = true;
@@ -1935,8 +1944,14 @@ public class Circle extends Shape
         fill(fillColor);
       }
 
+      pushMatrix();
+      Translate();
+      rotate(radians(rotation));
+      invTranslate();
       ellipse(x + (w / 2), y + (h/2), w, h);
-
+      rotate(radians(-rotation));
+      popMatrix();
+      
       stroke(0);
 
       if (selected)
@@ -2084,7 +2099,13 @@ public class Rectangle extends Shape
         fill(fillColor);
       }
 
-       rect(x,y,w,h);
+      pushMatrix();
+      Translate();
+      rotate(radians(rotation));
+      //invTranslate();
+
+      rect(-(w/2),-(h/2),w,h);
+      popMatrix();
 
       stroke(0);
 
@@ -2429,6 +2450,78 @@ public void drawLine(Point pointA, Point pointB)
 {
   line(pointA.x, pointA.y, pointB.x, pointB.y);
 }
+
+ //Start of Functions
+public PImage scaleUp_bilinear(int destinationImageWidth, int destinationImageHeight, PImage img){
+  //Create a blank image for the destination imgage
+  PImage destinationImage = new PImage(destinationImageWidth, destinationImageHeight);
+  //Loops through each pixel in the destination image
+  for (int y = 0; y < destinationImageHeight; y++) {
+    for (int x = 0; x < destinationImageWidth; x++){
+      //Scales coordinates to origonal image pixel coordinates
+      float parametricX = (x/(float)destinationImageWidth);
+      float parametricY = (y/(float)destinationImageHeight); 
+      
+      //Gets the pixel color of the current pixel
+      int thisPix = getPixelBilinear(parametricX,parametricY, img);
+      destinationImage.set(x,y, thisPix);
+    }
+  
+  }
+  return destinationImage;
+} 
+
+public float getMantisa(float n)
+{
+  return n - ((int) n);
+}
+
+
+public int getPixelBilinear(float x, float y, PImage img){
+  
+  // scale up the paramteric coordinates to match this image's pixel coordinates
+  // but keep it floating point
+  float scaledX = img.width * x;
+  float scaledY = img.height * y;
+  
+  // regarding the 4 pixels we are concerned with
+  // A B
+  // C D
+  // (0,0) is the coordinate at the top left of A
+  // B,C and D are ventured into as X and Y move between 0...1
+  // This algorithm works out the average colour of them based on the degree of overlap of each pixel
+  
+ 
+  // get the four pixels
+  int pA = img.get((int)scaledX,(int)scaledY);
+  int pB = img.get((int)scaledX + 1, (int)scaledY);
+  int pC = img.get((int)scaledX,(int)scaledY + 1);
+  int pD = img.get((int)scaledX + 1,(int)scaledY + 1);
+  
+  // work out the foating point bit of the pixel location
+  
+  float mx = getMantisa(scaledX);
+  
+  float my = getMantisa(scaledY);
+
+  
+  // use this work out the overlap for each pixel
+  float areaA = ((1.0f - mx) * (1.0f-my));
+  
+  float areaB = (mx * (1.0f-my));
+  
+  float areaC = ((1.0f - mx) * my);
+  
+  float areaD = (mx*my);
+  
+  // now average all the red colours based on their relative amounts in A,B,C & D
+  int aRed = PApplet.parseInt(areaA * red(pA) + areaB * red(pB) + areaC * red(pC) + areaD * red(pD) );
+  int aGreen = PApplet.parseInt(areaA * green(pA) + areaB * green(pB) + areaC * green(pC) + areaD * green(pD) );
+  int aBlue = PApplet.parseInt(areaA * blue(pA) + areaB * blue(pB) + areaC * blue(pC) + areaD * blue(pD) );
+
+  
+  return color(aRed, aGreen,aBlue);
+}
 class LayerButton extends Button
 {
   PImage layerIMG;
@@ -2733,8 +2826,10 @@ class MenuBar extends UIManager
     editMenu.setActive(false);
 
     Menu imageMenu = new ImageMenu();
-    imageMenu.add(new Button("Resize", "mnbtnResize"));
+    imageMenu.add(new Button("Resize image", "mnbtnResize"));
     imageMenu.add(new Button("Resize shape", "mnbtnResizeShape"));
+    imageMenu.add(new Button("Rotate image", "mnbtnRotateImage"));
+    imageMenu.add(new Button("Rotate shape", "mnbtnRotateShape"));
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
@@ -2750,6 +2845,10 @@ class MenuBar extends UIManager
     filterMenu.add(new Button("Blur", "mnbtnBlur"));
     filterMenu.add(new Button("Sharpen", "mnbtnSharpen"));
     filterMenu.add(new Button("Edge detect", "mnbtnEdgeDetect"));
+    filterMenu.add(new Button("Increase Contrast", "mnbtnIncContrast"));
+    filterMenu.add(new Button("Decrease Contrast", "mnbtnDecContrast"));
+    filterMenu.add(new Button("Increase Brightness", "mnbtnIncBrightness"));
+    filterMenu.add(new Button("Decrease Brightness", "mnbtnDecBrightness"));
 
     filterMenu.setActive(false);
 
@@ -2757,7 +2856,7 @@ class MenuBar extends UIManager
     addMenu(fileMenu);
     addButton("Edit");
     addMenu(editMenu);
-    addButton("Image");
+    addButton("Resize");
     addMenu(imageMenu);
     addButton("Shapes");
     addMenu(shapeMenu);
@@ -2905,12 +3004,29 @@ class ImageMenu extends Menu
 
       }
       if (s == "mnbtnResizeShape")
+      {
+        if (canvas.layerIndex > -1)
         {
-          if (canvas.layerIndex > -1)
-          {
-            ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
-          }
+          ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
         }
+      }
+      if (s == "mnbtnRotateImage")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          RotateLayer(canvas.layers.get(canvas.layerIndex), null);
+        }
+      }
+      if (s == "mnbtnRotateShape")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          RotateLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
+        }
+      }
+      
+      
+        
     }
   }
 
@@ -2985,6 +3101,38 @@ class FilterMenu extends Menu
       if (s == "mnbtnEdgeDetect")
       {
         canvas.convolute(edge_matrix);
+      }
+      
+      if (s == "mnbtnIncContrast")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeContrast(0);
+        }
+      }
+      
+      if (s == "mnbtnDecContrast")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeContrast(-10);
+        }
+      }
+      
+      if (s == "mnbtnIncBrightness")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeBrightness(50);
+        }
+      }
+      
+      if (s == "mnbtnDecBrightness")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeBrightness(-50);
+        }
       }
     }
 
@@ -3070,6 +3218,176 @@ class NewCanvasUIManager extends FloatingWindow
     }
   }
 }
+// THE GRAPHING FUNCTIONS
+//
+//
+// multiplies the input by a value. darkens OK, but causes clipping when brightening
+public float simpleScale(float v, float scl){
+  
+  float scaledV =  v*scl;
+  return constrain(scaledV,0,1);
+  
+}
+
+// interpolates the input value between the low and hi values
+public float ramp(float v, float low, float hi){
+  
+  float rampedV = lerp(low, hi, v);
+  return constrain(rampedV,0,1);
+}
+
+// negates the input value
+public float invert(float v){
+  
+  return 1-v;
+}
+
+
+// raises the input value by a power
+public float gammaCurve(float v, float gamma){
+  
+  return pow(v,gamma);
+  
+}
+
+// creates a "flipped" gamma curve
+public float inverseGammaCurve(float v, float gamma){
+  
+  return 1.0f - pow(1.0f-v,gamma);
+  
+}
+
+// creates a nice S-shaped curve, useful for contrast functions
+public float sigmoidCurve(float v){
+  // contrast: generate a sigmoid function
+  
+  float f =  (1.0f / (1 + exp(-12 * (v  - 0.5f))));
+  
+ 
+  return f;
+}
+
+
+// creates a stepped output. useful for posterising
+public float step(float v, int numSteps){
+  float thisStep = (int) (v*numSteps);
+  return thisStep/numSteps;
+  
+}
+
+public int[] makeSigmoidLUT(int offset){
+  int[] lut = new int[256];
+  for(int n = 0; n < 256; n++) {
+    
+    float p = (n+offset)/255.0f;  // p ranges between 0...1
+    float val = sigmoidCurve(p);
+    lut[n] = (int)(val*255);
+  }
+  return lut;
+}
+
+
+// makeFunctionLUT
+// this function returns a LUT from the range of functions listed
+// in the second TAB above
+// The parameters are functionName: a string to specify the function used
+// parameter1 and parameter2 are optional, some functions do not require
+// any parameters, some require one, some two
+
+public int[] makeFunctionLUT(String functionName, float parameter1, float parameter2){
+  
+  int[] lut = new int[256];
+  for(int n = 0; n < 256; n++) {
+    
+    float p = n/256.0f;  // ranges between 0...1
+    float val = 0;
+    
+    switch(functionName) {
+      // add in the list of functions here
+      // and set the val accordingly
+      
+      case "makeSigmoidLUT":
+       //lut[n] = int(step(n, (int)parameter1) * 255);
+      case "simpleScale":
+        print(PApplet.parseInt(simpleScale(p, 1.0f) * 255) + "\n");
+        val = simpleScale(p, parameter1);
+      case "invert":
+        val = invert(p);
+      case "ramp":
+        val = ramp(p, parameter1, parameter2);
+      case "gammaCurve":
+        val = gammaCurve(p, parameter1);
+      case "inverseGammaCurve":
+        val = inverseGammaCurve(p, parameter1);
+      case "step":
+        val = step(p, (int)parameter1);
+      
+      //
+      }// end of switch statement
+
+   
+    lut[n] = (int)(val*255);
+  }
+  
+  return lut;
+}
+
+
+
+
+
+
+public PImage applyPointProcessing(int[] redLUT, int[] greenLUT, int[] blueLUT, PImage inputImage){
+  PImage outputImage = createImage(inputImage.width,inputImage.height,RGB);
+  
+  
+  inputImage.loadPixels();
+  outputImage.loadPixels();
+  int numPixels = inputImage.width*inputImage.height;
+  for(int n = 0; n < numPixels; n++){
+    
+    int c = inputImage.pixels[n];
+    
+    int r = (int)red(c);
+    int g = (int)green(c);
+    int b = (int)blue(c);
+    
+    r = redLUT[r];
+    g = greenLUT[g];
+    b = blueLUT[b];
+    
+    outputImage.pixels[n] = color(r,g,b);
+    
+    
+  }
+  
+  return outputImage;
+}
+
+public PImage ChangeContrast(PImage src, int offset)
+{
+  int[] lut = makeSigmoidLUT(offset);
+  
+  return applyPointProcessing(lut,lut,lut, src);
+}
+
+public PImage ChangeBrightness(PImage src, int offset)
+{
+  PImage ret = new PImage(src.width, src.height);
+  
+  for (int x = 0; x < src.width; x++)
+  {
+     for (int y = 0; y < src.height; y++)
+     {
+       int oldColor = src.get(x,y);
+       int newColor = color(red(oldColor) + offset, green(oldColor) + offset, blue(oldColor) + offset);
+       ret.set(x,y, newColor);
+     }
+    
+  }
+  
+  return ret;
+}
 class RadioButtons extends UIManager
 {
   //ArrayList<Button> buttonList = new ArrayList<Button>();
@@ -3119,6 +3437,147 @@ class RadioButtons extends UIManager
     widgetList.add(btn);
   }
  
+}
+class RotateWindow extends FloatingWindow
+{
+	Layer layer;
+	Shape shape;
+
+	Slider rotateSlider = null;
+
+	RotateWindow(Layer l, Shape s)
+	{
+		x = 50;
+		y = 50;
+		w = 500;
+		h = 100;
+		
+		closeButton.x = x+w - 20;
+    	closeButton.y =  y;
+
+		layer = l;
+		shape = s;
+
+		if (l != null)
+		{
+			rotateSlider = new Slider(10, 10, 255, 0, 360);
+
+			rotateSlider.setValue(l.getRotation());
+		} 
+		
+		
+		//WidthSlider.setValue(l.actImage.width);
+		//HeightSlider.setValue(l.actImage.height);
+
+		if (s != null)
+		{
+			rotateSlider = new Slider(10, 10, 255, 0, 360);
+
+			rotateSlider.setValue(s.getRotation());
+
+		}
+		
+		if (rotateSlider != null)
+		add(rotateSlider);
+		else 
+			closed = true;
+	}
+
+	public void mouseReleased()
+	{
+		super.mouseReleased();
+
+		if(layer != null)
+			layer.setRotation((int)rotateSlider.getValue());
+		if(shape != null)
+			shape.setRotation((int)rotateSlider.getValue());
+
+	}
+
+	public void mouseDragged()
+	{
+		int oldX = x;
+		int oldY = y;
+		super.mouseDragged();
+		if (oldX == x && oldY == y)
+		{
+			if(layer != null)
+			layer.setRotation((int)rotateSlider.getValue());
+			if(shape != null)
+			shape.setRotation((int)rotateSlider.getValue());
+		}
+	}
+
+
+	public void draw()
+	{
+		super.draw();
+	}
+
+} 
+class RotationSlider extends Slider
+{
+  
+  RotationSlider(int x, int y, int w, int min, int max)
+  {
+    //Slider(x,y,w,min,max);
+    this.x = x;
+    oldX = x;
+    this.y = y - 5;
+    this.w=w;
+    this.min = min;
+    this.max=max;
+    h = 10;
+    
+    rectX = x + (w/2);
+    
+    textInput = new TextInput(x+w+10, y, Float.toString(value), 12);
+    
+  }
+  
+  public void mouseDragged()
+  {
+    super.mouseDragged();
+    
+    if (clicked)
+    {
+    if (canvas != null)
+    {
+      if (canvas.layerIndex > -1)
+      {
+        Layer l = canvas.layers.get(canvas.layerIndex);
+
+        if (l.selectedShape != null)
+        {
+          //l.selectedShape.setRotation(toggled);
+        }
+      }
+    }
+    }
+  }
+  
+  public void mouseReleased()
+  {
+    super.mouseReleased();
+    
+    
+  }
+  
+  public void WidgetClickEvent()
+  {
+    if (canvas != null)
+    {
+      if (canvas.layerIndex > -1)
+      {
+        Layer l = canvas.layers.get(canvas.layerIndex);
+
+        if (l.selectedShape != null)
+        {
+          //l.selectedShape.setFilled(toggled);
+        }
+      }
+    }
+  }
 }
 public enum Orientation
 {
@@ -3255,8 +3714,8 @@ class Slider extends Widget
 {
   int rectX;
   int min, max;
-  private float value;
-  private int oldX;
+  protected float value;
+  protected int oldX;
   TextInput textInput;
   
   Slider(int x, int y, int w, int min, int max)
@@ -3274,7 +3733,8 @@ class Slider extends Widget
     textInput = new TextInput(x+w+10, y, Float.toString(value), 12);
     
   }
-  
+  Slider()
+  {}
   
   public void mouseDragged()
   {

@@ -27,6 +27,8 @@ class MenuBar extends UIManager
     Menu imageMenu = new ImageMenu();
     imageMenu.add(new Button("Resize image", "mnbtnResize"));
     imageMenu.add(new Button("Resize shape", "mnbtnResizeShape"));
+    imageMenu.add(new Button("Rotate image", "mnbtnRotateImage"));
+    imageMenu.add(new Button("Rotate shape", "mnbtnRotateShape"));
     imageMenu.setActive(false);
 
     Menu shapeMenu = new ShapeMenu();
@@ -207,8 +209,22 @@ class ImageMenu extends Menu
           ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
         }
       }
+      if (s == "mnbtnRotateImage")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          RotateLayer(canvas.layers.get(canvas.layerIndex), null);
+        }
+      }
+      if (s == "mnbtnRotateShape")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          RotateLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
+        }
+      }
       
-     
+      
         
     }
   }
