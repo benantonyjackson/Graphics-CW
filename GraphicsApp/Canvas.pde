@@ -333,8 +333,9 @@ class Canvas extends UIManager
     {
       PImage img = l.actImage;
      // println("Point b");
+     img =  scaleUp_bilinear(l.newWidth,l.newHeight, img);
       l.actImage.loadPixels();
-     // println("Point c");
+     // println("Point c");scaleUp
 
       data += img.width;
       data += ".";
@@ -393,7 +394,7 @@ class Canvas extends UIManager
           }
         }
 
-        if(s.type == "Rectangle")
+        else if (s.type == "Rectangle")
         {
           Rectangle rectangle = (Rectangle) s;
 
@@ -518,8 +519,6 @@ class Canvas extends UIManager
     }
     
    autoSetSize();
-   
-   
    loop();
   }
 
