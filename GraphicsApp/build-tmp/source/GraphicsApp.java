@@ -2378,7 +2378,7 @@ public class Polygon extends Shape
 
     for (Point p: points)
     {
-      shape.vertex(p.x, p.y);
+      shape.vertex(p.x - x, p.y - y);
     }
     if (closedShape)
     {
@@ -2446,15 +2446,23 @@ public class Polygon extends Shape
 
       shape.vertex(mouseX, mouseY);
       shape.endShape();
+      shape(shape, 0,0);
+    }
+    else
+    {
+      pushMatrix();
+      Translate();
+      rotate(radians(rotation));
+      shape(shape,-(w/2),-(h/2));
+      popMatrix();
+
+      if (selected && placed)
+      {
+        rect(x,y,w,h);
+      }
     }
     
-
-    shape(shape,0,0);
-
-    if (selected && placed)
-    {
-      rect(x,y,w,h);
-    }
+    
 
   }
 
