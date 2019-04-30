@@ -1584,7 +1584,11 @@ class Layer extends UIManager
 
   public void draw()
   {
-    image(disImage, x, y);
+    pushMatrix();
+    Translate();
+    rotate(radians(rotation));
+    image(disImage, -(disImage.width / 2), -(disImage.height / 2));
+    popMatrix();
 
     if (selected)
     {
@@ -1629,7 +1633,11 @@ class Layer extends UIManager
   //Writes shape data to the final PGraphic 
   public void flatten(PGraphics pg)
   {
-    pg.image(actImage, offsetX, offsetY);
+    pg.pushMatrix();
+    pg.translate(offsetX+(actImage.width / 2), offsetY+(actImage.height / 2));
+    pg.rotate(radians(rotation));
+    pg.image(actImage, -(actImage.width / 2) , -(actImage.width / 2));
+    pg.popMatrix();
 
     for(Shape s: shapeList)
     {
@@ -1703,6 +1711,31 @@ class Layer extends UIManager
   public void addCircle(boolean filled, int lineColor, int fillColor)
   {
     addShape(new Circle(scalar, filled, lineColor, fillColor));
+  }
+
+   public void Translate()
+  {
+    //translate(-(x + (w/2)), -(y + (h / 2)));
+    //translate(x + (w/2), y + (h / 2));
+
+    //translate(-(w/2), (-h/2));
+
+    //translate(w/2, h/2);
+    //translate(-x, -y);
+    translate(x + (w/2), y + (h / 2));
+  }
+
+  public void FlattenTranslate(PGraphics pg, int oldCanvasX, int oldCanvasY)
+  {
+    //pg.rect(round((float)(x - oldCanvasX) / this.scalar),round((float)(y - oldCanvasY) / this.scalar)
+     // ,round((float)w / this.scalar),round((float)h / this.scalar));
+
+    int tempX = round((float)(x - oldCanvasX) / scalar);
+    int tempY = round((float)(y - oldCanvasY) / this.scalar);
+    int tempW = round((float)w / this.scalar);
+    int tempH = round((float)h / this.scalar);
+
+    pg.translate(tempX + (tempW / 2), tempY + (tempH / 2));
   }
  
 
