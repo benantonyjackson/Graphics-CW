@@ -507,6 +507,26 @@ class Canvas extends UIManager
         continue;
       }
       
+      if (line.contentEquals("Circle"))
+      {
+        Circle circle = new Circle(Float.parseFloat(Pixels[i++])
+          , Boolean.parseBoolean(Pixels[i++])
+          , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
+
+          
+        circle.x = Integer.parseInt(Pixels[i++]);
+        circle.y = Integer.parseInt(Pixels[i++]);
+        circle.w = Integer.parseInt(Pixels[i++]);
+        circle.h = Integer.parseInt(Pixels[i++]);
+
+        circle.placed = true;
+        layers.get(layers.size()-1).addShape(circle);
+        //The current line was read by the while loop but the line index was not incremented
+        //So the line index must be incremented now for the next itteration of the loop
+        i++;
+        continue;
+      }
+      
       int tempW = Integer.parseInt(split(line, ".")[0]);
       int tempH = Integer.parseInt(split(line, ".")[1]);
       int tempX = Integer.parseInt(split(line, ".")[2]);
