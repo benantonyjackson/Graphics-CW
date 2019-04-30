@@ -1831,11 +1831,17 @@ public class Shape extends Widget
     translate(x + (w/2), y + (h / 2));
   }
 
-  public void invTranslate()
+  public void FlattenTranslate(PGraphics pg, int oldCanvasX, int oldCanvasY)
   {
-    //translate(-(x + (w/2)), -(y + (h / 2)));
+    //pg.rect(round((float)(x - oldCanvasX) / this.scalar),round((float)(y - oldCanvasY) / this.scalar)
+     // ,round((float)w / this.scalar),round((float)h / this.scalar));
 
-    translate(x + (w/2), y + (h / 2));
+    int tempX = round((float)(x - oldCanvasX) / scalar);
+    int tempY = round((float)(y - oldCanvasY) / this.scalar);
+    int tempW = round((float)w / this.scalar);
+    int tempH = round((float)h / this.scalar);
+
+    pg.translate(tempX + (tempW / 2), tempY + (tempH / 2));
   }
 
   public Shape clone()
@@ -1947,7 +1953,7 @@ public class Circle extends Shape
       pushMatrix();
       Translate();
       rotate(radians(rotation));
-      invTranslate();
+      //invTranslate();
       ellipse(x + (w / 2), y + (h/2), w, h);
       rotate(radians(-rotation));
       popMatrix();
@@ -1981,6 +1987,10 @@ public class Circle extends Shape
       }
       pg.ellipse(round((float)((x + (w / 2)) - oldCanvasX) / this.scalar),round((float)((y + (h / 2)) - oldCanvasY) / this.scalar)
       ,round((float)w / this.scalar),round((float)h / this.scalar));
+
+      //pg.pushMatrix();
+      //FlattenTranslate();
+      //pg.ellips
   }
 
   public void scaleAfterReize(float scalar)
@@ -2135,9 +2145,14 @@ public class Rectangle extends Shape
     {
       pg.fill(fillColor);
     }
-    pg.rect(round((float)(x - oldCanvasX) / this.scalar),round((float)(y - oldCanvasY) / this.scalar)
-      ,round((float)w / this.scalar),round((float)h / this.scalar));
+    //pg.rect(round((float)(x - oldCanvasX) / this.scalar),round((float)(y - oldCanvasY) / this.scalar)
+    //  ,round((float)w / this.scalar),round((float)h / this.scalar));
 
+    pg.pushMatrix();
+    FlattenTranslate(pg, oldCanvasX, oldCanvasY);
+    pg.rotate(radians(rotation));
+    pg.rect(-round((float)w / this.scalar) / 2, - round((float)h / this.scalar) / 2, round((float)w / this.scalar), round((float)h / this.scalar));
+    pg.popMatrix();
     pg.stroke(0);
   }
 
