@@ -412,6 +412,25 @@ class Canvas extends UIManager
 
           s.scaleAfterReize(scalar);
         }
+        
+        else if (s.type == "Circle")
+        {
+          Circle circle = (Circle) s;
+
+          s.scaleAfterReize(1);
+
+          output.println(circle.scalar);
+          output.println(circle.filled);
+          output.println(circle.lineColor);
+          output.println(circle.fillColor);
+
+          output.println(circle.x);
+          output.println(circle.y);
+          output.println(circle.w);
+          output.println(circle.h);
+
+          s.scaleAfterReize(scalar);
+        }
 
         //Marks the end of a layers shape data
         output.println("*");

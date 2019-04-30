@@ -358,7 +358,7 @@ public class Circle extends Shape
   int oldCanvasY;
   Circle(float scalar, boolean filled, color lineColor, color fillColor)
   {
-    type = "Rectangle";
+    type = "Circle";
     draggable=true;
 
     toggleable = true;
