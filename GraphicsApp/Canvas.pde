@@ -346,6 +346,8 @@ class Canvas extends UIManager
       data += l.offsetY;
       //data += ".";
       output.println(data);
+      //data += l.rotation;
+      output.println((int)l.getRotation());
       data = "";
       int i = 0;
       for (int x = 0; x < img.width; x++)
@@ -386,6 +388,7 @@ class Canvas extends UIManager
           output.println(poly.closedShape);
           output.println(poly.lineColor);
           output.println(poly.fillColor);
+          output.println(poly.rotation);
 
           for (Point p: poly.actPoints)
           {
@@ -404,6 +407,7 @@ class Canvas extends UIManager
           output.println(rectangle.filled);
           output.println(rectangle.lineColor);
           output.println(rectangle.fillColor);
+          output.println(rectangle.rotation);
 
           output.println(rectangle.x);
           output.println(rectangle.y);
@@ -423,6 +427,7 @@ class Canvas extends UIManager
           output.println(circle.filled);
           output.println(circle.lineColor);
           output.println(circle.fillColor);
+          output.println(circle.rotation);
 
           output.println(circle.x);
           output.println(circle.y);
@@ -470,6 +475,8 @@ class Canvas extends UIManager
           , Boolean.parseBoolean(Pixels[i++]), Boolean.parseBoolean(Pixels[i++])
           , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
 
+        poly.rotation = round(Float.parseFloat(Pixels[i++]));
+
         while (!Pixels[i].contentEquals("*"))
         {
 
@@ -492,7 +499,7 @@ class Canvas extends UIManager
         Rectangle rectangle = new Rectangle(Float.parseFloat(Pixels[i++])
           , Boolean.parseBoolean(Pixels[i++])
           , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
-
+        rectangle.rotation = Integer.parseInt(Pixels[i++]);
           
         rectangle.x = Integer.parseInt(Pixels[i++]);
         rectangle.y = Integer.parseInt(Pixels[i++]);
@@ -513,7 +520,7 @@ class Canvas extends UIManager
           , Boolean.parseBoolean(Pixels[i++])
           , Integer.parseInt(Pixels[i++]), Integer.parseInt(Pixels[i++]));
 
-          
+          circle.rotation = Integer.parseInt(Pixels[i++]);
         circle.x = Integer.parseInt(Pixels[i++]);
         circle.y = Integer.parseInt(Pixels[i++]);
         circle.w = Integer.parseInt(Pixels[i++]);
@@ -533,7 +540,7 @@ class Canvas extends UIManager
       int tempY = Integer.parseInt(split(line, ".")[3]);
       
       PImage outputImage = new PImage(tempW, tempH);
-      
+      int rotation = Integer.parseInt(Pixels[i++]);
       for (int y = 0; y < tempH; y++)
       {
        for (int x = 0; x < tempW; x++)
@@ -554,7 +561,7 @@ class Canvas extends UIManager
      
        }
      addLayer(outputImage, tempX, tempY);
-     
+     layers.get(layers.size() - 1).setRotation(rotation);
     }
     
    autoSetSize();

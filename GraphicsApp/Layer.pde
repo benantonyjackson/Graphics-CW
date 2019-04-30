@@ -23,7 +23,7 @@ class Layer extends UIManager
   //Indicates whether or not the layer is selected
   private boolean selected = false;
   
-  private float rotation = 0; 
+  private int rotation = 0; 
 
   Shape selectedShape = null;
 
@@ -165,7 +165,7 @@ class Layer extends UIManager
 
   void setRotation(float r)
   {
-    rotation = r;
+    rotation = (int) r;
   }
 
   float getRotation()
