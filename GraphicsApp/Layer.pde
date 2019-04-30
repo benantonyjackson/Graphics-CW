@@ -465,7 +465,7 @@ public class Circle extends Shape
       Translate();
       rotate(radians(rotation));
       //invTranslate();
-      ellipse(x + (w / 2), y + (h/2), w, h);
+      ellipse(0, 0, w, h);
       rotate(radians(-rotation));
       popMatrix();
       
