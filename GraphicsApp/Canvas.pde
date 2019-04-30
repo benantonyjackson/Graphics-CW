@@ -431,7 +431,7 @@ class Canvas extends UIManager
   {
     String line;
     int i = 2;
-    
+    noLoop();
     while (true)
     {
       line = Pixels[i++];
@@ -519,6 +519,8 @@ class Canvas extends UIManager
     
    autoSetSize();
    
+   
+   loop();
   }
 
   void undo()

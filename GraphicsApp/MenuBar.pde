@@ -25,7 +25,7 @@ class MenuBar extends UIManager
     editMenu.setActive(false);
 
     Menu imageMenu = new ImageMenu();
-    imageMenu.add(new Button("Resize", "mnbtnResize"));
+    imageMenu.add(new Button("Resize image", "mnbtnResize"));
     imageMenu.add(new Button("Resize shape", "mnbtnResizeShape"));
     imageMenu.setActive(false);
 
@@ -42,6 +42,10 @@ class MenuBar extends UIManager
     filterMenu.add(new Button("Blur", "mnbtnBlur"));
     filterMenu.add(new Button("Sharpen", "mnbtnSharpen"));
     filterMenu.add(new Button("Edge detect", "mnbtnEdgeDetect"));
+    filterMenu.add(new Button("Increase Contrast", "mnbtnIncContrast"));
+    filterMenu.add(new Button("Decrease Contrast", "mnbtnDecContrast"));
+    filterMenu.add(new Button("Increase Brightness", "mnbtnIncBrightness"));
+    filterMenu.add(new Button("Decrease Brightness", "mnbtnDecBrightness"));
 
     filterMenu.setActive(false);
 
@@ -49,7 +53,7 @@ class MenuBar extends UIManager
     addMenu(fileMenu);
     addButton("Edit");
     addMenu(editMenu);
-    addButton("Image");
+    addButton("Resize");
     addMenu(imageMenu);
     addButton("Shapes");
     addMenu(shapeMenu);
@@ -197,12 +201,15 @@ class ImageMenu extends Menu
 
       }
       if (s == "mnbtnResizeShape")
+      {
+        if (canvas.layerIndex > -1)
         {
-          if (canvas.layerIndex > -1)
-          {
-            ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
-          }
+          ResizeLayer(null, canvas.layers.get(canvas.layerIndex).selectedShape);
         }
+      }
+      
+     
+        
     }
   }
 
@@ -277,6 +284,38 @@ class FilterMenu extends Menu
       if (s == "mnbtnEdgeDetect")
       {
         canvas.convolute(edge_matrix);
+      }
+      
+      if (s == "mnbtnIncContrast")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeContrast(0);
+        }
+      }
+      
+      if (s == "mnbtnDecContrast")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeContrast(-10);
+        }
+      }
+      
+      if (s == "mnbtnIncBrightness")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeBrightness(50);
+        }
+      }
+      
+      if (s == "mnbtnDecBrightness")
+      {
+        if (canvas.layerIndex > -1)
+        {
+          canvas.layers.get(canvas.layerIndex).changeBrightness(-50);
+        }
       }
     }
 

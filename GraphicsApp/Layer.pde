@@ -80,6 +80,19 @@ class Layer extends UIManager
     scaleAfterReize(scalar);
   }
 
+  void changeContrast(int offset)
+  {
+    actImage = ChangeContrast(actImage, offset);
+    disImage = ChangeContrast(disImage, offset);
+  }
+  
+  void changeBrightness(int offset)
+  {
+    actImage = ChangeBrightness(actImage, offset);
+    disImage = ChangeBrightness(disImage, offset);
+    
+  }
+
   void draw()
   {
     image(disImage, x, y);
